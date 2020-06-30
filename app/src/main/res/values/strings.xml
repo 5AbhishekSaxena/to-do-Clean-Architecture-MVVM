@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">GetTaskDone</string>
+    <string name="title">Title</string>
+    <string name="details">Details</string>
+    <string name="save">Save</string>
+    <string name="title_empty">Title field is empty.</string>
+    <string name="details_empty">Details field is empty.</string>
+</resources>

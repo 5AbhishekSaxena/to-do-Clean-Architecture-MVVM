@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/to_do_navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="in.abhisheksaxena.gettaskdone.ui.fragment.HomeFragment"
+        tools:layout="@layout/fragment_home"
+        android:label="TasksDisplayFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_addTaskFragment"
+            app:destination="@id/addTaskFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addTaskFragment"
+        android:name="in.abhisheksaxena.gettaskdone.ui.fragment.AddTaskFragment"
+        android:label="Add a Task"
+        tools:layout="@layout/fragment_add_task">
+        <action
+            android:id="@+id/action_addTaskFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true"/>
+        <argument
+            android:name="viewState"
+            app:nullable="false"
+            app:argType="in.abhisheksaxena.gettaskdone.viewmodel.AddTaskState" />
+        </fragment>
+</navigation>
