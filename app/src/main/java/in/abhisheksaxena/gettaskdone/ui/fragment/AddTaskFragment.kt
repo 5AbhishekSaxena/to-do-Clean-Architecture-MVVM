@@ -41,19 +41,6 @@ class AddTaskFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val callback: OnBackPressedCallback =
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    // Handle the back button event'
-                    if (viewModel.viewState.value == AddTaskState.EDIT_STATE){
-                        viewModel.updateViewState(AddTaskState.VIEW_STATE)
-                    }else{
-                        findNavController().navigateUp()
-                    }
-                }
-            }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
     override fun onCreateView(
@@ -68,6 +55,8 @@ class AddTaskFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        handleOnBackPressed()
 
         val database = TaskDatabase.getInstance(requireNotNull(this.activity).application).taskDao
         val arguments = AddTaskFragmentArgs.fromBundle(requireArguments())
@@ -170,6 +159,21 @@ class AddTaskFragment : Fragment() {
     private fun toggleEditable(state: Boolean) {
         binding.titleEditText.isEnabled = state
         binding.detailsEditText.isEnabled = state
+    }
+
+    private fun handleOnBackPressed() {
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    // Handle the back button event'
+                    if (viewModel.viewState.value == AddTaskState.EDIT_STATE) {
+                        viewModel.updateViewState(AddTaskState.VIEW_STATE)
+                    } else {
+                        findNavController().navigateUp()
+                    }
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
 
