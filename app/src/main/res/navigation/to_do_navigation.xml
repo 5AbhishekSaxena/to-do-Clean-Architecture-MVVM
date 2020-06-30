@@ -11,14 +11,14 @@
         tools:layout="@layout/fragment_home"
         android:label="Tasks" >
         <action
-            android:id="@+id/action_homeFragment_to_addTaskFragment"
-            app:destination="@id/addTaskFragment" />
+            android:id="@+id/action_homeFragment_to_taskDetailsFragment"
+            app:destination="@id/taskDetailsFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/addTaskFragment"
-        android:name="in.abhisheksaxena.gettaskdone.ui.fragment.AddTaskFragment"
-        tools:layout="@layout/fragment_add_task">
+        android:id="@+id/taskDetailsFragment"
+        android:name="in.abhisheksaxena.gettaskdone.ui.fragment.TaskDetailsFragment"
+        tools:layout="@layout/fragment_tasks_detail">
         <action
             android:id="@+id/action_addTaskFragment_to_homeFragment"
             app:destination="@id/homeFragment"

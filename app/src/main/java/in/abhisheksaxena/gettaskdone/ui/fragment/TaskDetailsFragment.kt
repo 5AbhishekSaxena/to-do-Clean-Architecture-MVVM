@@ -7,7 +7,6 @@ import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentAddTaskBinding
 import `in`.abhisheksaxena.gettaskdone.ui.MainActivity
 import `in`.abhisheksaxena.gettaskdone.util.hideKeyboard
-import `in`.abhisheksaxena.gettaskdone.util.showSnackBar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.AddTaskState
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
@@ -17,7 +16,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -31,7 +29,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
  * @since 24-06-2020 07:43
  */
 
-class AddTaskFragment : Fragment() {
+class TaskDetailsFragment : Fragment() {
 
 
     private lateinit var binding: FragmentAddTaskBinding
@@ -49,7 +47,7 @@ class AddTaskFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_task, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tasks_detail, container, false)
         return binding.root
     }
 
