@@ -78,7 +78,7 @@ class HomeFragment : Fragment() {
         viewModel.navigateToAddTaskFragment.observe(viewLifecycleOwner, Observer {
             if (it) {
                 val action =
-                    HomeFragmentDirections.actionHomeFragmentToAddTaskFragment(navData)
+                    HomeFragmentDirections.actionHomeFragmentToTaskDetailsFragment(navData)
                 findNavController().navigate(action)
                 viewModel.doneNavigationToAddTask()
             }
