@@ -131,7 +131,6 @@ class AddTaskFragment : Fragment() {
 
     private fun setTitle(title: String) {
         requireNotNull(activity as MainActivity).supportActionBar?.title = title
-
     }
 
     private fun toggleHint(state: AddTaskState) {
