@@ -3,7 +3,8 @@ package `in`.abhisheksaxena.gettaskdone.ui.fragment
 import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.adapter.TaskListAdapter
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentHomeBinding
-import `in`.abhisheksaxena.gettaskdone.db.local.TaskDatabase
+import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
+import `in`.abhisheksaxena.gettaskdone.data.model.NavData
 import `in`.abhisheksaxena.gettaskdone.viewmodel.AddTaskState
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
@@ -24,16 +25,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
  * @since 24-06-2020 11:09
  */
 
-class HomeFragment : /*BaseFragment<FragmentHomeBinding, HomeViewModel, HomeViewModelFactory>*/
-    Fragment() {
-
-    /*
-    override var layoutRes: Int = R.layout.fragment_home
-    override var modelClass = HomeViewModel::class.java
-    override fun getViewModelStoreOwner(): ViewModelStoreOwner? = this
-    */
+class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
+
+    private val navData = NavData()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,21 +44,27 @@ class HomeFragment : /*BaseFragment<FragmentHomeBinding, HomeViewModel, HomeView
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val database = TaskDatabase.getInstance(requireNotNull(this.activity).application)
+        val database = TaskDatabase.getInstance(requireNotNull(this.activity).application).taskDao
 
         val factory = HomeViewModelFactory(database)
 
         val viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
 
-        val adapter = TaskListAdapter()
+        val lambda: (Long) -> Unit = { id: Long ->
+            navData.state = AddTaskState.VIEW_STATE
+            navData.id = id
+            viewModel.navigateToAddTaskFragment()
+        }
+        val listener = TaskListAdapter.TaskItemClickListener(lambda)
+
+        val adapter = TaskListAdapter(listener)
+
         binding.tasksRecyclerView.adapter = adapter
         binding.tasksRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         binding.addItemFloatingActionButton.setOnClickListener {
-            val action =
-                HomeFragmentDirections.actionHomeFragmentToAddTaskFragment(AddTaskState.EDIT_STATE)
-            findNavController().navigate(action)
+            resetNavData()
             viewModel.navigateToAddTaskFragment()
 
         }
@@ -74,8 +77,16 @@ class HomeFragment : /*BaseFragment<FragmentHomeBinding, HomeViewModel, HomeView
 
         viewModel.navigateToAddTaskFragment.observe(viewLifecycleOwner, Observer {
             if (it) {
+                val action =
+                    HomeFragmentDirections.actionHomeFragmentToAddTaskFragment(navData)
+                findNavController().navigate(action)
                 viewModel.doneNavigationToAddTask()
             }
         })
+    }
+
+    private fun resetNavData(){
+        navData.id = -1
+        navData.state = AddTaskState.NEW_TASK_STATE
     }
 }

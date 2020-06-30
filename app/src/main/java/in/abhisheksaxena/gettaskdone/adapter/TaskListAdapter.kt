@@ -2,8 +2,7 @@ package `in`.abhisheksaxena.gettaskdone.adapter
 
 
 import `in`.abhisheksaxena.gettaskdone.databinding.TaskListItemBinding
-import `in`.abhisheksaxena.gettaskdone.db.model.Task
-import android.util.Log
+import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -16,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
  * @since 24-06-2020 07:48
  */
 
-class TaskListAdapter : ListAdapter<Task, TaskListAdapter.ViewHolder>(TaskDiffCallback()) {
+class TaskListAdapter(val clickListener: TaskItemClickListener) : ListAdapter<Task, TaskListAdapter.ViewHolder>(TaskDiffCallback()) {
 
     private val TAG = javaClass.name
 
@@ -27,7 +26,7 @@ class TaskListAdapter : ListAdapter<Task, TaskListAdapter.ViewHolder>(TaskDiffCa
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         //Log.e(TAG, "onBindViewHolder called")
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), clickListener)
     }
 
     class ViewHolder private constructor(private val binding: TaskListItemBinding) :
@@ -42,13 +41,15 @@ class TaskListAdapter : ListAdapter<Task, TaskListAdapter.ViewHolder>(TaskDiffCa
             }
         }
 
-        fun bind(task: Task) {
-            //Log.e(javaClass.name, "from bind(), task: $task")
+        fun bind(
+            task: Task,
+            clickListener: TaskItemClickListener
+        ) {
             binding.titleTextView.text = task.title
-            //binding.summaryTextView.text = task.details
 
-            /*if (task.details.isEmpty())
-                binding.summaryTextView.visibility = View.GONE*/
+            binding.root.setOnClickListener {
+                clickListener.onClick(task)
+            }
         }
     }
 
@@ -59,6 +60,12 @@ class TaskListAdapter : ListAdapter<Task, TaskListAdapter.ViewHolder>(TaskDiffCa
 
         override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean {
             return oldItem == newItem
+        }
+    }
+
+    class TaskItemClickListener(val clickListener: (taskId: Long) -> Unit) {
+        fun onClick(task: Task) {
+            clickListener(task.id)
         }
     }
 

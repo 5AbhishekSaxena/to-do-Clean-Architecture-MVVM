@@ -7,7 +7,7 @@
 
         <variable
             name="task"
-            type="in.abhisheksaxena.gettaskdone.db.model.Task" />
+            type="in.abhisheksaxena.gettaskdone.data.model.Task" />
     </data>
 
     <androidx.cardview.widget.CardView

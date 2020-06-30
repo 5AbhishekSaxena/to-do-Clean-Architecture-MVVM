@@ -1,6 +1,6 @@
-package `in`.abhisheksaxena.gettaskdone.db.local
+package `in`.abhisheksaxena.gettaskdone.data.db.local
 
-import `in`.abhisheksaxena.gettaskdone.db.model.Task
+import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room

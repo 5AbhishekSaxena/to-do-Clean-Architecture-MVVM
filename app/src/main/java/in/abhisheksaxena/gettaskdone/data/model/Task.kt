@@ -1,4 +1,4 @@
-package `in`.abhisheksaxena.gettaskdone.db.model
+package `in`.abhisheksaxena.gettaskdone.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -13,9 +13,11 @@ import androidx.room.PrimaryKey
 data class Task(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
-    var title: String,
+    var title: String = "",
     var details: String = ""
 ){
+    constructor(task: Task): this(task.id, task.title, task.details)
+
     override fun toString(): String {
         return "{Task: id: $id, title: $title, details: $details}"
     }

@@ -26,8 +26,8 @@
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true"/>
         <argument
-            android:name="viewState"
             app:nullable="false"
-            app:argType="in.abhisheksaxena.gettaskdone.viewmodel.AddTaskState" />
+            android:name="navData"
+            app:argType="in.abhisheksaxena.gettaskdone.data.model.NavData"/>
         </fragment>
 </navigation>

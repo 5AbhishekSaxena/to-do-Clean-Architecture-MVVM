@@ -1,6 +1,6 @@
-package `in`.abhisheksaxena.gettaskdone.db.local
+package `in`.abhisheksaxena.gettaskdone.data.db.local
 
-import `in`.abhisheksaxena.gettaskdone.db.model.Task
+import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import androidx.lifecycle.LiveData
 import androidx.room.*
 
@@ -21,6 +21,9 @@ interface TaskDao {
 
     @Query("SELECT * FROM tasks_table WHERE id == :id")
     fun getTask(id: Long): Task?
+
+    @Query("SELECT * FROM tasks_table WHERE id == :id")
+    fun getTaskWithId(id: Long): LiveData<Task>
 
     @Query("SELECT * FROM tasks_table")
     fun getAllTasks(): LiveData<MutableList<Task>>

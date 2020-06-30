@@ -2,7 +2,7 @@ package `in`.abhisheksaxena.gettaskdone.ui
 
 
 import `in`.abhisheksaxena.gettaskdone.R
-import `in`.abhisheksaxena.gettaskdone.db.local.TaskDatabase
+import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 

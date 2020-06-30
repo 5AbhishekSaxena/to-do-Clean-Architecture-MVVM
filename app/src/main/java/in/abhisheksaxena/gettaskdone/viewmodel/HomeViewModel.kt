@@ -1,10 +1,12 @@
 package `in`.abhisheksaxena.gettaskdone.viewmodel
 
 
-import `in`.abhisheksaxena.gettaskdone.db.local.TaskDatabase
-import `in`.abhisheksaxena.gettaskdone.db.model.Task
+import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDao
+import `in`.abhisheksaxena.gettaskdone.data.model.NavData
+import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.*
 
@@ -15,8 +17,8 @@ import kotlinx.coroutines.*
  */
 
 class HomeViewModel(
-    private val database: TaskDatabase,
-    state: AddTaskState
+    private val dataSource: TaskDao,
+    navData: NavData
 ) : BaseViewModel() {
 
     private val TAG = javaClass.name
@@ -24,10 +26,10 @@ class HomeViewModel(
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-    var tasks = database.taskDao.getAllTasks()
+    var tasks = dataSource.getAllTasks()
 
-    var title = ""
-    var details = ""
+    var tempTask: Task = Task()
+    var currentTask = MediatorLiveData<Task>()
 
     private var _viewState = MutableLiveData<AddTaskState>()
 
@@ -45,29 +47,52 @@ class HomeViewModel(
         get() = _navigateToHomeFragment
 
     init {
-        _viewState.value = state
+        _viewState.value = navData.state
         _navigateToHomeFragment.value = false
         _navigateToAddTaskFragment.value = false
+        if (navData.id != -1L) {
+            Log.e(TAG, "id: $navData")
+            currentTask.addSource(dataSource.getTaskWithId(navData.id), currentTask::setValue)
+        }
+        Log.e(TAG, "init current task: ${currentTask.value}")
+        Log.e(TAG, "init temp task: $tempTask")
     }
 
     fun addTask() {
-        if (title.isNotEmpty()) {
-            if (details.isEmpty())
-                details = ""
+        Log.e(TAG, "addTask called()")
+        Log.e(TAG, "currentTask: ${currentTask.value}, tempTask: $tempTask")
+        if (currentTask.value != tempTask) {
+            if (tempTask.details.isEmpty())
+                tempTask.details = ""
             coroutineScope.launch {
                 withContext(Dispatchers.IO) {
-                    database.taskDao.insertTask(Task(title = title, details = details))
+                    if (_viewState.value == AddTaskState.NEW_TASK_STATE)
+                        dataSource.insertTask(tempTask)
+                    else
+                        dataSource.updateTask(tempTask)
                 }
-                navigateToHomeFragment()
+                if (_viewState.value == AddTaskState.NEW_TASK_STATE) {
+                    navigateToHomeFragment()
+                }else if (_viewState.value == AddTaskState.EDIT_STATE)
+                    updateViewState(AddTaskState.VIEW_STATE)
+                Log.e(TAG, "Task updated")
             }
+        } else {
+            updateViewState(AddTaskState.VIEW_STATE)
+            Log.e(TAG, "No change in the tasks")
         }
     }
 
-    fun navigateToAddTaskFragment(){
+    fun onTaskItemClicked(id: Long) {
         _navigateToAddTaskFragment.value = true
     }
 
-    fun navigateToHomeFragment(){
+    fun navigateToAddTaskFragment() {
+        _navigateToAddTaskFragment.value = true
+    }
+
+    private fun navigateToHomeFragment() {
+        updateViewState(null)
         _navigateToHomeFragment.value = true
     }
 
@@ -79,12 +104,13 @@ class HomeViewModel(
         _navigateToHomeFragment.value = false
     }
 
-    fun updateViewState(state: AddTaskState){
+    fun updateViewState(state: AddTaskState?) {
         _viewState.value = state
+        Log.e(TAG, "updateViewState called, _viewState: ${_viewState.value}")
     }
 
 }
 
-enum class AddTaskState{
-    EDIT_STATE, VIEW_STATE
+enum class AddTaskState {
+    NEW_TASK_STATE, EDIT_STATE, VIEW_STATE
 }
