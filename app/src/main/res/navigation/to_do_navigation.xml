@@ -18,7 +18,6 @@
     <fragment
         android:id="@+id/addTaskFragment"
         android:name="in.abhisheksaxena.gettaskdone.ui.fragment.AddTaskFragment"
-        android:label="Add a Task"
         tools:layout="@layout/fragment_add_task">
         <action
             android:id="@+id/action_addTaskFragment_to_homeFragment"

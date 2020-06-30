@@ -5,6 +5,7 @@ import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentAddTaskBinding
+import `in`.abhisheksaxena.gettaskdone.ui.MainActivity
 import `in`.abhisheksaxena.gettaskdone.util.hideKeyboard
 import `in`.abhisheksaxena.gettaskdone.util.showSnackBar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.AddTaskState
@@ -94,8 +95,13 @@ class AddTaskFragment : Fragment() {
         viewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
             binding.fab.setFabButton(state)
             if (state == AddTaskState.VIEW_STATE) {
+                setTitle("View Task")
                 toggleEditable(false)
             } else {
+                if (state == AddTaskState.EDIT_STATE)
+                    setTitle("Edit Task")
+                else
+                    setTitle("Add a Task")
                 toggleEditable(true)
             }
             toggleHint(state)
@@ -121,6 +127,11 @@ class AddTaskFragment : Fragment() {
                 }
             }
         })
+    }
+
+    private fun setTitle(title: String) {
+        requireNotNull(activity as MainActivity).supportActionBar?.title = title
+
     }
 
     private fun toggleHint(state: AddTaskState) {
