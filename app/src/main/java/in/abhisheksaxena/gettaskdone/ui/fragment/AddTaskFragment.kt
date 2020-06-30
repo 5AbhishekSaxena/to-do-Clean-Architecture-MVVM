@@ -2,21 +2,20 @@ package `in`.abhisheksaxena.gettaskdone.ui.fragment
 
 
 import `in`.abhisheksaxena.gettaskdone.R
-import `in`.abhisheksaxena.gettaskdone.databinding.FragmentAddTaskBinding
 import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
+import `in`.abhisheksaxena.gettaskdone.databinding.FragmentAddTaskBinding
 import `in`.abhisheksaxena.gettaskdone.util.hideKeyboard
 import `in`.abhisheksaxena.gettaskdone.util.showSnackBar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.AddTaskState
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
-import android.graphics.Color
-
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -38,6 +37,23 @@ class AddTaskFragment : Fragment() {
     private lateinit var viewModel: HomeViewModel
 
     private val TAG = javaClass.name
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    // Handle the back button event'
+                    if (viewModel.viewState.value == AddTaskState.EDIT_STATE){
+                        viewModel.updateViewState(AddTaskState.VIEW_STATE)
+                    }else{
+                        findNavController().navigateUp()
+                    }
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -145,4 +161,6 @@ class AddTaskFragment : Fragment() {
         binding.titleEditText.isEnabled = state
         binding.detailsEditText.isEnabled = state
     }
+
+
 }

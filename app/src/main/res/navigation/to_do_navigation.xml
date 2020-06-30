@@ -9,7 +9,7 @@
         android:id="@+id/homeFragment"
         android:name="in.abhisheksaxena.gettaskdone.ui.fragment.HomeFragment"
         tools:layout="@layout/fragment_home"
-        android:label="TasksDisplayFragment" >
+        android:label="Tasks" >
         <action
             android:id="@+id/action_homeFragment_to_addTaskFragment"
             app:destination="@id/addTaskFragment" />
