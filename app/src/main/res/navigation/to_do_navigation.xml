@@ -18,7 +18,7 @@
     <fragment
         android:id="@+id/taskDetailsFragment"
         android:name="in.abhisheksaxena.gettaskdone.ui.fragment.TaskDetailsFragment"
-        tools:layout="@layout/fragment_tasks_detail">
+        tools:layout="@layout/fragment_task_details">
         <action
             android:id="@+id/action_addTaskFragment_to_homeFragment"
             app:destination="@id/homeFragment"

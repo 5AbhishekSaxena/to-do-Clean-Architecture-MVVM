@@ -4,9 +4,10 @@ package `in`.abhisheksaxena.gettaskdone.ui.fragment
 import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
-import `in`.abhisheksaxena.gettaskdone.databinding.FragmentAddTaskBinding
+import `in`.abhisheksaxena.gettaskdone.databinding.FragmentTaskDetailsBinding
 import `in`.abhisheksaxena.gettaskdone.ui.MainActivity
 import `in`.abhisheksaxena.gettaskdone.util.hideKeyboard
+import `in`.abhisheksaxena.gettaskdone.util.showSnackBar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.AddTaskState
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
@@ -16,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -32,7 +34,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class TaskDetailsFragment : Fragment() {
 
 
-    private lateinit var binding: FragmentAddTaskBinding
+    private lateinit var binding: FragmentTaskDetailsBinding
     private lateinit var viewModel: HomeViewModel
 
     private val TAG = javaClass.name
@@ -47,7 +49,7 @@ class TaskDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tasks_detail, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_task_details, container, false)
         return binding.root
     }
 
