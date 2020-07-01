@@ -27,10 +27,4 @@ class MainActivity : AppCompatActivity() {
         navController.navigateUp()
         return true
     }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-
-        val fragment = this.supportFragmentManager
-    }
 }

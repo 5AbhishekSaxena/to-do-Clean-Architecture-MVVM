@@ -20,12 +20,10 @@ class TaskListAdapter(val clickListener: TaskItemClickListener) : ListAdapter<Ta
     private val TAG = javaClass.name
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        //Log.e(TAG, "onCreateViewHolder called")
         return ViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        //Log.e(TAG, "onBindViewHolder called")
         holder.bind(getItem(position), clickListener)
     }
 
@@ -45,11 +43,11 @@ class TaskListAdapter(val clickListener: TaskItemClickListener) : ListAdapter<Ta
             task: Task,
             clickListener: TaskItemClickListener
         ) {
-            binding.titleTextView.text = task.title
-
             binding.root.setOnClickListener {
                 clickListener.onClick(task)
             }
+            binding.task = task
+            binding.executePendingBindings()
         }
     }
 

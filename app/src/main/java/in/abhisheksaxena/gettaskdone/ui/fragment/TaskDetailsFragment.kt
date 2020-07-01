@@ -14,8 +14,8 @@ import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.ArrayAdapter
 import androidx.activity.OnBackPressedCallback
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -40,6 +40,9 @@ class TaskDetailsFragment : Fragment() {
 
     private val TAG = javaClass.name
 
+    private val priorities =
+        listOf(Task.TaskPriority.LOW, Task.TaskPriority.NORMAL, Task.TaskPriority.HIGH)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,6 +61,7 @@ class TaskDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         handleOnBackPressed()
+        setupSpinner()
 
         val database = TaskDatabase.getInstance(requireNotNull(this.activity).application).taskDao
         val arguments = TaskDetailsFragmentArgs.fromBundle(requireArguments())
@@ -74,6 +78,7 @@ class TaskDetailsFragment : Fragment() {
             )
 
         }
+
         binding.detailsEditText.doOnTextChanged { text, _, _, _ ->
             viewModel.tempTask.details = text.toString().trim()
             Log.e(
@@ -82,10 +87,17 @@ class TaskDetailsFragment : Fragment() {
             )
         }
 
+        binding.prioritySpinner.doOnTextChanged { text, _, _, _ ->
+            viewModel.tempTask.priority = text.toString()
+            Log.e(
+                TAG,
+                "priority updated, text: $text, currentTask: ${viewModel.currentTask.value} tempTask: ${viewModel.tempTask}"
+            )
+        }
+
         viewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
             Log.e(TAG, "viewState observer called, state: $state")
             state?.let {
-
                 binding.fab.setFabButton(state)
                 toggleDelete(state)
 
@@ -117,6 +129,7 @@ class TaskDetailsFragment : Fragment() {
         viewModel.currentTask.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.titleEditText.setText(it.title)
+                binding.prioritySpinner.setText(it.priority, false)
                 binding.detailsEditText.setText(it.details)
                 viewModel.tempTask = Task(it)
                 Log.e(
@@ -142,8 +155,8 @@ class TaskDetailsFragment : Fragment() {
             }
         })
 
-        viewModel.isTaskUpdated.observe(viewLifecycleOwner, Observer{
-            if (it){
+        viewModel.isTaskUpdated.observe(viewLifecycleOwner, Observer {
+            if (it) {
                 showSnackBar(binding.coordinatorLayout, getString(R.string.task_update_success))
                 viewModel.doneOnTaskUpdated()
             }
@@ -157,6 +170,13 @@ class TaskDetailsFragment : Fragment() {
                 }
             }
         })
+    }
+
+    private fun setupSpinner() {
+        ArrayAdapter(requireContext(), R.layout.drop_down_menu_item, priorities).apply {
+            binding.prioritySpinner.setAdapter(this)
+            //binding.prioritySpinner.setText(priorities[1], false) //fixme
+        }
     }
 
     private fun toggleDelete(state: AddTaskState?) {
@@ -181,6 +201,7 @@ class TaskDetailsFragment : Fragment() {
 
     private fun toggleEditable(isEnabled: Boolean) {
         binding.titleEditText.isEnabled = isEnabled
+        binding.priorityLayout.isEnabled = isEnabled
         binding.detailsEditText.isEnabled = isEnabled
     }
 
@@ -200,6 +221,10 @@ class TaskDetailsFragment : Fragment() {
                 viewModel.tempTask.title.isEmpty() -> showSnackBar(
                     binding.coordinatorLayout,
                     getString(R.string.title_empty)
+                )
+                viewModel.tempTask.priority.isEmpty() -> showSnackBar(
+                    binding.coordinatorLayout,
+                    getString(R.string.priority_empty)
                 )
                 else -> {
                     viewModel.addTask()
@@ -247,6 +272,4 @@ class TaskDetailsFragment : Fragment() {
         this.menu = menu
         toggleDelete(viewModel.viewState.value)
     }
-
-
 }

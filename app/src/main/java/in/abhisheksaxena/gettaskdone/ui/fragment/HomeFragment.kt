@@ -70,7 +70,6 @@ class HomeFragment : Fragment() {
         binding.fab.setOnClickListener {
             resetNavData()
             viewModel.navigateToAddTaskFragment()
-
         }
 
         viewModel.tasks.observe(viewLifecycleOwner, Observer {

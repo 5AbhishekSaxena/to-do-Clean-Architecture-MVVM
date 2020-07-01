@@ -14,11 +14,20 @@ data class Task(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     var title: String = "",
-    var details: String = ""
-){
-    constructor(task: Task): this(task.id, task.title, task.details)
+    var details: String = "",
+    var priority: String = ""
+) {
+    constructor(task: Task) : this(task.id, task.title, task.details, task.priority)
 
     override fun toString(): String {
-        return "{Task: id: $id, title: $title, details: $details}"
+        return "{Task: id: $id, title: $title, details: $details, priority: $priority}"
+    }
+
+    interface TaskPriority {
+        companion object {
+            const val LOW = "Low"
+            const val NORMAL = "Normal"
+            const val HIGH = "High"
+        }
     }
 }

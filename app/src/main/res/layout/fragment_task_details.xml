@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <import type="android.text.InputType" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -68,7 +68,7 @@
                     android:id="@+id/priority_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:inputType="none" />
+                    android:inputType="@{InputType.TYPE_NULL}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

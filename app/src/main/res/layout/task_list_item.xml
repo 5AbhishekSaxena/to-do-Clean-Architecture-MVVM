@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="task"
             type="in.abhisheksaxena.gettaskdone.data.model.Task" />
@@ -23,7 +22,8 @@
             <View
                 android:layout_width="5dp"
                 android:layout_height="0dp"
-                android:background="#FF0000"
+                tools:background="#FF0000"
+                app:setPriorityColor="@{task}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -36,6 +36,7 @@
                 android:layout_marginTop="@dimen/margin_default"
                 android:layout_marginBottom="@dimen/margin_default"
                 android:textStyle="bold"
+                android:text="@{task.title}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
