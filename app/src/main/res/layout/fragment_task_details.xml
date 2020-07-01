@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.text.InputType" />
     </data>
 
@@ -55,14 +56,16 @@
                 app:layout_constraintTop_toTopOf="@id/margin_top" />
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                 android:id="@+id/priority_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_default"
-                app:layout_constraintTop_toBottomOf="@id/title_edit_text"
+                app:boxStrokeColor="@color/secondaryColor"
+                app:endIconTint="@color/primaryDarkColor"
+                app:layout_constraintEnd_toEndOf="@id/margin_end"
                 app:layout_constraintStart_toStartOf="@id/margin_start"
-                app:layout_constraintEnd_toEndOf="@id/margin_end">
+                app:layout_constraintTop_toBottomOf="@id/title_edit_text">
 
                 <AutoCompleteTextView
                     android:id="@+id/priority_spinner"
@@ -81,21 +84,21 @@
                 android:background="@android:color/transparent"
                 android:gravity="start"
                 android:hint="@string/details"
-                app:layout_constraintTop_toBottomOf="@id/priority_layout"
                 app:layout_constraintBottom_toTopOf="@id/margin_bottom"
                 app:layout_constraintEnd_toEndOf="@id/margin_end"
-                app:layout_constraintStart_toStartOf="@id/margin_start" />
+                app:layout_constraintStart_toStartOf="@id/margin_start"
+                app:layout_constraintTop_toBottomOf="@id/priority_layout" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_add_24"
-            android:tint="#FFFFFF"
-            app:fabSize="normal"
             android:layout_gravity="bottom|end"
             android:layout_marginEnd="@dimen/margin_default"
-            android:layout_marginBottom="@dimen/margin_default" />
+            android:layout_marginBottom="@dimen/margin_default"
+            android:src="@drawable/ic_baseline_add_24"
+            app:tint="#FFFFFF"
+            app:fabSize="normal" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
