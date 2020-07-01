@@ -72,10 +72,12 @@ class HomeFragment : Fragment() {
             viewModel.navigateToAddTaskFragment()
         }
 
-        viewModel.tasks.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                adapter.submitList(it)
-            }
+        viewModel.tasks.observe(viewLifecycleOwner, Observer {tasks ->
+            if (tasks != null && tasks.isNotEmpty()) {
+                binding.emptyListTextView.visibility = View.GONE
+                adapter.submitList(tasks)
+            }else
+                binding.emptyListTextView.visibility = View.VISIBLE
         })
 
         viewModel.isTaskCreated.observe(viewLifecycleOwner, Observer {

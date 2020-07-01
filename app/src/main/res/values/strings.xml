@@ -17,4 +17,5 @@
     <string name="task_deleted_fail">Failed to delete the task.</string>
     <string name="priority">priority</string>
     <string name="priority_empty">Priority not selected.</string>
+    <string name="no_tasks">No Tasks</string>
 </resources>
