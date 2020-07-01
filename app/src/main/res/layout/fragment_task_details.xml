@@ -54,6 +54,24 @@
                 app:layout_constraintStart_toStartOf="@id/margin_start"
                 app:layout_constraintTop_toTopOf="@id/margin_top" />
 
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:id="@+id/priority_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_default"
+                app:layout_constraintTop_toBottomOf="@id/title_edit_text"
+                app:layout_constraintStart_toStartOf="@id/margin_start"
+                app:layout_constraintEnd_toEndOf="@id/margin_end">
+
+                <AutoCompleteTextView
+                    android:id="@+id/priority_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
             <EditText
                 android:id="@+id/details_edit_text"
                 android:layout_width="0dp"
@@ -63,10 +81,10 @@
                 android:background="@android:color/transparent"
                 android:gravity="start"
                 android:hint="@string/details"
+                app:layout_constraintTop_toBottomOf="@id/priority_layout"
                 app:layout_constraintBottom_toTopOf="@id/margin_bottom"
                 app:layout_constraintEnd_toEndOf="@id/margin_end"
-                app:layout_constraintStart_toStartOf="@id/margin_start"
-                app:layout_constraintTop_toBottomOf="@id/title_edit_text" />
+                app:layout_constraintStart_toStartOf="@id/margin_start" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
