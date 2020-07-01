@@ -5,4 +5,5 @@
     <string name="save">Save</string>
     <string name="title_empty">Title field is empty.</string>
     <string name="details_empty">Details field is empty.</string>
+    <string name="delete">Delete</string>
 </resources>

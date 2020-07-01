@@ -13,9 +13,7 @@ import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
@@ -37,11 +35,9 @@ class TaskDetailsFragment : Fragment() {
     private lateinit var binding: FragmentTaskDetailsBinding
     private lateinit var viewModel: HomeViewModel
 
-    private val TAG = javaClass.name
+    private var menu: Menu? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private val TAG = javaClass.name
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,7 +45,11 @@ class TaskDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_task_details, container, false)
+        binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_task_details, container, false)
+
+        setHasOptionsMenu(true)
+
         return binding.root
     }
 
@@ -59,7 +59,7 @@ class TaskDetailsFragment : Fragment() {
         handleOnBackPressed()
 
         val database = TaskDatabase.getInstance(requireNotNull(this.activity).application).taskDao
-        val arguments = AddTaskFragmentArgs.fromBundle(requireArguments())
+        val arguments = TaskDetailsFragmentArgs.fromBundle(requireArguments())
         Log.e(TAG, "arguments, state: ${arguments.navData}")
         val factory = HomeViewModelFactory(database, arguments.navData)
 
@@ -82,18 +82,35 @@ class TaskDetailsFragment : Fragment() {
         }
 
         viewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
-            binding.fab.setFabButton(state)
-            if (state == AddTaskState.VIEW_STATE) {
-                setTitle("View Task")
-                toggleEditable(false)
-            } else {
-                if (state == AddTaskState.EDIT_STATE)
-                    setTitle("Edit Task")
-                else
-                    setTitle("Add a Task")
-                toggleEditable(true)
+            Log.e(TAG, "viewState observer called, state: $state")
+            state?.let {
+
+                binding.fab.setFabButton(state)
+                toggleDelete(state)
+
+                when (state) {
+                    AddTaskState.NEW_TASK_STATE -> {
+                        setTitle("Add a Task")
+                        toggleEditable(true)
+                        toggleDetailsHint(true)
+                    }
+
+                    AddTaskState.EDIT_STATE -> {
+                        setTitle("Edit Task")
+                        toggleEditable(true)
+                        toggleDetailsHint(true)
+                    }
+
+                    AddTaskState.VIEW_STATE -> {
+                        setTitle("View Task")
+                        toggleEditable(false)
+                        if (viewModel.tempTask.details.isEmpty())
+                            toggleDetailsHint(false)
+                        else
+                            toggleDetailsHint(true)
+                    }
+                }
             }
-            toggleHint(state)
         })
 
         viewModel.currentTask.observe(viewLifecycleOwner, Observer {
@@ -111,25 +128,36 @@ class TaskDetailsFragment : Fragment() {
         viewModel.navigateToHomeFragment.observe(viewLifecycleOwner, Observer {
             it?.let {
                 if (it) {
-                    findNavController().navigate(AddTaskFragmentDirections.actionAddTaskFragmentToHomeFragment())
+                    findNavController().navigate(TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment())
                     viewModel.doneNavigationToHome()
                 }
             }
         })
     }
 
+    private fun toggleDelete(state: AddTaskState?) {
+        state?.let {
+
+            menu?.findItem(R.id.action_delete)?.isVisible = state == AddTaskState.VIEW_STATE
+            requireNotNull(activity as MainActivity).invalidateOptionsMenu()
+        }
+    }
+
     private fun setTitle(title: String) {
         requireNotNull(activity as MainActivity).supportActionBar?.title = title
     }
 
-    private fun toggleHint(state: AddTaskState) {
-        if (state == AddTaskState.VIEW_STATE) {
-            if (viewModel.tempTask.details.isEmpty()) {
-                binding.detailsEditText.hint = ""
-            }
-        } else
+    private fun toggleDetailsHint(isEnabled: Boolean) {
+        if (isEnabled)
             binding.detailsEditText.hint = getString(R.string.details)
+        else
+            binding.detailsEditText.hint = ""
 
+    }
+
+    private fun toggleEditable(isEnabled: Boolean) {
+        binding.titleEditText.isEnabled = isEnabled
+        binding.detailsEditText.isEnabled = isEnabled
     }
 
     private fun FloatingActionButton.setFabButton(state: AddTaskState) {
@@ -145,7 +173,10 @@ class TaskDetailsFragment : Fragment() {
     private fun handleClickEvent(state: AddTaskState) {
         if (state == AddTaskState.EDIT_STATE || state == AddTaskState.NEW_TASK_STATE) {
             when {
-                viewModel.tempTask.title.isEmpty() -> binding.root.showSnackBar(getString(R.string.title_empty))
+                viewModel.tempTask.title.isEmpty() -> showSnackBar(
+                    binding.coordinatorLayout,
+                    getString(R.string.title_empty)
+                )
                 else -> {
                     viewModel.addTask()
                     hideKeyboard(requireActivity())
@@ -154,11 +185,6 @@ class TaskDetailsFragment : Fragment() {
         } else {
             viewModel.updateViewState(AddTaskState.EDIT_STATE)
         }
-    }
-
-    private fun toggleEditable(state: Boolean) {
-        binding.titleEditText.isEnabled = state
-        binding.detailsEditText.isEnabled = state
     }
 
     private fun handleOnBackPressed() {
@@ -174,6 +200,28 @@ class TaskDetailsFragment : Fragment() {
                 }
             }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.task_details_menu, menu)
+        Log.e(TAG, "onCreateOptionsMenu called(), menu: $menu, this.menu: ${this.menu}")
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Log.e(TAG, "onOptionsItemSelected called()")
+        return if (item.itemId == R.id.action_delete) {
+            viewModel.deleteItem()
+            true
+        } else
+            false
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        Log.e(TAG, "onPrepareOptionsMenu() called")
+        this.menu = menu
+        toggleDelete(viewModel.viewState.value)
     }
 
 

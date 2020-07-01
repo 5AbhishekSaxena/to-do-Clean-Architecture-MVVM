@@ -5,10 +5,12 @@ import `in`.abhisheksaxena.gettaskdone.adapter.TaskListAdapter
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentHomeBinding
 import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
 import `in`.abhisheksaxena.gettaskdone.data.model.NavData
+import `in`.abhisheksaxena.gettaskdone.util.showSnackBar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.AddTaskState
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +28,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
  */
 
 class HomeFragment : Fragment() {
+
+    private val TAG = javaClass.name
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -72,6 +76,14 @@ class HomeFragment : Fragment() {
         viewModel.tasks.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.submitList(it)
+            }
+        })
+
+        viewModel.isItemDeleted.observe(viewLifecycleOwner, Observer{
+            if (it){
+                showSnackBar(binding.coordinatorLayout, "Item deleted successfully")
+                Log.e(TAG, "root?: ${binding.coordinatorLayout}")
+                viewModel.doneOnItemDeleted()
             }
         })
 

@@ -5,6 +5,7 @@ import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDao
 import `in`.abhisheksaxena.gettaskdone.data.model.NavData
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import android.util.Log
+import android.view.Menu
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -46,6 +47,11 @@ class HomeViewModel(
     val navigateToHomeFragment: LiveData<Boolean>
         get() = _navigateToHomeFragment
 
+    private val _isItemDeleted = MutableLiveData<Boolean>()
+
+    val isItemDeleted: LiveData<Boolean>
+        get() = _isItemDeleted
+
     init {
         _viewState.value = navData.state
         _navigateToHomeFragment.value = false
@@ -59,8 +65,8 @@ class HomeViewModel(
     }
 
     fun addTask() {
-        Log.e(TAG, "addTask called()")
-        Log.e(TAG, "currentTask: ${currentTask.value}, tempTask: $tempTask")
+        //Log.e(TAG, "addTask called()")
+        //Log.e(TAG, "currentTask: ${currentTask.value}, tempTask: $tempTask")
         if (currentTask.value != tempTask) {
             if (tempTask.details.isEmpty())
                 tempTask.details = ""
@@ -73,18 +79,32 @@ class HomeViewModel(
                 }
                 if (_viewState.value == AddTaskState.NEW_TASK_STATE) {
                     navigateToHomeFragment()
-                }else if (_viewState.value == AddTaskState.EDIT_STATE)
+                } else if (_viewState.value == AddTaskState.EDIT_STATE)
                     updateViewState(AddTaskState.VIEW_STATE)
-                Log.e(TAG, "Task updated")
+                //Log.e(TAG, "Task updated")
             }
         } else {
             updateViewState(AddTaskState.VIEW_STATE)
-            Log.e(TAG, "No change in the tasks")
+            //Log.e(TAG, "No change in the tasks")
         }
     }
 
-    fun onTaskItemClicked(id: Long) {
-        _navigateToAddTaskFragment.value = true
+
+    fun deleteItem() {
+        if (currentTask.value != null) {
+            coroutineScope.launch {
+                withContext(Dispatchers.IO) {
+                    dataSource.deleteItem(currentTask.value!!)
+                }
+                onItemDeleted()
+                navigateToHomeFragment()
+            }
+        }
+    }
+
+    fun updateViewState(state: AddTaskState?) {
+        _viewState.value = state
+        Log.e(TAG, "updateViewState called, _viewState: ${_viewState.value}")
     }
 
     fun navigateToAddTaskFragment() {
@@ -92,7 +112,6 @@ class HomeViewModel(
     }
 
     private fun navigateToHomeFragment() {
-        updateViewState(null)
         _navigateToHomeFragment.value = true
     }
 
@@ -104,9 +123,12 @@ class HomeViewModel(
         _navigateToHomeFragment.value = false
     }
 
-    fun updateViewState(state: AddTaskState?) {
-        _viewState.value = state
-        Log.e(TAG, "updateViewState called, _viewState: ${_viewState.value}")
+    fun onItemDeleted(){
+        _isItemDeleted.value = true
+    }
+
+    fun doneOnItemDeleted(){
+        _isItemDeleted.value = false
     }
 
 }

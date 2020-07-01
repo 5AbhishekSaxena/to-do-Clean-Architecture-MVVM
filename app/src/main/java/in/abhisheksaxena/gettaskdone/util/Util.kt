@@ -1,9 +1,9 @@
 package `in`.abhisheksaxena.gettaskdone.util
 
 import android.app.Activity
-import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -17,7 +17,7 @@ fun hideKeyboard(activity: Activity?) {
         ?.hideSoftInputFromWindow((activity.currentFocus ?: View(activity)).windowToken, 0)
 }
 
-fun View.showSnackBar(message: String){
-    Snackbar.make(this, message, Snackbar.LENGTH_SHORT).show()
+fun showSnackBar(layout: CoordinatorLayout, message: String){
+    Snackbar.make(layout, message, Snackbar.LENGTH_SHORT).show()
 
 }

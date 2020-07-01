@@ -28,4 +28,7 @@ interface TaskDao {
     @Query("SELECT * FROM tasks_table")
     fun getAllTasks(): LiveData<MutableList<Task>>
 
+    @Delete
+    fun deleteItem(task: Task)
+
 }
