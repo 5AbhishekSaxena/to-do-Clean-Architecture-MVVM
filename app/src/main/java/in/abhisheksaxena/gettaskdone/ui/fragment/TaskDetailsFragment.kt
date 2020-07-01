@@ -270,6 +270,7 @@ class TaskDetailsFragment : Fragment() {
         super.onPrepareOptionsMenu(menu)
         Log.e(TAG, "onPrepareOptionsMenu() called")
         this.menu = menu
-        toggleDelete(viewModel.viewState.value)
+        if(viewModel.viewState.value == AddTaskState.VIEW_STATE)
+            menu.findItem(R.id.action_delete).isVisible = true
     }
 }
