@@ -67,7 +67,7 @@ class HomeFragment : Fragment() {
         binding.tasksRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        binding.addItemFloatingActionButton.setOnClickListener {
+        binding.fab.setOnClickListener {
             resetNavData()
             viewModel.navigateToAddTaskFragment()
 
@@ -79,11 +79,19 @@ class HomeFragment : Fragment() {
             }
         })
 
-        viewModel.isItemDeleted.observe(viewLifecycleOwner, Observer{
-            if (it){
-                showSnackBar(binding.coordinatorLayout, "Item deleted successfully")
-                Log.e(TAG, "root?: ${binding.coordinatorLayout}")
-                viewModel.doneOnItemDeleted()
+        viewModel.isTaskCreated.observe(viewLifecycleOwner, Observer {
+            Log.e(TAG, "HomeFragment, isTaskCreated: $it")
+            if (it) {
+                showSnackBar(binding.coordinatorLayout, getString(R.string.task_created_success))
+                viewModel.doneOnTaskCreated()
+            }
+        })
+
+        viewModel.isTaskDeleted.observe(viewLifecycleOwner, Observer {
+            Log.e(TAG, "HomeFragment, isTaskDeleted: $it")
+            if (it) {
+                showSnackBar(binding.coordinatorLayout, getString(R.string.task_deleted_success))
+                viewModel.doneOnTaskDeleted()
             }
         })
 
@@ -97,7 +105,7 @@ class HomeFragment : Fragment() {
         })
     }
 
-    private fun resetNavData(){
+    private fun resetNavData() {
         navData.id = -1
         navData.state = AddTaskState.NEW_TASK_STATE
     }

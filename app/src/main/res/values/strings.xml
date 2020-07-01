@@ -6,4 +6,13 @@
     <string name="title_empty">Title field is empty.</string>
     <string name="details_empty">Details field is empty.</string>
     <string name="delete">Delete</string>
+
+    <string name="task_created_success">Task created successfully</string>
+    <string name="task_created_fail">Failed to create the task.</string>
+
+    <string name="task_update_success">Task updated successfully</string>
+    <string name="task_update_fail">Failed to update the task.</string>
+
+    <string name="task_deleted_success">Task deleted successfully</string>
+    <string name="task_deleted_fail">Failed to delete the task.</string>
 </resources>

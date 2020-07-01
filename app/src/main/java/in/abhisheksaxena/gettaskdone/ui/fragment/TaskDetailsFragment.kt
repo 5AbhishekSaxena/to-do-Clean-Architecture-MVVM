@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.activity.OnBackPressedCallback
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -122,6 +123,29 @@ class TaskDetailsFragment : Fragment() {
                     TAG,
                     "onChange called, current task: ${it}, tempTask: ${viewModel.tempTask}, tempTask==currentTask: ${viewModel.tempTask == it}"
                 )
+            }
+        })
+
+        viewModel.isTaskCreated.observe(viewLifecycleOwner, Observer {
+            Log.e(TAG, "TaskDetailsFragment, isTaskCreated: $it")
+            if (it) {
+                showSnackBar(binding.coordinatorLayout, getString(R.string.task_created_success))
+                viewModel.doneOnTaskCreated()
+            }
+        })
+
+        viewModel.isTaskDeleted.observe(viewLifecycleOwner, Observer {
+            Log.e(TAG, "TaskDetailsFragment, isTaskDeleted: $it")
+            if (it) {
+                showSnackBar(binding.coordinatorLayout, getString(R.string.task_deleted_success))
+                viewModel.doneOnTaskDeleted()
+            }
+        })
+
+        viewModel.isTaskUpdated.observe(viewLifecycleOwner, Observer{
+            if (it){
+                showSnackBar(binding.coordinatorLayout, getString(R.string.task_update_success))
+                viewModel.doneOnTaskUpdated()
             }
         })
 

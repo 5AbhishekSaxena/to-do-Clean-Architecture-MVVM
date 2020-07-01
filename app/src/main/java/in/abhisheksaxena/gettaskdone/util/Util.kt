@@ -19,5 +19,4 @@ fun hideKeyboard(activity: Activity?) {
 
 fun showSnackBar(layout: CoordinatorLayout, message: String){
     Snackbar.make(layout, message, Snackbar.LENGTH_SHORT).show()
-
 }

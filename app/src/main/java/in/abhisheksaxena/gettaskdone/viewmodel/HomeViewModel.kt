@@ -5,7 +5,6 @@ import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDao
 import `in`.abhisheksaxena.gettaskdone.data.model.NavData
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import android.util.Log
-import android.view.Menu
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -47,10 +46,21 @@ class HomeViewModel(
     val navigateToHomeFragment: LiveData<Boolean>
         get() = _navigateToHomeFragment
 
-    private val _isItemDeleted = MutableLiveData<Boolean>()
+    private val _isTaskDeleted = MutableLiveData<Boolean>()
 
-    val isItemDeleted: LiveData<Boolean>
-        get() = _isItemDeleted
+    val isTaskDeleted: LiveData<Boolean>
+        get() = _isTaskDeleted
+
+    private val _isTaskCreated = MutableLiveData<Boolean>()
+
+    val isTaskCreated: LiveData<Boolean>
+        get() = _isTaskCreated
+
+    private val _isTaskUpdated = MutableLiveData<Boolean>()
+
+    val isTaskUpdated: LiveData<Boolean>
+        get() = _isTaskUpdated
+
 
     init {
         _viewState.value = navData.state
@@ -79,8 +89,11 @@ class HomeViewModel(
                 }
                 if (_viewState.value == AddTaskState.NEW_TASK_STATE) {
                     navigateToHomeFragment()
-                } else if (_viewState.value == AddTaskState.EDIT_STATE)
+                    onTaskCreated()
+                } else if (_viewState.value == AddTaskState.EDIT_STATE) {
                     updateViewState(AddTaskState.VIEW_STATE)
+                    onTaskUpdated()
+                }
                 //Log.e(TAG, "Task updated")
             }
         } else {
@@ -96,7 +109,7 @@ class HomeViewModel(
                 withContext(Dispatchers.IO) {
                     dataSource.deleteItem(currentTask.value!!)
                 }
-                onItemDeleted()
+                onTaskDeleted()
                 navigateToHomeFragment()
             }
         }
@@ -123,12 +136,28 @@ class HomeViewModel(
         _navigateToHomeFragment.value = false
     }
 
-    fun onItemDeleted(){
-        _isItemDeleted.value = true
+    fun onTaskCreated(){
+        _isTaskCreated.value = true
     }
 
-    fun doneOnItemDeleted(){
-        _isItemDeleted.value = false
+    fun doneOnTaskCreated(){
+        _isTaskCreated.value = false
+    }
+
+    fun onTaskUpdated(){
+        _isTaskUpdated.value = true
+    }
+
+    fun doneOnTaskUpdated(){
+        _isTaskUpdated.value = false
+    }
+
+    fun onTaskDeleted(){
+        _isTaskDeleted.value = true
+    }
+
+    fun doneOnTaskDeleted(){
+        _isTaskDeleted.value = false
     }
 
 }
