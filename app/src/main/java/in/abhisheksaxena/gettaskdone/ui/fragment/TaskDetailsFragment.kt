@@ -132,10 +132,6 @@ class TaskDetailsFragment : Fragment() {
                 binding.prioritySpinner.setText(it.priority, false)
                 binding.detailsEditText.setText(it.details)
                 viewModel.tempTask = Task(it)
-                Log.e(
-                    TAG,
-                    "onChange called, current task: ${it}, tempTask: ${viewModel.tempTask}, tempTask==currentTask: ${viewModel.tempTask == it}"
-                )
             }
         })
 
@@ -254,11 +250,9 @@ class TaskDetailsFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.task_details_menu, menu)
-        Log.e(TAG, "onCreateOptionsMenu called(), menu: $menu, this.menu: ${this.menu}")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Log.e(TAG, "onOptionsItemSelected called()")
         return if (item.itemId == R.id.action_delete) {
             viewModel.deleteItem()
             true
@@ -268,7 +262,6 @@ class TaskDetailsFragment : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        Log.e(TAG, "onPrepareOptionsMenu() called")
         this.menu = menu
         if(viewModel.viewState.value == AddTaskState.VIEW_STATE)
             menu.findItem(R.id.action_delete).isVisible = true
