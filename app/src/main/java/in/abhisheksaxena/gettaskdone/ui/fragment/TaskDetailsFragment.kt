@@ -1,6 +1,7 @@
 package `in`.abhisheksaxena.gettaskdone.ui.fragment
 
 
+import `in`.abhisheksaxena.gettaskdone.EventObserver
 import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
@@ -69,6 +70,7 @@ class TaskDetailsFragment : Fragment() {
         val factory = HomeViewModelFactory(database, arguments.navData)
 
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
+        binding.lifecycleOwner = this.viewLifecycleOwner
 
         binding.titleEditText.doOnTextChanged { text, _, _, _ ->
             viewModel.tempTask.title = text.toString().trim()
@@ -158,14 +160,15 @@ class TaskDetailsFragment : Fragment() {
             }
         })
 
-        viewModel.navigateToHomeFragment.observe(viewLifecycleOwner, Observer {
+        /*viewModel.navigateToHomeFragment.observe(viewLifecycleOwner, Observer {
             it?.let {
                 if (it) {
                     findNavController().navigate(TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment())
                     viewModel.doneNavigationToHome()
                 }
             }
-        })
+        })*/
+        setupNavigation()
     }
 
     private fun setupSpinner() {
@@ -173,6 +176,13 @@ class TaskDetailsFragment : Fragment() {
             binding.prioritySpinner.setAdapter(this)
             //binding.prioritySpinner.setText(priorities[1], false) //fixme
         }
+    }
+
+    private fun setupNavigation(){
+        viewModel.newTaskEvent.observe(viewLifecycleOwner, EventObserver{
+            val action = TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment()
+            findNavController().navigate(action)
+        })
     }
 
     private fun toggleDelete(state: AddTaskState?) {

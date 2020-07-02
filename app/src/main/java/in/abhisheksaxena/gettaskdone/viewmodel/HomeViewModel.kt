@@ -1,6 +1,7 @@
 package `in`.abhisheksaxena.gettaskdone.viewmodel
 
 
+import `in`.abhisheksaxena.gettaskdone.Event
 import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDao
 import `in`.abhisheksaxena.gettaskdone.data.model.NavData
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
@@ -32,40 +33,25 @@ class HomeViewModel(
     var currentTask = MediatorLiveData<Task>()
 
     private var _viewState = MutableLiveData<AddTaskState>()
+    val viewState: LiveData<AddTaskState> = _viewState
 
-    val viewState: LiveData<AddTaskState>
-        get() = _viewState
+    private val _openTaskEvent = MutableLiveData<Event<Unit>>()
+    val openTaskEvent: LiveData<Event<Unit>> = _openTaskEvent
 
-    private val _navigateToAddTaskFragment = MutableLiveData<Boolean>()
-
-    val navigateToAddTaskFragment: LiveData<Boolean>
-        get() = _navigateToAddTaskFragment
-
-    private val _navigateToHomeFragment = MutableLiveData<Boolean>()
-
-    val navigateToHomeFragment: LiveData<Boolean>
-        get() = _navigateToHomeFragment
+    private val _taskUpdatedEvent = MutableLiveData<Event<Unit>>()
+    val taskUpdatedEvent: LiveData<Event<Unit>> = _taskUpdatedEvent
 
     private val _isTaskDeleted = MutableLiveData<Boolean>()
-
-    val isTaskDeleted: LiveData<Boolean>
-        get() = _isTaskDeleted
+    val isTaskDeleted: LiveData<Boolean>  = _isTaskDeleted
 
     private val _isTaskCreated = MutableLiveData<Boolean>()
-
-    val isTaskCreated: LiveData<Boolean>
-        get() = _isTaskCreated
+    val isTaskCreated: LiveData<Boolean> = _isTaskCreated
 
     private val _isTaskUpdated = MutableLiveData<Boolean>()
-
-    val isTaskUpdated: LiveData<Boolean>
-        get() = _isTaskUpdated
-
+    val isTaskUpdated: LiveData<Boolean> = _isTaskUpdated
 
     init {
         _viewState.value = navData.state
-        _navigateToHomeFragment.value = false
-        _navigateToAddTaskFragment.value = false
         if (navData.id != -1L) {
             Log.e(TAG, "id: $navData")
             currentTask.addSource(dataSource.getTaskWithId(navData.id), currentTask::setValue)
@@ -75,9 +61,6 @@ class HomeViewModel(
     }
 
     fun saveTask() {
-
-
-
         if (currentTask.value != tempTask) {
             if (tempTask.details.isEmpty())
                 tempTask.details = ""
@@ -121,20 +104,12 @@ class HomeViewModel(
         Log.e(TAG, "updateViewState called, _viewState: ${_viewState.value}")
     }
 
-    fun navigateToAddTaskFragment() {
-        _navigateToAddTaskFragment.value = true
+    fun openTaskEvent() {
+        _openTaskEvent.value = Event(Unit)
     }
 
     private fun navigateToHomeFragment() {
-        _navigateToHomeFragment.value = true
-    }
-
-    fun doneNavigationToAddTask() {
-        _navigateToAddTaskFragment.value = false
-    }
-
-    fun doneNavigationToHome() {
-        _navigateToHomeFragment.value = false
+        _taskUpdatedEvent.value = Event(Unit)
     }
 
     fun onTaskCreated(){

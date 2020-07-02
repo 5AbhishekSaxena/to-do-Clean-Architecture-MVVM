@@ -1,5 +1,6 @@
 package `in`.abhisheksaxena.gettaskdone.ui.fragment
 
+import `in`.abhisheksaxena.gettaskdone.EventObserver
 import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.adapter.TaskListAdapter
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentHomeBinding
@@ -33,6 +34,8 @@ class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
 
+    private lateinit var viewModel: HomeViewModel
+
     private val navData = NavData()
 
     override fun onCreateView(
@@ -44,7 +47,6 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -52,24 +54,25 @@ class HomeFragment : Fragment() {
 
         val factory = HomeViewModelFactory(database)
 
-        val viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
+        binding.lifecycleOwner = this.viewLifecycleOwner
 
         val lambda: (Long) -> Unit = { id: Long ->
-            navData.state = AddTaskState.VIEW_STATE
-            navData.id = id
-            viewModel.navigateToAddTaskFragment()
+            setNavData(id, AddTaskState.VIEW_STATE)
+            viewModel.openTaskEvent()
         }
         val listener = TaskListAdapter.TaskItemClickListener(lambda)
-
         val adapter = TaskListAdapter(listener)
+
+        setupNavigation()
 
         binding.tasksRecyclerView.adapter = adapter
         binding.tasksRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         binding.fab.setOnClickListener {
-            resetNavData()
-            viewModel.navigateToAddTaskFragment()
+            setNavData()
+            viewModel.openTaskEvent()
         }
 
         viewModel.tasks.observe(viewLifecycleOwner, Observer {tasks ->
@@ -95,19 +98,21 @@ class HomeFragment : Fragment() {
                 viewModel.doneOnTaskDeleted()
             }
         })
+    }
 
-        viewModel.navigateToAddTaskFragment.observe(viewLifecycleOwner, Observer {
-            if (it) {
-                val action =
-                    HomeFragmentDirections.actionHomeFragmentToTaskDetailsFragment(navData)
-                findNavController().navigate(action)
-                viewModel.doneNavigationToAddTask()
-            }
+    private fun setupNavigation(){
+        viewModel.openTaskEvent.observe(viewLifecycleOwner, EventObserver {
+            navigateToTaskDetails(it)
         })
     }
 
-    private fun resetNavData() {
-        navData.id = -1
-        navData.state = AddTaskState.NEW_TASK_STATE
+    private fun navigateToTaskDetails(it: Unit) {
+            val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailsFragment(navData)
+            findNavController().navigate(action)
+    }
+
+    private fun setNavData(id: Long = -1L, state: AddTaskState = AddTaskState.NEW_TASK_STATE) {
+        navData.id = id
+        navData.state = state
     }
 }
