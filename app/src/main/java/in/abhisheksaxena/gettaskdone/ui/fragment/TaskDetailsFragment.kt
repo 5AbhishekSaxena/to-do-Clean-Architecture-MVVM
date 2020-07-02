@@ -227,7 +227,7 @@ class TaskDetailsFragment : Fragment() {
                     getString(R.string.priority_empty)
                 )
                 else -> {
-                    viewModel.addTask()
+                    viewModel.saveTask()
                     hideKeyboard(requireActivity())
                 }
             }

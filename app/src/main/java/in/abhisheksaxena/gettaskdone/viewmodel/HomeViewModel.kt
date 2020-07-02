@@ -74,9 +74,10 @@ class HomeViewModel(
         Log.e(TAG, "init temp task: $tempTask")
     }
 
-    fun addTask() {
-        //Log.e(TAG, "addTask called()")
-        //Log.e(TAG, "currentTask: ${currentTask.value}, tempTask: $tempTask")
+    fun saveTask() {
+
+
+
         if (currentTask.value != tempTask) {
             if (tempTask.details.isEmpty())
                 tempTask.details = ""
