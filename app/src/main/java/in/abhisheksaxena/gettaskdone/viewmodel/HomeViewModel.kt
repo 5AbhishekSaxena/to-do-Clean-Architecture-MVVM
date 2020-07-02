@@ -26,6 +26,7 @@ class HomeViewModel(
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+    private val ioDispatcher = Dispatchers.IO
 
     var tasks = dataSource.getAllTasks()
 
@@ -44,8 +45,8 @@ class HomeViewModel(
     private val _taskUpdatedEvent = MutableLiveData<Event<Unit>>()
     val taskUpdatedEvent: LiveData<Event<Unit>> = _taskUpdatedEvent
 
-    private val _isTaskDeleted = MutableLiveData<Boolean>()
-    val isTaskDeleted: LiveData<Boolean>  = _isTaskDeleted
+    private val _taskDeletedEvent = MutableLiveData<Event<Unit>>()
+    val taskDeletedEvent: LiveData<Event<Unit>>  = _taskDeletedEvent
 
     private val _isTaskCreated = MutableLiveData<Boolean>()
     val isTaskCreated: LiveData<Boolean> = _isTaskCreated
@@ -68,23 +69,23 @@ class HomeViewModel(
             if (tempTask.details.isEmpty())
                 tempTask.details = ""
             coroutineScope.launch {
-                withContext(Dispatchers.IO) {
+                withContext(ioDispatcher) {
                     if (_viewState.value == AddTaskState.NEW_TASK_STATE)
                         dataSource.insertTask(tempTask)
                     else
                         dataSource.updateTask(tempTask)
                 }
                 if (_viewState.value == AddTaskState.NEW_TASK_STATE) {
-                    navigateToHomeFragment()
-                    onTaskCreated()
+                    taskUpdatedEvent()
+                    newTaskEvent()
                 } else if (_viewState.value == AddTaskState.EDIT_STATE) {
                     updateViewState(AddTaskState.VIEW_STATE)
-                    onTaskUpdated()
+                    taskUpdatedEvent()
                 }
                 //Log.e(TAG, "Task updated")
             }
         } else {
-            updateViewState(AddTaskState.VIEW_STATE)
+            taskUpdatedEvent()
             //Log.e(TAG, "No change in the tasks")
         }
     }
@@ -93,11 +94,10 @@ class HomeViewModel(
     fun deleteItem() {
         if (currentTask.value != null) {
             coroutineScope.launch {
-                withContext(Dispatchers.IO) {
+                withContext(ioDispatcher) {
                     dataSource.deleteItem(currentTask.value!!)
                 }
-                onTaskDeleted()
-                navigateToHomeFragment()
+                taskDeletedEvent()
             }
         }
     }
@@ -115,34 +115,18 @@ class HomeViewModel(
         _openTaskEvent.value = Event(Unit)
     }
 
-    private fun navigateToHomeFragment() {
+    private fun taskUpdatedEvent() {
         _taskUpdatedEvent.value = Event(Unit)
     }
 
-    fun onTaskCreated(){
-        _isTaskCreated.value = true
+    private fun taskDeletedEvent(){
+        _taskDeletedEvent.value = Event(Unit)
     }
 
-    fun doneOnTaskCreated(){
-        _isTaskCreated.value = false
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
     }
-
-    fun onTaskUpdated(){
-        _isTaskUpdated.value = true
-    }
-
-    fun doneOnTaskUpdated(){
-        _isTaskUpdated.value = false
-    }
-
-    fun onTaskDeleted(){
-        _isTaskDeleted.value = true
-    }
-
-    fun doneOnTaskDeleted(){
-        _isTaskDeleted.value = false
-    }
-
 }
 
 enum class AddTaskState {

@@ -8,18 +8,11 @@ import `in`.abhisheksaxena.gettaskdone.viewmodel.AddTaskState
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavArgs
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import androidx.navigation.navGraphViewModels
 
 
 /**
@@ -40,25 +33,30 @@ class TaskDetailsPreviewFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(
+        return DataBindingUtil.inflate<FragmentTaskDetailsPreviewBinding>(
             inflater,
             R.layout.fragment_task_details_preview,
             container,
             false
-        )
-        return binding.root
+        ).apply {
+            binding = this
+        }.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         val database = TaskDatabase.getInstance(requireNotNull(this.activity).application).taskDao
         arguments = TaskDetailsFragmentArgs.fromBundle(requireArguments())
         val factory = HomeViewModelFactory(database, arguments.navData)
-
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
+
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewmodel = viewModel
         binding.executePendingBindings()
+
+        setHasOptionsMenu(true)
         setupFab()
         setupNavigation()
     }
@@ -71,17 +69,33 @@ class TaskDetailsPreviewFragment : Fragment() {
     }
 
     private fun setupNavigation() {
-        viewModel.openTaskEvent.observe(viewLifecycleOwner, EventObserver{
+        viewModel.openTaskEvent.observe(viewLifecycleOwner, EventObserver {
             navigateToTaskDetailsFragment()
+        })
+
+        viewModel.taskDeletedEvent.observe(viewLifecycleOwner, EventObserver{
+            findNavController().navigateUp()
         })
     }
 
     private fun navigateToTaskDetailsFragment() {
         val action =
-            TaskDetailsPreviewFragmentDirections.
-            actionTaskDetailsPreviewFragmentToTaskDetailsFragment(
+            TaskDetailsPreviewFragmentDirections.actionTaskDetailsPreviewFragmentToTaskDetailsFragment(
                 arguments.navData.copy(state = AddTaskState.EDIT_STATE)
             )
         findNavController().navigate(action)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.task_details_preview_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == R.id.action_delete) {
+            viewModel.deleteItem()
+            true
+        } else
+            false
     }
 }
