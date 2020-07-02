@@ -58,9 +58,10 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = this.viewLifecycleOwner
 
         val lambda: (Long) -> Unit = { id: Long ->
-            setNavData(id, AddTaskState.VIEW_STATE)
+            setNavData(id = id)
             viewModel.openTaskEvent()
         }
+
         val listener = TaskListAdapter.TaskItemClickListener(lambda)
         val adapter = TaskListAdapter(listener)
 
@@ -71,8 +72,8 @@ class HomeFragment : Fragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         binding.fab.setOnClickListener {
-            setNavData()
-            viewModel.openTaskEvent()
+            setNavData(state = AddTaskState.NEW_TASK_STATE)
+            viewModel.newTaskEvent()
         }
 
         viewModel.tasks.observe(viewLifecycleOwner, Observer {tasks ->
@@ -101,8 +102,13 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupNavigation(){
-        viewModel.openTaskEvent.observe(viewLifecycleOwner, EventObserver {
+
+        viewModel.newTaskEvent.observe(viewLifecycleOwner, EventObserver{
             navigateToTaskDetails(it)
+        })
+
+        viewModel.openTaskEvent.observe(viewLifecycleOwner, EventObserver {
+            navigateToTaskDetailsPreview(it)
         })
     }
 
@@ -111,7 +117,12 @@ class HomeFragment : Fragment() {
             findNavController().navigate(action)
     }
 
-    private fun setNavData(id: Long = -1L, state: AddTaskState = AddTaskState.NEW_TASK_STATE) {
+    private fun navigateToTaskDetailsPreview(it: Unit) {
+            val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailsPreviewFragment(navData)
+            findNavController().navigate(action)
+    }
+
+    private fun setNavData(id: Long = -1L, state: AddTaskState = AddTaskState.VIEW_STATE) {
         navData.id = id
         navData.state = state
     }

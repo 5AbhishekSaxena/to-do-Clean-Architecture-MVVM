@@ -159,15 +159,6 @@ class TaskDetailsFragment : Fragment() {
                 viewModel.doneOnTaskUpdated()
             }
         })
-
-        /*viewModel.navigateToHomeFragment.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                if (it) {
-                    findNavController().navigate(TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment())
-                    viewModel.doneNavigationToHome()
-                }
-            }
-        })*/
         setupNavigation()
     }
 
@@ -179,7 +170,7 @@ class TaskDetailsFragment : Fragment() {
     }
 
     private fun setupNavigation(){
-        viewModel.newTaskEvent.observe(viewLifecycleOwner, EventObserver{
+        viewModel.openTaskEvent.observe(viewLifecycleOwner, EventObserver{
             val action = TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment()
             findNavController().navigate(action)
         })

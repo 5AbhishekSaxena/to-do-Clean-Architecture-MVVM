@@ -19,6 +19,8 @@ data class Task(
 ) {
     constructor(task: Task) : this(task.id, task.title, task.details, task.priority)
 
+    fun hasDetails(): Boolean = details.isNotEmpty()
+
     override fun toString(): String {
         return "{Task: id: $id, title: $title, details: $details, priority: $priority}"
     }

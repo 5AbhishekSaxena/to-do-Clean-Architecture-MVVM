@@ -11,6 +11,7 @@
         <item name="colorOnSecondary">@color/secondaryTextColor</item>
         <item name="colorError">@color/errorColor</item>
         <item name="colorOnError">@color/secondaryTextColor</item>
+        <item name="fontFamily">@font/roboto</item>
 
     </style>
 

@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_taskDetailsFragment"
             app:destination="@id/taskDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_taskDetailsPreviewFragment"
+            app:destination="@id/taskDetailsPreviewFragment" />
     </fragment>
 
     <fragment
@@ -28,5 +31,29 @@
             app:nullable="false"
             android:name="navData"
             app:argType="in.abhisheksaxena.gettaskdone.data.model.NavData"/>
-        </fragment>
+        <action
+            android:id="@+id/action_taskDetailsFragment_to_taskDetailsPreviewFragment"
+            app:destination="@id/taskDetailsPreviewFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/taskDetailsPreviewFragment"
+        android:name="in.abhisheksaxena.gettaskdone.ui.fragment.TaskDetailsPreviewFragment"
+        android:label="View Task"
+        tools:layout="@layout/fragment_task_details_preview">
+        <action
+            android:id="@+id/action_addTaskFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true"/>
+        <argument
+            app:nullable="false"
+            android:name="navData"
+            app:argType="in.abhisheksaxena.gettaskdone.data.model.NavData"/>
+        <action
+            android:id="@+id/action_taskDetailsPreviewFragment_to_taskDetailsFragment"
+            app:destination="@id/taskDetailsFragment"
+            app:popUpTo="@layout/fragment_home"
+            app:popUpToInclusive="true"/>
+    </fragment>
 </navigation>

@@ -38,6 +38,9 @@ class HomeViewModel(
     private val _openTaskEvent = MutableLiveData<Event<Unit>>()
     val openTaskEvent: LiveData<Event<Unit>> = _openTaskEvent
 
+    private val _newTaskEvent = MutableLiveData<Event<Unit>>()
+    val newTaskEvent: LiveData<Event<Unit>> = _newTaskEvent
+
     private val _taskUpdatedEvent = MutableLiveData<Event<Unit>>()
     val taskUpdatedEvent: LiveData<Event<Unit>> = _taskUpdatedEvent
 
@@ -102,6 +105,10 @@ class HomeViewModel(
     fun updateViewState(state: AddTaskState?) {
         _viewState.value = state
         Log.e(TAG, "updateViewState called, _viewState: ${_viewState.value}")
+    }
+
+    fun newTaskEvent() {
+        _newTaskEvent.value = Event(Unit)
     }
 
     fun openTaskEvent() {
