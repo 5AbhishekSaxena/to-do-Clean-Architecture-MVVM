@@ -37,6 +37,8 @@ class TaskDetailsFragment : Fragment() {
     private lateinit var binding: FragmentTaskDetailsBinding
     private lateinit var viewModel: HomeViewModel
 
+    private lateinit var arguments: TaskDetailsFragmentArgs
+
     private val TAG = javaClass.name
 
     private val priorities =
@@ -64,7 +66,7 @@ class TaskDetailsFragment : Fragment() {
         setupSpinner()
 
         val database = TaskDatabase.getInstance(requireNotNull(this.activity).application).taskDao
-        val arguments = TaskDetailsFragmentArgs.fromBundle(requireArguments())
+        arguments = TaskDetailsFragmentArgs.fromBundle(requireArguments())
         Log.e(TAG, "arguments, state: ${arguments.navData}")
         val factory = HomeViewModelFactory(database, arguments.navData)
 
@@ -157,8 +159,10 @@ class TaskDetailsFragment : Fragment() {
                 binding.coordinatorLayout,
                 getString(R.string.task_created_success)
             ) //fixme
-            //val action = TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment()
-            findNavController().navigateUp()
+            val action =
+                TaskDetailsFragmentDirections.
+                actionAddTaskFragmentToHomeFragment()
+            findNavController().navigate(action)
         })
 
         viewModel.taskUpdatedEvent.observe(viewLifecycleOwner, EventObserver {

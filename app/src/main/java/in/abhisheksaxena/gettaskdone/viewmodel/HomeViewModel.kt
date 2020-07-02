@@ -76,7 +76,6 @@ class HomeViewModel(
                         dataSource.updateTask(tempTask)
                 }
                 if (_viewState.value == AddTaskState.NEW_TASK_STATE) {
-                    taskUpdatedEvent()
                     newTaskEvent()
                 } else if (_viewState.value == AddTaskState.EDIT_STATE) {
                     updateViewState(AddTaskState.VIEW_STATE)
