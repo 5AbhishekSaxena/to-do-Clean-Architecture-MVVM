@@ -37,8 +37,6 @@ class TaskDetailsFragment : Fragment() {
     private lateinit var binding: FragmentTaskDetailsBinding
     private lateinit var viewModel: HomeViewModel
 
-    private var menu: Menu? = null
-
     private val TAG = javaClass.name
 
     private val priorities =
@@ -49,13 +47,14 @@ class TaskDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_task_details, container, false)
-
-        setHasOptionsMenu(true)
-
-        return binding.root
+        return DataBindingUtil.inflate<FragmentTaskDetailsBinding>(
+            inflater,
+            R.layout.fragment_task_details,
+            container,
+            false
+        ).apply {
+            binding = this
+        }.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -97,12 +96,11 @@ class TaskDetailsFragment : Fragment() {
             )
         }
 
+        //todo: set via binding
         viewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
             Log.e(TAG, "viewState observer called, state: $state")
             state?.let {
                 binding.fab.setFabButton(state)
-                toggleDelete(state)
-
                 when (state) {
                     AddTaskState.NEW_TASK_STATE -> {
                         setTitle("Add a Task")
@@ -128,6 +126,7 @@ class TaskDetailsFragment : Fragment() {
             }
         })
 
+        //todo set via two-way binding
         viewModel.currentTask.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.titleEditText.setText(it.title)
@@ -137,28 +136,6 @@ class TaskDetailsFragment : Fragment() {
             }
         })
 
-        viewModel.isTaskCreated.observe(viewLifecycleOwner, Observer {
-            Log.e(TAG, "TaskDetailsFragment, isTaskCreated: $it")
-            if (it) {
-                showSnackBar(binding.coordinatorLayout, getString(R.string.task_created_success))
-                viewModel.doneOnTaskCreated()
-            }
-        })
-
-        viewModel.isTaskDeleted.observe(viewLifecycleOwner, Observer {
-            Log.e(TAG, "TaskDetailsFragment, isTaskDeleted: $it")
-            if (it) {
-                showSnackBar(binding.coordinatorLayout, getString(R.string.task_deleted_success))
-                viewModel.doneOnTaskDeleted()
-            }
-        })
-
-        viewModel.isTaskUpdated.observe(viewLifecycleOwner, Observer {
-            if (it) {
-                showSnackBar(binding.coordinatorLayout, getString(R.string.task_update_success))
-                viewModel.doneOnTaskUpdated()
-            }
-        })
         setupNavigation()
     }
 
@@ -169,19 +146,35 @@ class TaskDetailsFragment : Fragment() {
         }
     }
 
-    private fun setupNavigation(){
-        viewModel.openTaskEvent.observe(viewLifecycleOwner, EventObserver{
+    private fun setupNavigation() {
+        viewModel.openTaskEvent.observe(viewLifecycleOwner, EventObserver {
             val action = TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment()
             findNavController().navigate(action)
         })
-    }
 
-    private fun toggleDelete(state: AddTaskState?) {
-        state?.let {
+        viewModel.newTaskEvent.observe(viewLifecycleOwner, EventObserver {
+            showSnackBar(
+                binding.coordinatorLayout,
+                getString(R.string.task_created_success)
+            ) //fixme
+            //val action = TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment()
+            findNavController().navigateUp()
+        })
 
-            menu?.findItem(R.id.action_delete)?.isVisible = state == AddTaskState.VIEW_STATE
-            requireNotNull(activity as MainActivity).invalidateOptionsMenu()
-        }
+        viewModel.taskUpdatedEvent.observe(viewLifecycleOwner, EventObserver {
+            showSnackBar(binding.coordinatorLayout, getString(R.string.task_update_success)) //fixme
+            findNavController().navigateUp()
+
+        })
+
+        viewModel.taskDeletedEvent.observe(viewLifecycleOwner, EventObserver {
+            showSnackBar(
+                binding.coordinatorLayout,
+                getString(R.string.task_deleted_success)
+            ) //fixme
+            val action = TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment()
+            findNavController().navigate(action)
+        })
     }
 
     private fun setTitle(title: String) {
@@ -246,25 +239,5 @@ class TaskDetailsFragment : Fragment() {
                 }
             }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.task_details_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (item.itemId == R.id.action_delete) {
-            viewModel.deleteItem()
-            true
-        } else
-            false
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        super.onPrepareOptionsMenu(menu)
-        this.menu = menu
-        if(viewModel.viewState.value == AddTaskState.VIEW_STATE)
-            menu.findItem(R.id.action_delete).isVisible = true
     }
 }

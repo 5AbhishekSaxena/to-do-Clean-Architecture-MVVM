@@ -84,21 +84,17 @@ class HomeFragment : Fragment() {
                 binding.emptyListTextView.visibility = View.VISIBLE
         })
 
-        viewModel.isTaskCreated.observe(viewLifecycleOwner, Observer {
+        /*viewModel.isTaskCreated.observe(viewLifecycleOwner, Observer {
             Log.e(TAG, "HomeFragment, isTaskCreated: $it")
             if (it) {
                 showSnackBar(binding.coordinatorLayout, getString(R.string.task_created_success))
-                viewModel.doneOnTaskCreated()
             }
         })
 
-        viewModel.isTaskDeleted.observe(viewLifecycleOwner, Observer {
-            Log.e(TAG, "HomeFragment, isTaskDeleted: $it")
-            if (it) {
+        viewModel.taskDeletedEvent.observe(viewLifecycleOwner, Observer {
                 showSnackBar(binding.coordinatorLayout, getString(R.string.task_deleted_success))
                 viewModel.doneOnTaskDeleted()
-            }
-        })
+        })*/
     }
 
     private fun setupNavigation(){
