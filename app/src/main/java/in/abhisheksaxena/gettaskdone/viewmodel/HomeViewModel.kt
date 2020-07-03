@@ -48,12 +48,6 @@ class HomeViewModel(
     private val _taskDeletedEvent = MutableLiveData<Event<Unit>>()
     val taskDeletedEvent: LiveData<Event<Unit>>  = _taskDeletedEvent
 
-    private val _isTaskCreated = MutableLiveData<Boolean>()
-    val isTaskCreated: LiveData<Boolean> = _isTaskCreated
-
-    private val _isTaskUpdated = MutableLiveData<Boolean>()
-    val isTaskUpdated: LiveData<Boolean> = _isTaskUpdated
-
     init {
         _viewState.value = navData.state
         if (navData.id != -1L) {
