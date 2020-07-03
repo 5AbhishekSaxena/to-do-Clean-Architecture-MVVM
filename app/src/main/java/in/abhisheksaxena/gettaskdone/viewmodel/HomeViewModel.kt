@@ -4,8 +4,8 @@ package `in`.abhisheksaxena.gettaskdone.viewmodel
 import `in`.abhisheksaxena.gettaskdone.Event
 import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDao
-import `in`.abhisheksaxena.gettaskdone.data.model.MESSAGE
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
+import `in`.abhisheksaxena.gettaskdone.util.Constants
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -112,9 +112,9 @@ class HomeViewModel(
     fun showUserMessage(message: Int){
         if (hasMessageShown) return
         when(message){
-            MESSAGE.ADD_TASK_OK -> showSnackbarMessage(R.string.task_created_success)
-            MESSAGE.UPDATE_TASK_OK -> showSnackbarMessage(R.string.task_update_success)
-            MESSAGE.DELETE_TASK_OK -> showSnackbarMessage(R.string.task_deleted_success)
+            Constants.MESSAGE.ADD_TASK_OK -> showSnackbarMessage(R.string.task_created_success)
+            Constants.MESSAGE.UPDATE_TASK_OK -> showSnackbarMessage(R.string.task_update_success)
+            Constants.MESSAGE.DELETE_TASK_OK -> showSnackbarMessage(R.string.task_deleted_success)
         }
 
         hasMessageShown = true
