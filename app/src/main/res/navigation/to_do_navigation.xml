@@ -18,15 +18,15 @@
             app:destination="@id/taskDetailsPreviewFragment" />
         <argument
             android:name="userMessage"
-            app:argType="integer"
-            android:defaultValue="-1"/>
+            android:defaultValue="-1"
+            app:argType="integer" />
     </fragment>
 
     <fragment
         android:id="@+id/taskDetailsFragment"
         android:name="in.abhisheksaxena.gettaskdone.ui.fragment.TaskDetailsFragment"
-        tools:layout="@layout/fragment_task_details"
-        android:label="{title}">
+        android:label="{title}"
+        tools:layout="@layout/fragment_task_details">
         <action
             android:id="@+id/action_addTaskFragment_to_homeFragment"
             app:destination="@id/homeFragment"
@@ -34,13 +34,13 @@
             app:popUpToInclusive="true" />
         <argument
             android:name="taskId"
-            app:argType="long"
-            android:defaultValue="-1L"/>
+            android:defaultValue="-1L"
+            app:argType="long" />
 
         <argument
             android:name="title"
             app:argType="string"
-            app:nullable="false"/>
+            app:nullable="false" />
     </fragment>
 
     <fragment
@@ -53,9 +53,14 @@
             app:destination="@id/taskDetailsFragment"
             app:popUpTo="@layout/fragment_home"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_taskDetailsPreviewFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@layout/fragment_home"
+            app:popUpToInclusive="true" />
         <argument
             android:name="taskId"
-            app:argType="long"
-            android:defaultValue="-1L"/>
+            android:defaultValue="-1L"
+            app:argType="long" />
     </fragment>
 </navigation>
