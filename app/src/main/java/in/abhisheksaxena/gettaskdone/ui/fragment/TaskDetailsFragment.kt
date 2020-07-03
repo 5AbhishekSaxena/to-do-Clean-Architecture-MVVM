@@ -8,8 +8,7 @@ import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentTaskDetailsBinding
 import `in`.abhisheksaxena.gettaskdone.ui.MainActivity
 import `in`.abhisheksaxena.gettaskdone.util.hideKeyboard
-import `in`.abhisheksaxena.gettaskdone.util.showSnackBar
-import `in`.abhisheksaxena.gettaskdone.viewmodel.AddTaskState
+import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
 import android.os.Bundle
@@ -24,6 +23,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 
 
 /**
@@ -62,16 +62,13 @@ class TaskDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        handleOnBackPressed()
-        setupSpinner()
-
         val database = TaskDatabase.getInstance(requireNotNull(this.activity).application).taskDao
         arguments = TaskDetailsFragmentArgs.fromBundle(requireArguments())
-        Log.e(TAG, "arguments, state: ${arguments.navData}")
-        val factory = HomeViewModelFactory(database, arguments.navData)
+        //Log.e(TAG, "arguments, state: ${arguments.navData}")
+        val factory = HomeViewModelFactory(database, arguments.taskId)
 
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
-        binding.lifecycleOwner = this.viewLifecycleOwner
+        binding.lifecycleOwner = viewLifecycleOwner
 
         binding.titleEditText.doOnTextChanged { text, _, _, _ ->
             viewModel.tempTask.title = text.toString().trim()
@@ -98,7 +95,7 @@ class TaskDetailsFragment : Fragment() {
             )
         }
 
-        //todo: set via binding
+        /*//todo: set via binding
         viewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
             Log.e(TAG, "viewState observer called, state: $state")
             state?.let {
@@ -126,7 +123,7 @@ class TaskDetailsFragment : Fragment() {
                     }
                 }
             }
-        })
+        })*/
 
         //todo set via two-way binding
         viewModel.currentTask.observe(viewLifecycleOwner, Observer {
@@ -138,7 +135,11 @@ class TaskDetailsFragment : Fragment() {
             }
         })
 
+        setupSpinner()
+        setupSnackbar()
         setupNavigation()
+        binding.fab.setFabButton()
+        //handleOnBackPressed()
     }
 
     private fun setupSpinner() {
@@ -155,27 +156,17 @@ class TaskDetailsFragment : Fragment() {
         })
 
         viewModel.newTaskEvent.observe(viewLifecycleOwner, EventObserver {
-            showSnackBar(
-                binding.coordinatorLayout,
-                getString(R.string.task_created_success)
-            ) //fixme
             val action =
-                TaskDetailsFragmentDirections.
-                actionAddTaskFragmentToHomeFragment()
+                TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment()
             findNavController().navigate(action)
         })
 
         viewModel.taskUpdatedEvent.observe(viewLifecycleOwner, EventObserver {
-            showSnackBar(binding.coordinatorLayout, getString(R.string.task_update_success)) //fixme
             findNavController().navigateUp()
 
         })
 
         viewModel.taskDeletedEvent.observe(viewLifecycleOwner, EventObserver {
-            showSnackBar(
-                binding.coordinatorLayout,
-                getString(R.string.task_deleted_success)
-            ) //fixme
             val action = TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment()
             findNavController().navigate(action)
         })
@@ -183,6 +174,10 @@ class TaskDetailsFragment : Fragment() {
 
     private fun setTitle(title: String) {
         requireNotNull(activity as MainActivity).supportActionBar?.title = title
+    }
+
+    private fun setupSnackbar() {
+        view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
     }
 
     private fun toggleDetailsHint(isEnabled: Boolean) {
@@ -199,37 +194,17 @@ class TaskDetailsFragment : Fragment() {
         binding.detailsEditText.isEnabled = isEnabled
     }
 
-    private fun FloatingActionButton.setFabButton(state: AddTaskState) {
-        if (state == AddTaskState.VIEW_STATE) {
-            setImageResource(R.drawable.ic_baseline_edit_24)
-            setOnClickListener { handleClickEvent(state) }
-        } else {
-            setImageResource(R.drawable.ic_baseline_save_24)
-            setOnClickListener { handleClickEvent(state) }
-        }
+    private fun FloatingActionButton.setFabButton() {
+        setImageResource(R.drawable.ic_baseline_save_24)
+        setOnClickListener { handleClickEvent() }
     }
 
-    private fun handleClickEvent(state: AddTaskState) {
-        if (state == AddTaskState.EDIT_STATE || state == AddTaskState.NEW_TASK_STATE) {
-            when {
-                viewModel.tempTask.title.isEmpty() -> showSnackBar(
-                    binding.coordinatorLayout,
-                    getString(R.string.title_empty)
-                )
-                viewModel.tempTask.priority.isEmpty() -> showSnackBar(
-                    binding.coordinatorLayout,
-                    getString(R.string.priority_empty)
-                )
-                else -> {
-                    viewModel.saveTask()
-                    hideKeyboard(requireActivity())
-                }
-            }
-        } else {
-            viewModel.updateViewState(AddTaskState.EDIT_STATE)
-        }
+    private fun handleClickEvent() {
+        viewModel.saveTask()
+        hideKeyboard(requireActivity())
     }
 
+    /*//fixme - handle new navigation
     private fun handleOnBackPressed() {
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true) {
@@ -243,5 +218,5 @@ class TaskDetailsFragment : Fragment() {
                 }
             }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-    }
+    }*/
 }

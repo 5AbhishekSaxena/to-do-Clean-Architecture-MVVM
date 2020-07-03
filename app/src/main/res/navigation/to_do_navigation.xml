@@ -8,32 +8,39 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="in.abhisheksaxena.gettaskdone.ui.fragment.HomeFragment"
-        tools:layout="@layout/fragment_home"
-        android:label="Tasks" >
+        android:label="Tasks"
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_taskDetailsFragment"
             app:destination="@id/taskDetailsFragment" />
         <action
             android:id="@+id/action_homeFragment_to_taskDetailsPreviewFragment"
             app:destination="@id/taskDetailsPreviewFragment" />
+        <argument
+            android:name="userMessage"
+            app:argType="integer"
+            android:defaultValue="-1"/>
     </fragment>
 
     <fragment
         android:id="@+id/taskDetailsFragment"
         android:name="in.abhisheksaxena.gettaskdone.ui.fragment.TaskDetailsFragment"
-        tools:layout="@layout/fragment_task_details">
+        tools:layout="@layout/fragment_task_details"
+        android:label="{title}">
         <action
             android:id="@+id/action_addTaskFragment_to_homeFragment"
             app:destination="@id/homeFragment"
             app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
         <argument
-            app:nullable="false"
-            android:name="navData"
-            app:argType="in.abhisheksaxena.gettaskdone.data.model.NavData"/>
-        <action
-            android:id="@+id/action_taskDetailsFragment_to_taskDetailsPreviewFragment"
-            app:destination="@id/taskDetailsPreviewFragment" />
+            android:name="taskId"
+            app:argType="long"
+            android:defaultValue="-1L"/>
+
+        <argument
+            android:name="title"
+            app:argType="string"
+            app:nullable="false"/>
     </fragment>
 
     <fragment
@@ -42,18 +49,13 @@
         android:label="View Task"
         tools:layout="@layout/fragment_task_details_preview">
         <action
-            android:id="@+id/action_addTaskFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true"/>
-        <argument
-            app:nullable="false"
-            android:name="navData"
-            app:argType="in.abhisheksaxena.gettaskdone.data.model.NavData"/>
-        <action
             android:id="@+id/action_taskDetailsPreviewFragment_to_taskDetailsFragment"
             app:destination="@id/taskDetailsFragment"
             app:popUpTo="@layout/fragment_home"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="taskId"
+            app:argType="long"
+            android:defaultValue="-1L"/>
     </fragment>
 </navigation>

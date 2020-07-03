@@ -18,4 +18,7 @@
     <string name="priority">Priority</string>
     <string name="priority_empty">Priority not selected.</string>
     <string name="no_tasks">No Tasks</string>
+    <string name="task_not_updated">No changes.</string>
+    <string name="edit_task_label">Edit Task</string>
+    <string name="add_task_label">Add a Task</string>
 </resources>

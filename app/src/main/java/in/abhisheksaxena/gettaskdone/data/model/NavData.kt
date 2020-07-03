@@ -1,6 +1,6 @@
 package `in`.abhisheksaxena.gettaskdone.data.model
 
-import `in`.abhisheksaxena.gettaskdone.viewmodel.AddTaskState
+import android.os.Message
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
@@ -10,6 +10,12 @@ import kotlinx.android.parcel.Parcelize
  * @since 30-06-2020 17:17
  */
 
-@Parcelize
-data class NavData(var state: AddTaskState = AddTaskState.NEW_TASK_STATE, var id: Long = -1L) :
-    Parcelable
+
+interface MESSAGE {
+    companion object {
+        const val ADD_TASK_OK = 1
+        const val UPDATE_TASK_OK = 2
+        const val DELETE_TASK_OK = 3
+    }
+}
+

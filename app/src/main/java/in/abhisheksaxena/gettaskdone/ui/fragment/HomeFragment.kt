@@ -5,9 +5,7 @@ import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.adapter.TaskListAdapter
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentHomeBinding
 import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
-import `in`.abhisheksaxena.gettaskdone.data.model.NavData
-import `in`.abhisheksaxena.gettaskdone.util.showSnackBar
-import `in`.abhisheksaxena.gettaskdone.viewmodel.AddTaskState
+import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
 import android.os.Bundle
@@ -21,6 +19,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 
 
 /**
@@ -36,7 +35,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var viewModel: HomeViewModel
 
-    private val navData = NavData()
+    //private lateinit var arguments: HomeFragmentArgs
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,27 +51,23 @@ class HomeFragment : Fragment() {
 
         val database = TaskDatabase.getInstance(requireNotNull(this.activity).application).taskDao
 
-        val factory = HomeViewModelFactory(database)
+        val factory = HomeViewModelFactory(database, -1)
 
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
-        binding.lifecycleOwner = this.viewLifecycleOwner
+        binding.lifecycleOwner = viewLifecycleOwner
 
         val lambda: (Long) -> Unit = { id: Long ->
-            setNavData(id = id)
-            viewModel.openTaskEvent()
+            viewModel.openTaskEvent(id)
         }
 
         val listener = TaskListAdapter.TaskItemClickListener(lambda)
         val adapter = TaskListAdapter(listener)
-
-        setupNavigation()
 
         binding.tasksRecyclerView.adapter = adapter
         binding.tasksRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         binding.fab.setOnClickListener {
-            setNavData(state = AddTaskState.NEW_TASK_STATE)
             viewModel.newTaskEvent()
         }
 
@@ -84,23 +79,14 @@ class HomeFragment : Fragment() {
                 binding.emptyListTextView.visibility = View.VISIBLE
         })
 
-        /*viewModel.isTaskCreated.observe(viewLifecycleOwner, Observer {
-            Log.e(TAG, "HomeFragment, isTaskCreated: $it")
-            if (it) {
-                showSnackBar(binding.coordinatorLayout, getString(R.string.task_created_success))
-            }
-        })
-
-        viewModel.taskDeletedEvent.observe(viewLifecycleOwner, Observer {
-                showSnackBar(binding.coordinatorLayout, getString(R.string.task_deleted_success))
-                viewModel.doneOnTaskDeleted()
-        })*/
+        setupNavigation()
+        setupSnackbar()
     }
 
     private fun setupNavigation(){
 
         viewModel.newTaskEvent.observe(viewLifecycleOwner, EventObserver{
-            navigateToTaskDetails(it)
+            navigateToTaskDetails()
         })
 
         viewModel.openTaskEvent.observe(viewLifecycleOwner, EventObserver {
@@ -108,18 +94,21 @@ class HomeFragment : Fragment() {
         })
     }
 
-    private fun navigateToTaskDetails(it: Unit) {
-            val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailsFragment(navData)
+    private fun setupSnackbar(){
+        Log.e(TAG, "setupSnackbar called")
+        view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
+        arguments?.let{
+
+        }
+    }
+
+    private fun navigateToTaskDetails() {
+            val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailsFragment(-1, getString(R.string.add_task_label))
             findNavController().navigate(action)
     }
 
-    private fun navigateToTaskDetailsPreview(it: Unit) {
-            val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailsPreviewFragment(navData)
+    private fun navigateToTaskDetailsPreview(taskId: Long) {
+            val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailsPreviewFragment(taskId)
             findNavController().navigate(action)
-    }
-
-    private fun setNavData(id: Long = -1L, state: AddTaskState = AddTaskState.VIEW_STATE) {
-        navData.id = id
-        navData.state = state
     }
 }

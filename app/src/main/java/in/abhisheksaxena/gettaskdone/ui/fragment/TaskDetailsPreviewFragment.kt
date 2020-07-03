@@ -4,7 +4,7 @@ import `in`.abhisheksaxena.gettaskdone.EventObserver
 import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentTaskDetailsPreviewBinding
-import `in`.abhisheksaxena.gettaskdone.viewmodel.AddTaskState
+import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
 import android.os.Bundle
@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 
 
 /**
@@ -26,7 +27,7 @@ class TaskDetailsPreviewFragment : Fragment() {
 
     private lateinit var viewModel: HomeViewModel
 
-    private lateinit var arguments: TaskDetailsFragmentArgs
+    private lateinit var arguments: TaskDetailsPreviewFragmentArgs
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,23 +49,24 @@ class TaskDetailsPreviewFragment : Fragment() {
 
 
         val database = TaskDatabase.getInstance(requireNotNull(this.activity).application).taskDao
-        arguments = TaskDetailsFragmentArgs.fromBundle(requireArguments())
-        val factory = HomeViewModelFactory(database, arguments.navData)
+        arguments = TaskDetailsPreviewFragmentArgs.fromBundle(requireArguments())
+        val factory = HomeViewModelFactory(database, arguments.taskId)
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewmodel = viewModel
         binding.executePendingBindings()
 
-        setHasOptionsMenu(true)
         setupFab()
+        setupSnackbar()
         setupNavigation()
+        setHasOptionsMenu(true)
     }
 
 
     private fun setupFab() {
         binding.fab.setOnClickListener {
-            viewModel.openTaskEvent()
+            viewModel.openTaskEvent(viewModel.tempTask.id)
         }
     }
 
@@ -73,17 +75,29 @@ class TaskDetailsPreviewFragment : Fragment() {
             navigateToTaskDetailsFragment()
         })
 
-        viewModel.taskDeletedEvent.observe(viewLifecycleOwner, EventObserver{
-            findNavController().navigateUp()
+        viewModel.taskDeletedEvent.observe(viewLifecycleOwner, EventObserver {
+            navigateToHomeFragment()
         })
+    }
+
+    private fun setupSnackbar() {
+        view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
     }
 
     private fun navigateToTaskDetailsFragment() {
         val action =
             TaskDetailsPreviewFragmentDirections.actionTaskDetailsPreviewFragmentToTaskDetailsFragment(
-                arguments.navData.copy(state = AddTaskState.EDIT_STATE)
-            )
+                arguments.taskId,
+            getString(R.string.edit_task_label))
         findNavController().navigate(action)
+    }
+
+    private fun navigateToHomeFragment() {
+        /*val action =
+            TaskDetailsPreviewFragmentDirections.(
+                -1
+            )*/
+        findNavController().navigateUp(/*action*/)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
