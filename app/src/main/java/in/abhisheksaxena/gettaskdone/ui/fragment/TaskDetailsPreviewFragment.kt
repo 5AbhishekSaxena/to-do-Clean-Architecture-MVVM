@@ -3,6 +3,7 @@ package `in`.abhisheksaxena.gettaskdone.ui.fragment
 import `in`.abhisheksaxena.gettaskdone.EventObserver
 import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
+import `in`.abhisheksaxena.gettaskdone.data.model.MESSAGE
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentTaskDetailsPreviewBinding
 import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
@@ -82,6 +83,7 @@ class TaskDetailsPreviewFragment : Fragment() {
 
     private fun setupSnackbar() {
         view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
+        viewModel.showUserMessage(arguments.userMessage)
     }
 
     private fun navigateToTaskDetailsFragment() {
@@ -93,11 +95,8 @@ class TaskDetailsPreviewFragment : Fragment() {
     }
 
     private fun navigateToHomeFragment() {
-        /*val action =
-            TaskDetailsPreviewFragmentDirections.(
-                -1
-            )*/
-        findNavController().navigateUp(/*action*/)
+        val action = TaskDetailsPreviewFragmentDirections.actionTaskDetailsPreviewFragmentToHomeFragment(MESSAGE.DELETE_TASK_OK)
+        findNavController().navigate(action)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

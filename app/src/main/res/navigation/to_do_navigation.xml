@@ -32,6 +32,11 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_taskDetailsFragment_to_taskDetailsPreviewFragment"
+            app:destination="@id/taskDetailsPreviewFragment"
+            app:popUpTo="@id/taskDetailsPreviewFragment"
+            app:popUpToInclusive="true" />
         <argument
             android:name="taskId"
             android:defaultValue="-1L"
@@ -50,17 +55,19 @@
         tools:layout="@layout/fragment_task_details_preview">
         <action
             android:id="@+id/action_taskDetailsPreviewFragment_to_taskDetailsFragment"
-            app:destination="@id/taskDetailsFragment"
-            app:popUpTo="@layout/fragment_home"
-            app:popUpToInclusive="true" />
+            app:destination="@id/taskDetailsFragment" />
         <action
             android:id="@+id/action_taskDetailsPreviewFragment_to_homeFragment"
             app:destination="@id/homeFragment"
-            app:popUpTo="@layout/fragment_home"
+            app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
         <argument
             android:name="taskId"
             android:defaultValue="-1L"
             app:argType="long" />
+        <argument
+            android:name="userMessage"
+            android:defaultValue="-1"
+            app:argType="integer" />
     </fragment>
 </navigation>

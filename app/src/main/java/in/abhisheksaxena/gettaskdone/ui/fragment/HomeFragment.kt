@@ -35,7 +35,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var viewModel: HomeViewModel
 
-    //private lateinit var arguments: HomeFragmentArgs
+    private lateinit var arguments: HomeFragmentArgs
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,6 +55,8 @@ class HomeFragment : Fragment() {
 
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
         binding.lifecycleOwner = viewLifecycleOwner
+
+        arguments = HomeFragmentArgs.fromBundle(requireArguments())
 
         val lambda: (Long) -> Unit = { id: Long ->
             viewModel.openTaskEvent(id)
@@ -97,8 +99,8 @@ class HomeFragment : Fragment() {
     private fun setupSnackbar(){
         Log.e(TAG, "setupSnackbar called")
         view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
-        arguments?.let{
-
+        arguments.let{
+            viewModel.showUserMessage(it.userMessage)
         }
     }
 

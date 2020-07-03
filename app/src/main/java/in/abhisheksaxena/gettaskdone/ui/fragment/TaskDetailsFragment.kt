@@ -4,6 +4,7 @@ package `in`.abhisheksaxena.gettaskdone.ui.fragment
 import `in`.abhisheksaxena.gettaskdone.EventObserver
 import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
+import `in`.abhisheksaxena.gettaskdone.data.model.MESSAGE
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentTaskDetailsBinding
 import `in`.abhisheksaxena.gettaskdone.ui.MainActivity
@@ -150,19 +151,16 @@ class TaskDetailsFragment : Fragment() {
     }
 
     private fun setupNavigation() {
-        viewModel.openTaskEvent.observe(viewLifecycleOwner, EventObserver {
-            val action = TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment()
-            findNavController().navigate(action)
-        })
-
         viewModel.newTaskEvent.observe(viewLifecycleOwner, EventObserver {
             val action =
-                TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment()
+                TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment(MESSAGE.ADD_TASK_OK)
             findNavController().navigate(action)
         })
 
         viewModel.taskUpdatedEvent.observe(viewLifecycleOwner, EventObserver {
-            findNavController().navigateUp()
+            val action =
+                TaskDetailsFragmentDirections.actionTaskDetailsFragmentToTaskDetailsPreviewFragment(arguments.taskId, MESSAGE.UPDATE_TASK_OK)
+            findNavController().navigate(action)
 
         })
 
