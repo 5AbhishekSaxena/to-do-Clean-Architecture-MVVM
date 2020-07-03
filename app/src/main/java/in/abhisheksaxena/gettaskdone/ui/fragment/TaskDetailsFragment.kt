@@ -4,10 +4,10 @@ package `in`.abhisheksaxena.gettaskdone.ui.fragment
 import `in`.abhisheksaxena.gettaskdone.EventObserver
 import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
-import `in`.abhisheksaxena.gettaskdone.data.model.MESSAGE
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentTaskDetailsBinding
 import `in`.abhisheksaxena.gettaskdone.ui.MainActivity
+import `in`.abhisheksaxena.gettaskdone.util.Constants
 import `in`.abhisheksaxena.gettaskdone.util.hideKeyboard
 import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
@@ -153,13 +153,13 @@ class TaskDetailsFragment : Fragment() {
     private fun setupNavigation() {
         viewModel.newTaskEvent.observe(viewLifecycleOwner, EventObserver {
             val action =
-                TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment(MESSAGE.ADD_TASK_OK)
+                TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment(Constants.MESSAGE.ADD_TASK_OK)
             findNavController().navigate(action)
         })
 
         viewModel.taskUpdatedEvent.observe(viewLifecycleOwner, EventObserver {
             val action =
-                TaskDetailsFragmentDirections.actionTaskDetailsFragmentToTaskDetailsPreviewFragment(arguments.taskId, MESSAGE.UPDATE_TASK_OK)
+                TaskDetailsFragmentDirections.actionTaskDetailsFragmentToTaskDetailsPreviewFragment(arguments.taskId, Constants.MESSAGE.UPDATE_TASK_OK)
             findNavController().navigate(action)
 
         })
