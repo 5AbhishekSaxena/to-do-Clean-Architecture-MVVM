@@ -70,36 +70,6 @@ class TaskDetailsFragment : Fragment() {
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
         binding.lifecycleOwner = viewLifecycleOwner
 
-        /*//todo: set via binding
-        viewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
-            Log.e(TAG, "viewState observer called, state: $state")
-            state?.let {
-                binding.fab.setFabButton(state)
-                when (state) {
-                    AddTaskState.NEW_TASK_STATE -> {
-                        setTitle("Add a Task")
-                        toggleEditable(true)
-                        toggleDetailsHint(true)
-                    }
-
-                    AddTaskState.EDIT_STATE -> {
-                        setTitle("Edit Task")
-                        toggleEditable(true)
-                        toggleDetailsHint(true)
-                    }
-
-                    AddTaskState.VIEW_STATE -> {
-                        setTitle("View Task")
-                        toggleEditable(false)
-                        if (viewModel.tempTask.details.isEmpty())
-                            toggleDetailsHint(false)
-                        else
-                            toggleDetailsHint(true)
-                    }
-                }
-            }
-        })*/
-
         //todo set via two-way binding
         viewModel.currentTask.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -165,27 +135,14 @@ class TaskDetailsFragment : Fragment() {
     private fun setTextChangeListeners(){
         binding.titleEditText.doOnTextChanged { text, _, _, _ ->
             viewModel.tempTask.title = text.toString().trim()
-            Log.e(
-                TAG,
-                "title updated, currentTask: ${viewModel.currentTask.value} tempTask: ${viewModel.tempTask}"
-            )
-
         }
 
         binding.detailsEditText.doOnTextChanged { text, _, _, _ ->
             viewModel.tempTask.details = text.toString().trim()
-            Log.e(
-                TAG,
-                "details updated, currentTask: ${viewModel.currentTask.value} tempTask: ${viewModel.tempTask}"
-            )
         }
 
         binding.prioritySpinner.doOnTextChanged { text, _, _, _ ->
             viewModel.tempTask.priority = text.toString()
-            Log.e(
-                TAG,
-                "priority updated, text: $text, currentTask: ${viewModel.currentTask.value} tempTask: ${viewModel.tempTask}"
-            )
         }
     }
 
