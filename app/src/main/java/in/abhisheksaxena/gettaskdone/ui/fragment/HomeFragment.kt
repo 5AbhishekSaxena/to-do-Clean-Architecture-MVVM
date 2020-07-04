@@ -98,7 +98,7 @@ class HomeFragment : Fragment() {
 
     private fun setupSnackbar(){
         Log.e(TAG, "setupSnackbar called")
-        view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
+        view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_LONG)
         arguments.let{
             viewModel.showUserMessage(it.userMessage)
         }
