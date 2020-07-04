@@ -148,10 +148,6 @@ class TaskDetailsFragment : Fragment() {
         })
     }
 
-    private fun setTitle(title: String) {
-        requireNotNull(activity as MainActivity).supportActionBar?.title = title
-    }
-
     private fun setupSnackbar() {
         view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
     }
@@ -190,21 +186,6 @@ class TaskDetailsFragment : Fragment() {
                 "priority updated, text: $text, currentTask: ${viewModel.currentTask.value} tempTask: ${viewModel.tempTask}"
             )
         }
-    }
-
-
-    private fun toggleDetailsHint(isEnabled: Boolean) {
-        if (isEnabled)
-            binding.detailsEditText.hint = getString(R.string.details)
-        else
-            binding.detailsEditText.hint = ""
-
-    }
-
-    private fun toggleEditable(isEnabled: Boolean) {
-        binding.titleEditText.isEnabled = isEnabled
-        binding.priorityLayout.isEnabled = isEnabled
-        binding.detailsEditText.isEnabled = isEnabled
     }
 
     private fun setupFabButton() {
