@@ -85,7 +85,6 @@ class TaskDetailsFragment : Fragment() {
         setupFabButton()
         setupListeners()
         setupNavigation()
-        setTextChangeListeners()
         //handleOnBackPressed()
     }
 
@@ -125,6 +124,7 @@ class TaskDetailsFragment : Fragment() {
 
 
     private fun setupListeners() {
+        setTextChangeListeners()
         setFocusChangeListeners()
     }
 
