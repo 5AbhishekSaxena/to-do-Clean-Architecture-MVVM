@@ -8,7 +8,7 @@ import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentTaskDetailsBinding
 import `in`.abhisheksaxena.gettaskdone.ui.MainActivity
 import `in`.abhisheksaxena.gettaskdone.util.Constants
-import `in`.abhisheksaxena.gettaskdone.util.HideSoftKeyboard
+import `in`.abhisheksaxena.gettaskdone.util.HideSoftKeyboardOnFocusChange
 import `in`.abhisheksaxena.gettaskdone.util.hideKeyboard
 import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
@@ -162,7 +162,7 @@ class TaskDetailsFragment : Fragment() {
     }
 
     private fun setFocusChangeListeners() {
-        binding.prioritySpinner.onFocusChangeListener = HideSoftKeyboard(requireActivity(), true)
+        binding.prioritySpinner.onFocusChangeListener = HideSoftKeyboardOnFocusChange(requireActivity(), true)
     }
 
     private fun setTextChangeListeners(){

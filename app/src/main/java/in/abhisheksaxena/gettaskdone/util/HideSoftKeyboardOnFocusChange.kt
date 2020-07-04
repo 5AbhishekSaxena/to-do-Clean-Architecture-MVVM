@@ -9,7 +9,7 @@ import android.view.View
  * @since 04-07-2020 12:29
  */
 
-class HideSoftKeyboard(
+class HideSoftKeyboardOnFocusChange(
     private val activity: Activity,
     private val isAlwaysDisabled: Boolean = false
 ) : View.OnFocusChangeListener {
