@@ -108,7 +108,7 @@ class TaskDetailsPreviewFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (item.itemId == R.id.action_delete) {
-            viewModel.deleteItem()
+            viewModel.deleteTask()
             true
         } else
             false

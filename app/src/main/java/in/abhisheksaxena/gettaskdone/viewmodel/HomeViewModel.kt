@@ -57,7 +57,7 @@ class HomeViewModel(
         if (taskId != -1L) {
             isNewTask = false
             currentTask.addSource(dataSource.getTaskWithId(taskId), currentTask::setValue)
-        }else{
+        } else {
             isNewTask = true
         }
         Log.e(TAG, "init current task: ${currentTask.value}")
@@ -90,15 +90,14 @@ class HomeViewModel(
                     newTaskEvent()
                 else
                     taskUpdatedEvent()
-                }
-                //Log.e(TAG, "Task updated")
+            }
+            //Log.e(TAG, "Task updated")
         } else {
             taskUpdatedEvent()
         }
     }
 
-
-    fun deleteItem() {
+    fun deleteTask() {
         if (currentTask.value != null) {
             coroutineScope.launch {
                 withContext(ioDispatcher) {
@@ -109,9 +108,22 @@ class HomeViewModel(
         }
     }
 
-    fun showUserMessage(message: Int){
+    fun swipeToDeleteTask(index: Int) {
+        coroutineScope.launch {
+            withContext(ioDispatcher) {
+                val task = tasks.value?.get(index)
+                task?.let {
+                    dataSource.deleteItem(it)
+                }
+            }
+            hasMessageShown = false
+            taskDeletedEvent()
+        }
+    }
+
+    fun showUserMessage(message: Int) {
         if (hasMessageShown) return
-        when(message){
+        when (message) {
             Constants.MESSAGE.ADD_TASK_OK -> showSnackbarMessage(R.string.task_created_success)
             Constants.MESSAGE.UPDATE_TASK_OK -> showSnackbarMessage(R.string.task_update_success)
             Constants.MESSAGE.DELETE_TASK_OK -> showSnackbarMessage(R.string.task_deleted_success)
