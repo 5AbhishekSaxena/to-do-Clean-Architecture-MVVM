@@ -8,6 +8,7 @@ import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentTaskDetailsBinding
 import `in`.abhisheksaxena.gettaskdone.ui.MainActivity
 import `in`.abhisheksaxena.gettaskdone.util.Constants
+import `in`.abhisheksaxena.gettaskdone.util.HideSoftKeyboard
 import `in`.abhisheksaxena.gettaskdone.util.hideKeyboard
 import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
@@ -16,14 +17,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.ArrayAdapter
-import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -71,31 +70,6 @@ class TaskDetailsFragment : Fragment() {
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
         binding.lifecycleOwner = viewLifecycleOwner
 
-        binding.titleEditText.doOnTextChanged { text, _, _, _ ->
-            viewModel.tempTask.title = text.toString().trim()
-            Log.e(
-                TAG,
-                "title updated, currentTask: ${viewModel.currentTask.value} tempTask: ${viewModel.tempTask}"
-            )
-
-        }
-
-        binding.detailsEditText.doOnTextChanged { text, _, _, _ ->
-            viewModel.tempTask.details = text.toString().trim()
-            Log.e(
-                TAG,
-                "details updated, currentTask: ${viewModel.currentTask.value} tempTask: ${viewModel.tempTask}"
-            )
-        }
-
-        binding.prioritySpinner.doOnTextChanged { text, _, _, _ ->
-            viewModel.tempTask.priority = text.toString()
-            Log.e(
-                TAG,
-                "priority updated, text: $text, currentTask: ${viewModel.currentTask.value} tempTask: ${viewModel.tempTask}"
-            )
-        }
-
         /*//todo: set via binding
         viewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
             Log.e(TAG, "viewState observer called, state: $state")
@@ -138,8 +112,9 @@ class TaskDetailsFragment : Fragment() {
 
         setupSpinner()
         setupSnackbar()
+        setupFabButton()
+        setupListeners()
         setupNavigation()
-        binding.fab.setFabButton()
         //handleOnBackPressed()
     }
 
@@ -159,7 +134,10 @@ class TaskDetailsFragment : Fragment() {
 
         viewModel.taskUpdatedEvent.observe(viewLifecycleOwner, EventObserver {
             val action =
-                TaskDetailsFragmentDirections.actionTaskDetailsFragmentToTaskDetailsPreviewFragment(arguments.taskId, Constants.MESSAGE.UPDATE_TASK_OK)
+                TaskDetailsFragmentDirections.actionTaskDetailsFragmentToTaskDetailsPreviewFragment(
+                    arguments.taskId,
+                    Constants.MESSAGE.UPDATE_TASK_OK
+                )
             findNavController().navigate(action)
 
         })
@@ -178,6 +156,43 @@ class TaskDetailsFragment : Fragment() {
         view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
     }
 
+
+    private fun setupListeners() {
+        setFocusChangeListeners()
+    }
+
+    private fun setFocusChangeListeners() {
+        binding.prioritySpinner.onFocusChangeListener = HideSoftKeyboard(requireActivity(), true)
+    }
+
+    private fun setTextChangeListeners(){
+        binding.titleEditText.doOnTextChanged { text, _, _, _ ->
+            viewModel.tempTask.title = text.toString().trim()
+            Log.e(
+                TAG,
+                "title updated, currentTask: ${viewModel.currentTask.value} tempTask: ${viewModel.tempTask}"
+            )
+
+        }
+
+        binding.detailsEditText.doOnTextChanged { text, _, _, _ ->
+            viewModel.tempTask.details = text.toString().trim()
+            Log.e(
+                TAG,
+                "details updated, currentTask: ${viewModel.currentTask.value} tempTask: ${viewModel.tempTask}"
+            )
+        }
+
+        binding.prioritySpinner.doOnTextChanged { text, _, _, _ ->
+            viewModel.tempTask.priority = text.toString()
+            Log.e(
+                TAG,
+                "priority updated, text: $text, currentTask: ${viewModel.currentTask.value} tempTask: ${viewModel.tempTask}"
+            )
+        }
+    }
+
+
     private fun toggleDetailsHint(isEnabled: Boolean) {
         if (isEnabled)
             binding.detailsEditText.hint = getString(R.string.details)
@@ -192,9 +207,9 @@ class TaskDetailsFragment : Fragment() {
         binding.detailsEditText.isEnabled = isEnabled
     }
 
-    private fun FloatingActionButton.setFabButton() {
-        setImageResource(R.drawable.ic_baseline_save_24)
-        setOnClickListener { handleClickEvent() }
+    private fun setupFabButton() {
+        binding.fab.setImageResource(R.drawable.ic_baseline_save_24)
+        binding.fab.setOnClickListener { handleClickEvent() }
     }
 
     private fun handleClickEvent() {
@@ -217,4 +232,9 @@ class TaskDetailsFragment : Fragment() {
             }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }*/
+
+    override fun onPause() {
+        super.onPause()
+        hideKeyboard(requireActivity())
+    }
 }
