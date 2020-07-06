@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
  * @since 24-06-2020 07:49
  */
 
-@Entity(tableName = "tasks_table")
+@Entity(tableName = "Tasks")
 data class Task(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
