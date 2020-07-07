@@ -25,25 +25,25 @@ abstract class TaskDatabase : RoomDatabase() {
 
         const val DATABASE_NAME = "taskdb"
 
-       /* @Volatile
-        private var instance: TaskDatabase? = null
+        /* @Volatile
+         private var instance: TaskDatabase? = null
 
-        fun getInstance(context: Context): TaskDatabase {
-            synchronized(this) {
-                var instance =
-                    instance
-                if (instance == null) {
-                    instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        TaskDatabase::class.java,
-                        DATABASE_NAME
-                    )
-                        .fallbackToDestructiveMigration()
-                        .build()
-                    Companion.instance = instance
-                }
-                return instance
-            }
-        }*/
+         fun getInstance(context: Context): TaskDatabase {
+             synchronized(this) {
+                 var instance =
+                     instance
+                 if (instance == null) {
+                     instance = Room.databaseBuilder(
+                         context.applicationContext,
+                         TaskDatabase::class.java,
+                         DATABASE_NAME
+                     )
+                         .fallbackToDestructiveMigration()
+                         .build()
+                     Companion.instance = instance
+                 }
+                 return instance
+             }
+         }*/
     }
 }
