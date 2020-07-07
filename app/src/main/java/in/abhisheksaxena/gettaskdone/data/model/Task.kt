@@ -11,8 +11,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "Tasks")
 data class Task(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     var title: String = "",
     var details: String = "",
     var priority: String = ""

@@ -56,7 +56,7 @@ class HomeViewModel(
     init {
         if (taskId != -1L) {
             isNewTask = false
-            currentTask.addSource(dataSource.getTaskWithId(taskId), currentTask::setValue)
+            currentTask.addSource(dataSource.getTaskById(taskId), currentTask::setValue)
         } else {
             isNewTask = true
         }
@@ -101,7 +101,7 @@ class HomeViewModel(
         if (currentTask.value != null) {
             coroutineScope.launch {
                 withContext(ioDispatcher) {
-                    dataSource.deleteItem(currentTask.value!!)
+                    dataSource.deleteTaskById(currentTask.value!!)
                 }
                 taskDeletedEvent()
             }
@@ -113,7 +113,7 @@ class HomeViewModel(
             withContext(ioDispatcher) {
                 val task = tasks.value?.get(index)
                 task?.let {
-                    dataSource.deleteItem(it)
+                    dataSource.deleteTaskById(it)
                 }
             }
             hasMessageShown = false

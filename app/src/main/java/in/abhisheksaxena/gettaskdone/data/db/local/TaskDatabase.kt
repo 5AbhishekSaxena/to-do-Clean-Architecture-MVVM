@@ -11,6 +11,7 @@ import androidx.room.RoomDatabase
  * @author Abhishek Saxena
  * @since 24-06-2020 11:36
  */
+
 @Database(
     entities = [Task::class],
     version = 2,
@@ -21,9 +22,10 @@ abstract class TaskDatabase : RoomDatabase() {
     abstract val taskDao: TaskDao
 
     companion object {
-        private const val DATABASE_NAME = "taskdb"
 
-        @Volatile
+        const val DATABASE_NAME = "taskdb"
+
+       /* @Volatile
         private var instance: TaskDatabase? = null
 
         fun getInstance(context: Context): TaskDatabase {
@@ -42,6 +44,6 @@ abstract class TaskDatabase : RoomDatabase() {
                 }
                 return instance
             }
-        }
+        }*/
     }
 }

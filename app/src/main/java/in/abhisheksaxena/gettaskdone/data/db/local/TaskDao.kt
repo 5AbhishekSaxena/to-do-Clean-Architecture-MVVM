@@ -13,22 +13,42 @@ import androidx.room.*
 @Dao
 interface TaskDao {
 
+    @Query("SELECT * FROM Tasks")
+    fun observeTasks(): LiveData<List<Task>>
+
+    @Query("SELECT * FROM Tasks WHERE id = :taskId")
+    fun observeTaskWithId(taskId: Long): LiveData<Task>
+
+    @Query("SELECT * FROM Tasks")
+    suspend fun getTasks(): List<Task>
+
+    @Query("SELECT * FROM Tasks WHERE id == :id")
+    fun getTaskById(id: Long): Task?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTask(task: Task)
 
+    /**
+     * Update a task.
+     *
+     * @param task task to be updated
+     * @return the number of tasks updated. This should always be 1.
+     */
     @Update
-    fun updateTask(task: Task)
+    fun updateTask(task: Task): Int
 
-    @Query("SELECT * FROM tasks_table WHERE id == :id")
-    fun getTask(id: Long): Task?
+    /**
+     * Delete all tasks
+     */
+    @Query("DELETE FROM Tasks")
+    suspend fun deleteTasks()
 
-    @Query("SELECT * FROM tasks_table WHERE id == :id")
-    fun getTaskWithId(id: Long): LiveData<Task>
-
-    @Query("SELECT * FROM tasks_table")
-    fun getAllTasks(): LiveData<MutableList<Task>>
-
-    @Delete
-    fun deleteItem(task: Task)
+    /**
+     * Delete a task by id.
+     *
+     * @return the number of tasks deleted. This should always be 1.
+     */
+    @Query("DELETE FROM Tasks WHERE id = :taskId")
+    fun deleteTaskById(taskId: Long): Int
 
 }
