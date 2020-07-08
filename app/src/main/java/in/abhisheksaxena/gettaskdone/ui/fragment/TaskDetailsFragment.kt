@@ -3,23 +3,23 @@ package `in`.abhisheksaxena.gettaskdone.ui.fragment
 
 import `in`.abhisheksaxena.gettaskdone.EventObserver
 import `in`.abhisheksaxena.gettaskdone.R
-import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
+import `in`.abhisheksaxena.gettaskdone.data.db.TasksRepository
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentTaskDetailsBinding
-import `in`.abhisheksaxena.gettaskdone.ui.MainActivity
 import `in`.abhisheksaxena.gettaskdone.util.Constants
 import `in`.abhisheksaxena.gettaskdone.util.HideSoftKeyboardOnFocusChange
 import `in`.abhisheksaxena.gettaskdone.util.hideKeyboard
 import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
+import `in`.abhisheksaxena.gettaskdone.viewmodel.TaskDetailsViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.ArrayAdapter
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -35,7 +35,7 @@ class TaskDetailsFragment : Fragment() {
 
 
     private lateinit var binding: FragmentTaskDetailsBinding
-    private lateinit var viewModel: HomeViewModel
+    private val viewModel by viewModels<TaskDetailsViewModel>()
 
     private lateinit var arguments: TaskDetailsFragmentArgs
 
@@ -62,12 +62,9 @@ class TaskDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val database = TaskDatabase.getInstance(requireNotNull(this.activity).application).taskDao
+        val database = TasksRepository.getRepository(requireNotNull(this.activity).application)
         arguments = TaskDetailsFragmentArgs.fromBundle(requireArguments())
         //Log.e(TAG, "arguments, state: ${arguments.navData}")
-        val factory = HomeViewModelFactory(database, arguments.taskId)
-
-        viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
         binding.lifecycleOwner = viewLifecycleOwner
 
         //todo set via two-way binding
@@ -85,6 +82,7 @@ class TaskDetailsFragment : Fragment() {
         setupFabButton()
         setupListeners()
         setupNavigation()
+        viewModel.start(arguments.taskId)
         //handleOnBackPressed()
     }
 
@@ -96,25 +94,26 @@ class TaskDetailsFragment : Fragment() {
     }
 
     private fun setupNavigation() {
-        viewModel.newTaskEvent.observe(viewLifecycleOwner, EventObserver {
+        viewModel.taskCreateEvent.observe(viewLifecycleOwner, EventObserver {
             val action =
                 TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment(Constants.MESSAGE.ADD_TASK_OK)
             findNavController().navigate(action)
         })
 
-        viewModel.taskUpdatedEvent.observe(viewLifecycleOwner, EventObserver {
+        viewModel.taskUpdateEvent.observe(viewLifecycleOwner, EventObserver {
+            var message =
+            if (it)
+                Constants.MESSAGE.UPDATE_TASK_OK
+            else
+                Constants.MESSAGE.UPDATE_TASK_NOT_OK
+
             val action =
                 TaskDetailsFragmentDirections.actionTaskDetailsFragmentToTaskDetailsPreviewFragment(
                     arguments.taskId,
-                    Constants.MESSAGE.UPDATE_TASK_OK
+                    message
                 )
             findNavController().navigate(action)
 
-        })
-
-        viewModel.taskDeletedEvent.observe(viewLifecycleOwner, EventObserver {
-            val action = TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment()
-            findNavController().navigate(action)
         })
     }
 
@@ -129,10 +128,11 @@ class TaskDetailsFragment : Fragment() {
     }
 
     private fun setFocusChangeListeners() {
-        binding.prioritySpinner.onFocusChangeListener = HideSoftKeyboardOnFocusChange(requireActivity(), true)
+        binding.prioritySpinner.onFocusChangeListener =
+            HideSoftKeyboardOnFocusChange(requireActivity(), true)
     }
 
-    private fun setTextChangeListeners(){
+    private fun setTextChangeListeners() {
         binding.titleEditText.doOnTextChanged { text, _, _, _ ->
             viewModel.tempTask.title = text.toString().trim()
         }

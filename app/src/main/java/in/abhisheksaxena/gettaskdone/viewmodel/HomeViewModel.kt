@@ -3,15 +3,16 @@ package `in`.abhisheksaxena.gettaskdone.viewmodel
 
 import `in`.abhisheksaxena.gettaskdone.Event
 import `in`.abhisheksaxena.gettaskdone.R
-import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDao
+import `in`.abhisheksaxena.gettaskdone.data.Result
+import `in`.abhisheksaxena.gettaskdone.data.db.TasksRepository
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import `in`.abhisheksaxena.gettaskdone.util.Constants
+import `in`.abhisheksaxena.gettaskdone.util.TasksFilterType
 import android.util.Log
 import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import kotlinx.coroutines.*
+import java.lang.RuntimeException
 
 
 /**
@@ -20,8 +21,7 @@ import kotlinx.coroutines.*
  */
 
 class HomeViewModel(
-    private val dataSource: TaskDao,
-    private var taskId: Long
+    private val tasksRepository: TasksRepository
 ) : BaseViewModel() {
 
     private val TAG = javaClass.name
@@ -30,13 +30,31 @@ class HomeViewModel(
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
     private val ioDispatcher = Dispatchers.IO
 
-    var tasks = dataSource.getAllTasks()
+    private val _forceUpdate = MutableLiveData<Boolean>(false)
+
+    private val _tasks: LiveData<List<Task>> = _forceUpdate.switchMap { forceUpdate ->
+        if (forceUpdate) {
+            //refreshData
+        }
+        tasksRepository.observeTasks().switchMap { filterTasks(it) }
+    }
+    val tasks: LiveData<List<Task>> = _tasks
 
     var tempTask: Task = Task()
-    var currentTask = MediatorLiveData<Task>()
 
     var hasMessageShown = false
     private var isNewTask = true
+
+    private var currentFiltering = TasksFilterType.ALL_TASKS
+
+    private var taskId: Long? = null
+
+    private val _taskId = MutableLiveData<Long>()
+
+    private var _currentTask = _taskId.switchMap { taskId ->
+        tasksRepository.observeTask(taskId).map { computeResult(it) }
+    }
+    val currentTask: LiveData<Task?> = _currentTask
 
     private var _snackbarText = MutableLiveData<Event<Int>>()
     val snackbarText: LiveData<Event<Int>> = _snackbarText
@@ -54,20 +72,48 @@ class HomeViewModel(
     val taskDeletedEvent: LiveData<Event<Unit>> = _taskDeletedEvent
 
     init {
-        if (taskId != -1L) {
-            isNewTask = false
-            currentTask.addSource(dataSource.getTaskById(taskId), currentTask::setValue)
-        } else {
-            isNewTask = true
-        }
         Log.e(TAG, "init current task: ${currentTask.value}")
         Log.e(TAG, "init temp task: $tempTask")
-        Log.e(TAG, "init taskid: $taskId")
+        //Log.e(TAG, "init taskid: $taskId")
+    }
+
+    fun start(taskId: Long?) {
+        this.taskId = taskId
+        if (taskId == null) {
+            isNewTask = true
+            return
+        }
+
+        isNewTask = false
+        coroutineScope.launch {
+            tasksRepository.getTask(taskId).let { result ->
+                if (result is Result.Success) {
+                    onTaskLoaded(result.data)
+                } else {
+                    onDataNotAvailable()
+                }
+            }
+        }
+    }
+
+    private fun onTaskLoaded(task: Task) {
+        _taskId.value = task.id
+    }
+
+    private fun onDataNotAvailable() {}
+
+
+    private fun computeResult(taskResult: Result<Task>): Task? {
+        return if (taskResult is Result.Success) {
+            taskResult.data
+        } else {
+            showSnackbarMessage(R.string.loading_tasks_error)
+            null
+        }
     }
 
     fun saveTask() {
         if (currentTask.value != tempTask) {
-
             if (tempTask.title.isEmpty()) {
                 showSnackbarMessage(R.string.title_empty)
                 return
@@ -78,31 +124,37 @@ class HomeViewModel(
 
             if (tempTask.details.isEmpty())
                 tempTask.details = ""
-            coroutineScope.launch {
-                withContext(ioDispatcher) {
-                    //if (_viewState.value == AddTaskState.NEW_TASK_STATE)
-                    if (isNewTask)
-                        dataSource.insertTask(tempTask)
-                    else
-                        dataSource.updateTask(tempTask)
-                }
-                if (isNewTask)
-                    newTaskEvent()
-                else
-                    taskUpdatedEvent()
-            }
+
+            //if (_viewState.value == AddTaskState.NEW_TASK_STATE)
+            if (isNewTask)
+                createTask(tempTask)
+            else
+                updateTask(tempTask)
             //Log.e(TAG, "Task updated")
         } else {
             taskUpdatedEvent()
         }
     }
 
+    private fun createTask(newTask: Task) = coroutineScope.launch {
+        tasksRepository.saveTask(newTask)
+        newTaskEvent()
+    }
+
+    private fun updateTask(task: Task) {
+        if (isNewTask)
+            throw RuntimeException("updateTask() was called but task is new")
+
+        coroutineScope.launch {
+            tasksRepository.saveTask(task)
+            taskUpdatedEvent()
+        }
+    }
+
     fun deleteTask() {
-        if (currentTask.value != null) {
-            coroutineScope.launch {
-                withContext(ioDispatcher) {
-                    dataSource.deleteTaskById(currentTask.value!!)
-                }
+        coroutineScope.launch {
+            _taskId.value?.let {
+                tasksRepository.deleteTask(it)
                 taskDeletedEvent()
             }
         }
@@ -110,14 +162,12 @@ class HomeViewModel(
 
     fun swipeToDeleteTask(index: Int) {
         coroutineScope.launch {
-            withContext(ioDispatcher) {
-                val task = tasks.value?.get(index)
-                task?.let {
-                    dataSource.deleteTaskById(it)
-                }
+            val task = tasks.value?.get(index)
+            task?.let {
+                tasksRepository.deleteTask(it.id)
+                hasMessageShown = false
+                taskDeletedEvent()
             }
-            hasMessageShown = false
-            taskDeletedEvent()
         }
     }
 
@@ -130,6 +180,31 @@ class HomeViewModel(
         }
 
         hasMessageShown = true
+    }
+
+    private fun filterTasks(tasksResult: Result<List<Task>>): LiveData<List<Task>> {
+        val result = MutableLiveData<List<Task>>()
+
+        if (tasksResult is Result.Success) {
+            coroutineScope.launch {
+                result.value = filterItems(tasksResult.data, currentFiltering)
+            }
+        } else {
+            result.value = emptyList()
+            showSnackbarMessage(R.string.loading_tasks_error)
+        }
+        return result
+    }
+
+    private fun filterItems(tasks: List<Task>, filterType: TasksFilterType): List<Task> {
+        val tasksToShow = ArrayList<Task>()
+
+        for (task in tasks) {
+            //do filtering
+        }
+
+        tasksToShow.addAll(tasks)
+        return tasksToShow
     }
 
     private fun showSnackbarMessage(@StringRes messageRes: Int) {

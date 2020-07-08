@@ -9,7 +9,7 @@
 
         <variable
             name="viewmodel"
-            type="in.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel" />
+            type="in.abhisheksaxena.gettaskdone.viewmodel.TaskDetailsPreviewViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -55,7 +55,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_default"
-                android:text="@{viewmodel.currentTask.title}"
+                android:text="@{viewmodel.task.title}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/black"
                 android:textStyle="bold"
@@ -73,7 +73,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/priority_text_view"
                 app:layout_constraintEnd_toStartOf="@id/priority_text_view"
                 app:layout_constraintTop_toTopOf="@id/priority_text_view"
-                app:setPriorityColor="@{viewmodel.currentTask}"
+                app:setPriorityColor="@{viewmodel.task}"
                 tools:background="#FF0000" />
 
             <TextView
@@ -83,7 +83,7 @@
                 android:textSize="18sp"
                 app:layout_constraintEnd_toStartOf="@id/margin_end"
                 app:layout_constraintTop_toTopOf="@id/title_text_view"
-                app:text="@{viewmodel.currentTask.priority}"
+                app:text="@{viewmodel.task.priority}"
                 tools:text="High" />
 
             <TextView
@@ -94,7 +94,7 @@
                 android:text="@string/details"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:visibility="@{viewmodel.currentTask.hasDetails()? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewmodel.task.hasDetails()? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="@id/margin_start"
                 app:layout_constraintTop_toBottomOf="@id/title_text_view" />
 
@@ -104,8 +104,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_01"
                 android:textStyle="bold"
-                android:text="@{viewmodel.currentTask.details}"
-                android:visibility="@{viewmodel.currentTask.hasDetails()? View.VISIBLE : View.GONE}"
+                android:text="@{viewmodel.task.details}"
+                android:visibility="@{viewmodel.task.hasDetails()? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="@id/margin_start"
                 app:layout_constraintTop_toBottomOf="@id/details_label_text_view"
                 tools:text="Details Content" />

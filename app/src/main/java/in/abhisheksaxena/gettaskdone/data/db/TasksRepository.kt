@@ -16,18 +16,18 @@ import kotlinx.coroutines.*
  */
 
 
-class TaskRepository private constructor(application: Application) {
+class TasksRepository private constructor(application: Application) {
 
     private val tasksLocalDataSource: TaskDataSource
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     companion object {
         @Volatile
-        private var INSTANCE: TaskRepository? = null
+        private var INSTANCE: TasksRepository? = null
 
-        fun getRepository(app: Application): TaskRepository {
+        fun getRepository(app: Application): TasksRepository {
             return INSTANCE ?: synchronized(this) {
-                TaskRepository(app).also {
+                TasksRepository(app).also {
                     INSTANCE = it
                 }
             }
@@ -39,6 +39,7 @@ class TaskRepository private constructor(application: Application) {
             application.applicationContext,
             TaskDatabase::class.java, TaskDatabase.DATABASE_NAME
         )
+            .fallbackToDestructiveMigration()
             .build()
 
         tasksLocalDataSource = TasksLocalDataSource(database.taskDao)
@@ -63,6 +64,16 @@ class TaskRepository private constructor(application: Application) {
         return tasksLocalDataSource.getTask(taskId)
     }
 
+    suspend fun saveTask(task: Task) {
+        coroutineScope { tasksLocalDataSource.saveTask(task) }
+    }
+
+    suspend fun updateTask(task: Task) {
+        coroutineScope {
+            tasksLocalDataSource.updateTask(task)
+        }
+    }
+
     suspend fun deleteAllTasks() {
         withContext(ioDispatcher) {
             launch { tasksLocalDataSource.deleteAllTasks() }
@@ -71,7 +82,7 @@ class TaskRepository private constructor(application: Application) {
 
     suspend fun deleteTask(taskId: Long) {
         withContext(ioDispatcher) {
-            launch { tasksLocalDataSource.deleteTask(taskId) }
+            tasksLocalDataSource.deleteTask(taskId)
         }
     }
 

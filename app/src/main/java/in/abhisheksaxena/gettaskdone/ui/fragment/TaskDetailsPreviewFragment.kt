@@ -2,16 +2,18 @@ package `in`.abhisheksaxena.gettaskdone.ui.fragment
 
 import `in`.abhisheksaxena.gettaskdone.EventObserver
 import `in`.abhisheksaxena.gettaskdone.R
-import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
+import `in`.abhisheksaxena.gettaskdone.data.db.TasksRepository
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentTaskDetailsPreviewBinding
 import `in`.abhisheksaxena.gettaskdone.util.Constants
 import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
+import `in`.abhisheksaxena.gettaskdone.viewmodel.TaskDetailsPreviewViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -26,7 +28,7 @@ class TaskDetailsPreviewFragment : Fragment() {
 
     private lateinit var binding: FragmentTaskDetailsPreviewBinding
 
-    private lateinit var viewModel: HomeViewModel
+    private val viewModel by viewModels<TaskDetailsPreviewViewModel>()
 
     private lateinit var arguments: TaskDetailsPreviewFragmentArgs
 
@@ -49,10 +51,8 @@ class TaskDetailsPreviewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        val database = TaskDatabase.getInstance(requireNotNull(this.activity).application).taskDao
+        val database = TasksRepository.getRepository(requireNotNull(this.activity).application)
         arguments = TaskDetailsPreviewFragmentArgs.fromBundle(requireArguments())
-        val factory = HomeViewModelFactory(database, arguments.taskId)
-        viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewmodel = viewModel
@@ -62,21 +62,22 @@ class TaskDetailsPreviewFragment : Fragment() {
         setupSnackbar()
         setupNavigation()
         setHasOptionsMenu(true)
+        viewModel.start(arguments.taskId)
     }
 
 
     private fun setupFab() {
         binding.fab.setOnClickListener {
-            viewModel.openTaskEvent(viewModel.tempTask.id)
+            viewModel.taskOpenEvent()
         }
     }
 
     private fun setupNavigation() {
-        viewModel.openTaskEvent.observe(viewLifecycleOwner, EventObserver {
+        viewModel.taskOpenEvent.observe(viewLifecycleOwner, EventObserver {
             navigateToTaskDetailsFragment()
         })
 
-        viewModel.taskDeletedEvent.observe(viewLifecycleOwner, EventObserver {
+        viewModel.taskDeleteEvent.observe(viewLifecycleOwner, EventObserver {
             navigateToHomeFragment()
         })
     }

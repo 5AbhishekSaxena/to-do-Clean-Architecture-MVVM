@@ -3,6 +3,7 @@ package `in`.abhisheksaxena.gettaskdone.ui.fragment
 import `in`.abhisheksaxena.gettaskdone.EventObserver
 import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.adapter.TaskListAdapter
+import `in`.abhisheksaxena.gettaskdone.data.db.TasksRepository
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentHomeBinding
 import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
 import `in`.abhisheksaxena.gettaskdone.util.Constants
@@ -55,9 +56,9 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val database = TaskDatabase.getInstance(requireNotNull(this.activity).application).taskDao
+        val database = TasksRepository.getRepository(requireNotNull(this.activity).application)
 
-        val factory = HomeViewModelFactory(database, -1)
+        val factory = HomeViewModelFactory(database)
 
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
         binding.lifecycleOwner = viewLifecycleOwner
