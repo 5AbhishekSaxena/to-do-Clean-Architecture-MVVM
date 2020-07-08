@@ -87,10 +87,6 @@ class HomeFragment : Fragment() {
             navigateToTaskDetailsPreview(it)
         })
 
-        viewModel.taskDeletedEvent.observe(viewLifecycleOwner, EventObserver {
-            viewModel.showUserMessage(Constants.MESSAGE.DELETE_TASK_OK)
-        })
-
         viewModel.taskSwipeToDeletedEvent.observe(viewLifecycleOwner, EventObserver {
             Log.d(TAG, "setupEventObservers - swipeToDelete")
             //adapter.notifyDataSetChanged()
