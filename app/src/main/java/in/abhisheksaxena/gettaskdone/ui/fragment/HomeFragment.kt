@@ -5,12 +5,10 @@ import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.adapter.TaskListAdapter
 import `in`.abhisheksaxena.gettaskdone.data.db.TasksRepository
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentHomeBinding
-import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
 import `in`.abhisheksaxena.gettaskdone.util.Constants
 import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
-import android.content.ClipData
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -25,6 +23,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.fragment_home.*
 
 
 /**
@@ -69,22 +68,18 @@ class HomeFragment : Fragment() {
             viewModel.newTaskEvent()
         }
 
-        viewModel.tasks.observe(viewLifecycleOwner, Observer {tasks ->
-            if (tasks != null && tasks.isNotEmpty()) {
-                binding.emptyListTextView.visibility = View.GONE
-                adapter.submitList(tasks)
-            }else
-                binding.emptyListTextView.visibility = View.VISIBLE
-        })
-
-        setupNavigation()
         setupSnackbar()
+        setupObservers()
         setupRecyclerView()
     }
 
-    private fun setupNavigation(){
+    private fun setupObservers() {
+        setupDataObservers()
+        setupEventObservers()
+    }
 
-        viewModel.newTaskEvent.observe(viewLifecycleOwner, EventObserver{
+    private fun setupEventObservers() {
+        viewModel.newTaskEvent.observe(viewLifecycleOwner, EventObserver {
             navigateToTaskDetails()
         })
 
@@ -95,17 +90,34 @@ class HomeFragment : Fragment() {
         viewModel.taskDeletedEvent.observe(viewLifecycleOwner, EventObserver {
             viewModel.showUserMessage(Constants.MESSAGE.DELETE_TASK_OK)
         })
+
+        viewModel.taskSwipeToDeletedEvent.observe(viewLifecycleOwner, EventObserver {
+            Log.d(TAG, "setupEventObservers - swipeToDelete")
+            //adapter.notifyDataSetChanged()
+        })
     }
 
-    private fun setupSnackbar(){
+    private fun setupDataObservers() {
+        viewModel.tasks.observe(viewLifecycleOwner, Observer { tasks ->
+            if (tasks != null && tasks.isNotEmpty()) {
+                binding.emptyListTextView.visibility = View.GONE
+            } else {
+                //binding.tasksRecyclerView.visibility = View.GONE
+                binding.emptyListTextView.visibility = View.VISIBLE
+            }
+            adapter.submitList(tasks)
+        })
+    }
+
+    private fun setupSnackbar() {
         Log.e(TAG, "setupSnackbar called")
-        view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_LONG)
-        arguments.let{
+        view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
+        arguments.let {
             viewModel.showUserMessage(it.userMessage)
         }
     }
 
-    private fun setupRecyclerView(){
+    private fun setupRecyclerView() {
         val lambda: (Long) -> Unit = { id: Long ->
             viewModel.openTaskEvent(id)
         }
@@ -120,8 +132,8 @@ class HomeFragment : Fragment() {
         setupSwipeToDeleteItem()
     }
 
-    private fun setupSwipeToDeleteItem(){
-        object: ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.END){
+    private fun setupSwipeToDeleteItem() {
+        object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.END) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -132,20 +144,22 @@ class HomeFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 viewModel.swipeToDeleteTask(viewHolder.adapterPosition)
-                adapter.notifyItemRemoved(viewHolder.adapterPosition)
             }
-        }.apply{
+        }.apply {
             ItemTouchHelper(this).attachToRecyclerView(binding.tasksRecyclerView)
         }
     }
 
     private fun navigateToTaskDetails() {
-            val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailsFragment(-1, getString(R.string.add_task_label))
-            findNavController().navigate(action)
+        val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailsFragment(
+            -1,
+            getString(R.string.add_task_label)
+        )
+        findNavController().navigate(action)
     }
 
     private fun navigateToTaskDetailsPreview(taskId: Long) {
-            val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailsPreviewFragment(taskId)
-            findNavController().navigate(action)
+        val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailsPreviewFragment(taskId)
+        findNavController().navigate(action)
     }
 }

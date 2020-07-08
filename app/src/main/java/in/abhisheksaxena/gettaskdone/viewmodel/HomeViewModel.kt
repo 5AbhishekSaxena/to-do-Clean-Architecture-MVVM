@@ -71,6 +71,9 @@ class HomeViewModel(
     private val _taskDeletedEvent = MutableLiveData<Event<Unit>>()
     val taskDeletedEvent: LiveData<Event<Unit>> = _taskDeletedEvent
 
+    private val _taskSwipeToDeletedEvent = MutableLiveData<Event<Unit>>()
+    val taskSwipeToDeletedEvent: LiveData<Event<Unit>> = _taskSwipeToDeletedEvent
+
     init {
         Log.e(TAG, "init current task: ${currentTask.value}")
         Log.e(TAG, "init temp task: $tempTask")
@@ -161,12 +164,13 @@ class HomeViewModel(
     }
 
     fun swipeToDeleteTask(index: Int) {
+        Log.d(TAG, "swipeToDeleteTask, index: $index")
         coroutineScope.launch {
             val task = tasks.value?.get(index)
             task?.let {
                 tasksRepository.deleteTask(it.id)
                 hasMessageShown = false
-                taskDeletedEvent()
+                taskSwipeToDeleteEvent()
             }
         }
     }
@@ -225,6 +229,12 @@ class HomeViewModel(
 
     private fun taskDeletedEvent() {
         _taskDeletedEvent.value = Event(Unit)
+    }
+
+    private fun taskSwipeToDeleteEvent(){
+        Log.d(TAG, "taskSwipeToDeleteEvent")
+        showSnackbarMessage(R.string.task_deleted_success)
+        _taskSwipeToDeletedEvent.value = Event(Unit)
     }
 
     override fun onCleared() {
