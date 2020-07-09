@@ -95,12 +95,6 @@ class HomeFragment : Fragment() {
 
     private fun setupDataObservers() {
         viewModel.tasks.observe(viewLifecycleOwner, Observer { tasks ->
-            if (tasks != null && tasks.isNotEmpty()) {
-                binding.emptyListTextView.visibility = View.GONE
-            } else {
-                //binding.tasksRecyclerView.visibility = View.GONE
-                binding.emptyListTextView.visibility = View.VISIBLE
-            }
             adapter.submitList(tasks)
         })
     }
