@@ -14,6 +14,7 @@ import android.view.*
 import android.view.View.OnAttachStateChangeListener
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -63,11 +64,8 @@ class HomeFragment : Fragment() {
 
         arguments = HomeFragmentArgs.fromBundle(requireArguments())
 
-        binding.fab.setOnClickListener {
-            viewModel.newTaskEvent()
-        }
-
         setHasOptionsMenu(true)
+        setupFab()
         setupSnackbar()
         setupObservers()
         setupRecyclerView()
@@ -146,6 +144,21 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun setupFab(){
+        binding.fab.setOnClickListener {
+            viewModel.newTaskEvent()
+        }
+
+        toggleFab(true)
+    }
+
+    private fun toggleFab(isVisible: Boolean) {
+        if (isVisible)
+            binding.fab.visibility = View.VISIBLE
+        else
+            binding.fab.visibility = View.INVISIBLE
+    }
+
     private fun navigateToTaskDetails() {
         val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailsFragment(
             -1,
@@ -183,10 +196,12 @@ class HomeFragment : Fragment() {
             override fun onViewDetachedFromWindow(arg0: View?) {
                 // search was detached/closed
                 viewModel.updateSearchText(null)
+                toggleFab(true)
             }
 
             override fun onViewAttachedToWindow(arg0: View?) {
                 // search was opened
+                toggleFab(false)
             }
         })
     }
