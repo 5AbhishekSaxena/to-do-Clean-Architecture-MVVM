@@ -52,7 +52,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:counterEnabled="true"
-                app:counterMaxLength="75"
                 app:boxBackgroundColor="@android:color/transparent"
                 app:boxStrokeColor="@color/darker_gray"
                 app:hintTextColor="@color/black"

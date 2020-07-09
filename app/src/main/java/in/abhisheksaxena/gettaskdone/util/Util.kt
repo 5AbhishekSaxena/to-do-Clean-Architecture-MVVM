@@ -2,6 +2,7 @@ package `in`.abhisheksaxena.gettaskdone.util
 
 import `in`.abhisheksaxena.gettaskdone.Event
 import android.app.Activity
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.LifecycleOwner
@@ -31,7 +32,12 @@ fun View.setupSnackbar(
 ){
     snackbarEvent.observe(lifecycleOwner, Observer{ event ->
         event.getContentIfNotHandled()?.let {
-            showSnackbar(context.getString(it), timeLength)
+            Log.d(javaClass.name, "setupSnackbar, event.hasExtras(): ${event.hasIntExtras()}, event.intArray: ${event.intExtras}")
+            if (event.hasIntExtras() && event.intExtras != null)
+                //Log.d(javaClass.name, "setupSnackbar, error: string: ${context.getString(it, *event.intExtras!!)}")
+                showSnackbar(context.getString(it, *event.intExtras!!), timeLength)
+            else
+                showSnackbar(context.getString(it), timeLength)
         }
     })
 }

@@ -82,8 +82,13 @@ class TaskDetailsFragment : Fragment() {
         setupFabButton()
         setupListeners()
         setupNavigation()
+        setupTextInputLayout()
         viewModel.start(arguments.taskId)
         //handleOnBackPressed()
+    }
+
+    private fun setupTextInputLayout() {
+        binding.titleLayout.counterMaxLength = Constants.TITLE_CHARACTER_LIMIT
     }
 
     private fun setupSpinner() {

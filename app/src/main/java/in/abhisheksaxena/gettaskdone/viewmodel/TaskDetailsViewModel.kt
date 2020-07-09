@@ -5,6 +5,7 @@ import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.data.Result
 import `in`.abhisheksaxena.gettaskdone.data.db.TasksRepository
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
+import `in`.abhisheksaxena.gettaskdone.util.Constants
 import android.app.Application
 import android.util.Log
 import androidx.annotation.StringRes
@@ -88,8 +89,8 @@ class TaskDetailsViewModel(application: Application) : AndroidViewModel(applicat
                     showSnackbarMessage(R.string.title_empty)
                     return
                 }
-                tempTask.title.length > 75 -> {
-                    showSnackbarMessage(R.string.title_text_over_limit)
+                tempTask.title.length > Constants.TITLE_CHARACTER_LIMIT -> {
+                    showSnackbarMessage(R.string.title_text_over_limit, Constants.TITLE_CHARACTER_LIMIT)
                     return
                 }
                 tempTask.priority.isEmpty() -> {
@@ -133,8 +134,13 @@ class TaskDetailsViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    private fun showSnackbarMessage(@StringRes messageRes: Int) {
-        _snackbarText.value = Event(messageRes)
+    private fun showSnackbarMessage(@StringRes messageRes: Int, vararg intExtras: Int) {
+        val event = Event(messageRes)
+        if (intExtras.isNotEmpty()) {
+            event.intExtras = intExtras.toTypedArray()
+        }
+
+        _snackbarText.value = event
     }
 
     private fun taskCreateEvent() {
