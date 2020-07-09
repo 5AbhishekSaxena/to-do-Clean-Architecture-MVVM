@@ -6,6 +6,7 @@ import `in`.abhisheksaxena.gettaskdone.data.Result
 import `in`.abhisheksaxena.gettaskdone.data.db.TasksRepository
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import `in`.abhisheksaxena.gettaskdone.util.Constants
+import `in`.abhisheksaxena.gettaskdone.util.getCurrentTimeInMilli
 import android.app.Application
 import android.util.Log
 import androidx.annotation.StringRes
@@ -102,6 +103,7 @@ class TaskDetailsViewModel(application: Application) : AndroidViewModel(applicat
             if (isNewTask || _taskId.value == null)
                 createTask(tempTask)
             else {
+                tempTask.lastUpdate = getCurrentTimeInMilli()
                 updateTask(tempTask)
             }
         } else {
