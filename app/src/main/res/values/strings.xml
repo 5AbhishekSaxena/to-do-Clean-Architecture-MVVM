@@ -23,4 +23,5 @@
     <string name="add_task_label">Add a Task</string>
     <string name="loading_tasks_error">Error while loading tasks</string>
     <string name="task_no_change">No changes.</string>
+    <string name="search">Search</string>
 </resources>
