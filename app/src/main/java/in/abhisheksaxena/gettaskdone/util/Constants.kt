@@ -17,6 +17,6 @@ class Constants {
     }
 
     companion object {
-        val TITLE_CHARACTER_LIMIT = 10
+        val TITLE_CHARACTER_LIMIT = 75
     }
 }
