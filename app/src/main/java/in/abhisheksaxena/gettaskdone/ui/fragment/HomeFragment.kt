@@ -5,15 +5,15 @@ import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.adapter.TaskListAdapter
 import `in`.abhisheksaxena.gettaskdone.data.db.TasksRepository
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentHomeBinding
-import `in`.abhisheksaxena.gettaskdone.util.Constants
 import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.View.OnAttachStateChangeListener
+import android.view.inputmethod.EditorInfo
+import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_home.*
 
 
 /**
@@ -68,6 +67,7 @@ class HomeFragment : Fragment() {
             viewModel.newTaskEvent()
         }
 
+        setHasOptionsMenu(true)
         setupSnackbar()
         setupObservers()
         setupRecyclerView()
@@ -157,5 +157,39 @@ class HomeFragment : Fragment() {
     private fun navigateToTaskDetailsPreview(taskId: Long) {
         val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailsPreviewFragment(taskId)
         findNavController().navigate(action)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.home_menu, menu)
+
+        val searchItem = menu.findItem(R.id.action_search)
+        val searchView = searchItem.actionView as SearchView
+
+        searchView.imeOptions = EditorInfo.IME_ACTION_DONE
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.updateSearchText(query)
+                return false
+            }
+        })
+
+        searchView.addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
+            override fun onViewDetachedFromWindow(arg0: View?) {
+                // search was detached/closed
+                Log.d(TAG, "onViewDetachedFromWindow, searchView closed")
+                viewModel.updateSearchText(null)
+            }
+
+            override fun onViewAttachedToWindow(arg0: View?) {
+                // search was opened
+                Log.d(TAG, "onViewAttachedToWindow, searchView opened")
+            }
+        })
     }
 }

@@ -42,8 +42,8 @@ class HomeViewModel(
 
     private var currentFiltering = TasksFilterType.ALL_TASKS
 
-    private val _searchText = MutableLiveData<String>()
-    val searchText: LiveData<String> = _searchText
+    private val _queryText = MutableLiveData<String>()
+    val queryText: LiveData<String> = _queryText
 
     private var _snackbarText = MutableLiveData<Event<Int>>()
     val snackbarText: LiveData<Event<Int>> = _snackbarText
@@ -85,7 +85,7 @@ class HomeViewModel(
 
         if (tasksResult is Result.Success) {
             coroutineScope.launch {
-                result.value = filterItems(tasksResult.data, currentFiltering, _searchText.value ?: "")
+                result.value = filterItems(tasksResult.data, currentFiltering, _queryText.value)
             }
         } else {
             result.value = emptyList()
@@ -97,19 +97,26 @@ class HomeViewModel(
     private fun filterItems(
         tasks: List<Task>,
         filterType: TasksFilterType,
-        searchText: String
+        query: String?
     ): List<Task> {
-        //val tasksToShow = mutableListOf<Task>()
+        Log.d(TAG, "filterItems, tasks: $tasks")
+        var tasksToShow = listOf<Task>()
 
-        if (searchText.isEmpty())
+        if (query == null || query.isEmpty())
             return tasks
 
-        return tasks.filter { it.toString().contains(searchText) }
-        //return tasksToShow
+        tasksToShow = tasks.filter { it.toString().contains(query) }
+        return tasksToShow
     }
 
-    fun updateSearchText(text: String){
-        _searchText.value = text
+    fun updateSearchText(text: String?){
+        Log.d(TAG, "updateSearchText, text: $text")
+        _queryText.value = text
+        loadTasks(false)
+    }
+
+    private fun loadTasks(forceLoad: Boolean){
+        _forceUpdate.value = forceLoad
     }
 
     private fun showSnackbarMessage(@StringRes messageRes: Int) {
