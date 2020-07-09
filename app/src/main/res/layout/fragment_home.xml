@@ -79,7 +79,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/no_tasks"
-                android:visibility="@{viewmodel.tasks.empty? View.INVISIBLE : View.VISIBLE}"
+                android:visibility="@{viewmodel.tasks.empty? View.VISIBLE : View.INVISIBLE}"
                 app:layout_constraintBottom_toBottomOf="@id/margin_bottom"
                 app:layout_constraintEnd_toEndOf="@id/margin_end"
                 app:layout_constraintStart_toStartOf="@id/margin_start"
