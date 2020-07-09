@@ -99,7 +99,6 @@ class HomeViewModel(
         filterType: TasksFilterType,
         query: String?
     ): List<Task> {
-        Log.d(TAG, "filterItems, tasks: $tasks")
         var tasksToShow = listOf<Task>()
 
         if (query == null || query.isEmpty())
@@ -110,7 +109,6 @@ class HomeViewModel(
     }
 
     fun updateSearchText(text: String?){
-        Log.d(TAG, "updateSearchText, text: $text")
         _queryText.value = text
         loadTasks(false)
     }
