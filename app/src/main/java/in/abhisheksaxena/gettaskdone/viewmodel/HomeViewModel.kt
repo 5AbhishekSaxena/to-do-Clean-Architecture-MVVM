@@ -104,7 +104,7 @@ class HomeViewModel(
         if (query == null || query.isEmpty())
             return tasks
 
-        tasksToShow = tasks.filter { it.toString().contains(query) }
+        tasksToShow = tasks.filter { it.toString().contains(query, true) }
         return tasksToShow
     }
 
