@@ -64,12 +64,14 @@ class HomeViewModel(
             task?.let {
                 tasksRepository.deleteTask(it.id)
                 hasMessageShown = false
+                Log.d(TAG, "swipeToDeleteTask, hasMessageShown: $hasMessageShown")
                 taskSwipeToDeleteEvent()
             }
         }
     }
 
     fun showUserMessage(message: Int) {
+        Log.d(TAG, "showUserMessage, hasMessageShown: $hasMessageShown, message: $message")
         if (hasMessageShown) return
         when (message) {
             Constants.MESSAGE.ADD_TASK_OK -> showSnackbarMessage(R.string.task_created_success)
@@ -118,6 +120,7 @@ class HomeViewModel(
     }
 
     private fun showSnackbarMessage(@StringRes messageRes: Int) {
+        Log.d(TAG, "showSnackbarMessage, hasMessageShown: $hasMessageShown")
         _snackbarText.value = Event(messageRes)
     }
 
@@ -131,7 +134,8 @@ class HomeViewModel(
 
     private fun taskSwipeToDeleteEvent(){
         Log.d(TAG, "taskSwipeToDeleteEvent")
-        showSnackbarMessage(R.string.task_deleted_success)
+        Log.d(TAG, "taskSwipeToDeleteEvent, hasMessageShows: $hasMessageShown")
+        showUserMessage(Constants.MESSAGE.DELETE_TASK_OK)
         _taskSwipeToDeletedEvent.value = Event(Unit)
     }
 
