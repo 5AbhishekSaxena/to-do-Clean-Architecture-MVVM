@@ -8,6 +8,12 @@ This is a simple application build using the Model View View-Model (MVVM) archit
 #### Play Store Link: 
 Coming Soon
 
+### Screenshots
+
+![Screenshot_2020-07-10-00-07-07-663_in abhisheksaxena gettaskdone](https://user-images.githubusercontent.com/19958130/87078607-8a2c2380-c242-11ea-90c3-8578ee7ff6f7.jpg)
+![Screenshot_2020-07-10-00-07-27-006_in abhisheksaxena gettaskdone](https://user-images.githubusercontent.com/19958130/87078687-a760f200-c242-11ea-88c1-ca0501e30178.jpg)
+![Screenshot_2020-07-10-00-07-16-325_in abhisheksaxena gettaskdone](https://user-images.githubusercontent.com/19958130/87078663-9d3ef380-c242-11ea-9714-7e895b35416e.jpg)
+
 ### Why contribute to this repository
 - Beginner-friendly
 - Polish your java concepts
