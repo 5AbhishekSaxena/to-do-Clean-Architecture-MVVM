@@ -4,10 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
+
         <variable
             name="viewmodel"
             type="in.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel" />
-
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -45,19 +47,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_begin="@dimen/margin_default"/>
+                app:layout_constraintGuide_begin="@dimen/margin_default" />
 
             <TextView
                 android:id="@+id/sort_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/margin_01"
+                android:text="@string/a_z"
+                android:textStyle="bold"
+                android:visibility="@{viewmodel.tasks.empty? View.INVISIBLE : View.VISIBLE}"
                 app:layout_constraintEnd_toStartOf="@id/margin_end"
                 app:layout_constraintTop_toTopOf="@id/margin_top"
-                android:textStyle="bold"
-                android:text="@string/a_z"
-                android:padding="@dimen/margin_01"
-                android:gravity="center"
-                app:setDrawableEnd="@{viewmodel.isAscendingOrder}"/>
+                app:setDrawableEnd="@{viewmodel.isAscendingOrder}" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/tasks_recycler_view"
@@ -76,6 +79,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/no_tasks"
+                android:visibility="@{viewmodel.tasks.empty? View.INVISIBLE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="@id/margin_bottom"
                 app:layout_constraintEnd_toEndOf="@id/margin_end"
                 app:layout_constraintStart_toStartOf="@id/margin_start"
