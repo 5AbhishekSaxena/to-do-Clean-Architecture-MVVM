@@ -83,7 +83,6 @@ class TaskDetailsViewModel(application: Application) : AndroidViewModel(applicat
                     "equals: ${currentTask.value == tempTask}" +
                     "isNewTask: $isNewTask"
         )
-        if (currentTask.value != tempTask) {
             when {
                 tempTask.title.isEmpty() -> {
                     showSnackbarMessage(R.string.title_empty)
@@ -99,6 +98,7 @@ class TaskDetailsViewModel(application: Application) : AndroidViewModel(applicat
                 }
             }
 
+        if (currentTask.value != tempTask) {
             if (isNewTask || _taskId.value == null)
                 createTask(tempTask)
             else {
