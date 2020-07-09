@@ -24,4 +24,5 @@
     <string name="loading_tasks_error">Error while loading tasks</string>
     <string name="task_no_change">No changes.</string>
     <string name="search">Search</string>
+    <string name="title_text_over_limit">Title must be less than 75 characters.</string>
 </resources>
