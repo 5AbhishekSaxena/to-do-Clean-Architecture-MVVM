@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import kotlin.math.log
 
 
 /**
@@ -65,10 +66,10 @@ class HomeFragment : Fragment() {
         arguments = HomeFragmentArgs.fromBundle(requireArguments())
 
         setHasOptionsMenu(true)
-        setupFab()
         setupSnackbar()
         setupObservers()
         setupRecyclerView()
+        setupOnClickListeners()
     }
 
     private fun setupObservers() {
@@ -141,6 +142,15 @@ class HomeFragment : Fragment() {
             }
         }.apply {
             ItemTouchHelper(this).attachToRecyclerView(binding.tasksRecyclerView)
+        }
+    }
+
+    private fun setupOnClickListeners(){
+        setupFab()
+
+        binding.sortTextView.setOnClickListener{
+            Log.d(TAG, "setupOnClickListeners, clicked")
+            viewModel.updateSortOrder()
         }
     }
 

@@ -37,6 +37,23 @@
                 android:orientation="horizontal"
                 app:layout_constraintGuide_end="@dimen/margin_default" />
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/margin_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="@dimen/margin_default"/>
+
+            <TextView
+                android:id="@+id/sort_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toStartOf="@id/margin_end"
+                android:padding="@dimen/margin_default"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textStyle="bold"
+                android:text="A-Z" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/tasks_recycler_view"
                 android:layout_width="0dp"
@@ -46,7 +63,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/margin_bottom"
                 app:layout_constraintEnd_toEndOf="@id/margin_end"
                 app:layout_constraintStart_toStartOf="@id/margin_start"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sort_text_view"
                 tools:listitem="@layout/task_list_item" />
 
             <TextView

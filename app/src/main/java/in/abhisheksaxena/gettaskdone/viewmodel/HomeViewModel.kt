@@ -12,6 +12,7 @@ import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
+import kotlin.math.log
 
 
 /**
@@ -34,6 +35,7 @@ class HomeViewModel(
         if (forceUpdate) {
             //refreshData
         }
+        //Log.d(TAG, "TAG, forceUpdate: $forceUpdate")
         tasksRepository.observeTasks().switchMap { filterTasks(it) }
     }
     val tasks: LiveData<List<Task>> = _tasks
@@ -41,6 +43,8 @@ class HomeViewModel(
     var hasMessageShown = false
 
     private var currentFiltering = TasksFilterType.ALL_TASKS
+
+    private var listIsAscending = true
 
     private val _queryText = MutableLiveData<String>()
     val queryText: LiveData<String> = _queryText
@@ -58,7 +62,7 @@ class HomeViewModel(
     val taskSwipeToDeletedEvent: LiveData<Event<Unit>> = _taskSwipeToDeletedEvent
 
     fun swipeToDeleteTask(index: Int) {
-        Log.d(TAG, "swipeToDeleteTask, index: $index")
+        //Log.d(TAG, "swipeToDeleteTask, index: $index")
         coroutineScope.launch {
             val task = tasks.value?.get(index)
             task?.let {
@@ -71,7 +75,7 @@ class HomeViewModel(
     }
 
     fun showUserMessage(message: Int) {
-        Log.d(TAG, "showUserMessage, hasMessageShown: $hasMessageShown, message: $message")
+        //Log.d(TAG, "showUserMessage, hasMessageShown: $hasMessageShown, message: $message")
         if (hasMessageShown) return
         when (message) {
             Constants.MESSAGE.ADD_TASK_OK -> showSnackbarMessage(R.string.task_created_success)
@@ -87,7 +91,12 @@ class HomeViewModel(
 
         if (tasksResult is Result.Success) {
             coroutineScope.launch {
-                result.value = filterItems(tasksResult.data, currentFiltering, _queryText.value)
+                result.value = filterItems(
+                    tasksResult.data,
+                    currentFiltering,
+                    _queryText.value,
+                    listIsAscending
+                )
             }
         } else {
             result.value = emptyList()
@@ -99,28 +108,42 @@ class HomeViewModel(
     private fun filterItems(
         tasks: List<Task>,
         filterType: TasksFilterType,
-        query: String?
+        query: String?,
+        isInAscendingOrder: Boolean = true
     ): List<Task> {
-        var tasksToShow = listOf<Task>()
 
-        if (query == null || query.isEmpty())
-            return tasks
+        var tasksToShow = if (query != null && query.isNotEmpty())
+            tasks.filter { it.toString().contains(query, true) }
+        else
+            tasks.toList()
 
-        tasksToShow = tasks.filter { it.toString().contains(query, true) }
+        Log.d(TAG, "filterItems, isAscendingOrder: $isInAscendingOrder")
+        tasksToShow = if (isInAscendingOrder)
+            tasksToShow.sortedWith(compareBy({ it.lastUpdate }, { it.title }))
+        else
+            tasksToShow.sortedWith(compareBy({ it.lastUpdate }, { it.title })).reversed()
+
+
         return tasksToShow
     }
 
-    fun updateSearchText(text: String?){
+    fun updateSearchText(text: String?) {
         _queryText.value = text
         loadTasks(false)
     }
 
-    private fun loadTasks(forceLoad: Boolean){
+    fun updateSortOrder() {
+        listIsAscending = !listIsAscending
+        //Log.d(TAG, "updateSortOrder, listIsAscending: $listIsAscending")
+        loadTasks(false)
+    }
+
+    private fun loadTasks(forceLoad: Boolean) {
         _forceUpdate.value = forceLoad
     }
 
     private fun showSnackbarMessage(@StringRes messageRes: Int) {
-        Log.d(TAG, "showSnackbarMessage, hasMessageShown: $hasMessageShown")
+        //Log.d(TAG, "showSnackbarMessage, hasMessageShown: $hasMessageShown")
         _snackbarText.value = Event(messageRes)
     }
 
@@ -132,9 +155,9 @@ class HomeViewModel(
         _openTaskEvent.value = Event(id)
     }
 
-    private fun taskSwipeToDeleteEvent(){
-        Log.d(TAG, "taskSwipeToDeleteEvent")
-        Log.d(TAG, "taskSwipeToDeleteEvent, hasMessageShows: $hasMessageShown")
+    private fun taskSwipeToDeleteEvent() {
+        //Log.d(TAG, "taskSwipeToDeleteEvent")
+        //Log.d(TAG, "taskSwipeToDeleteEvent, hasMessageShows: $hasMessageShown")
         showUserMessage(Constants.MESSAGE.DELETE_TASK_OK)
         _taskSwipeToDeletedEvent.value = Event(Unit)
     }
