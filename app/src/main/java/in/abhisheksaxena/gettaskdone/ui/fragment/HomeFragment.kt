@@ -182,13 +182,11 @@ class HomeFragment : Fragment() {
         searchView.addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
             override fun onViewDetachedFromWindow(arg0: View?) {
                 // search was detached/closed
-                Log.d(TAG, "onViewDetachedFromWindow, searchView closed")
                 viewModel.updateSearchText(null)
             }
 
             override fun onViewAttachedToWindow(arg0: View?) {
                 // search was opened
-                Log.d(TAG, "onViewAttachedToWindow, searchView opened")
             }
         })
     }
