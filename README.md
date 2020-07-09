@@ -10,6 +10,9 @@ Coming Soon
 
 ### Screenshots
 
+![Screenshot_2020-07-10-00-07-07-663_in abhisheksaxena gettaskdone](https://user-images.githubusercontent.com/19958130/87079770-2c004000-c244-11ea-93de-56a34b7e22c0.jpg)
+![Screenshot_2020-07-10-00-07-27-006_in abhisheksaxena gettaskdone](https://user-images.githubusercontent.com/19958130/87079761-27d42280-c244-11ea-8ef8-67b1a6eb4573.jpg)
+![Screenshot_2020-07-10-00-07-16-325_in abhisheksaxena gettaskdone](https://user-images.githubusercontent.com/19958130/87079778-2efb3080-c244-11ea-8e61-267dcda89472.jpg)
 
 ### Why contribute to this repository
 - Beginner-friendly
