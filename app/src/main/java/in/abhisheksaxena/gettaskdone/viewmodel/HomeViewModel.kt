@@ -118,9 +118,9 @@ class HomeViewModel(
 
         Log.d(TAG, "filterItems, isAscendingOrder: $isInAscendingOrder")
         tasksToShow = if (isInAscendingOrder)
-            tasksToShow.sortedWith(compareBy({ it.lastUpdate }, { it.getPriorityValue() }))
+            tasksToShow.sortedWith(compareBy({ it.getPriorityValue() }, { it.lastUpdate }))
         else
-            tasksToShow.sortedWith(compareBy({ it.lastUpdate }, { it.getPriorityValue() })).reversed()
+            tasksToShow.sortedWith(compareBy({ it.getPriorityValue() }, { it.lastUpdate } )).reversed()
 
 
         return tasksToShow
