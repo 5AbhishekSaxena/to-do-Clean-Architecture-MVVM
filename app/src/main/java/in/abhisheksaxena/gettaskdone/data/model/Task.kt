@@ -1,5 +1,8 @@
 package `in`.abhisheksaxena.gettaskdone.data.model
 
+import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
+import `in`.abhisheksaxena.gettaskdone.util.getCurrentTimeInMilli
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -14,14 +17,30 @@ data class Task(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     var title: String = "",
     var details: String = "",
-    var priority: String = ""
+    var priority: String = "",
+    @ColumnInfo(name = "created_on") val createdOn: Long = getCurrentTimeInMilli(),
+    @ColumnInfo(name = "last_update") var lastUpdate: Long = getCurrentTimeInMilli()
 ) {
-    constructor(task: Task) : this(task.id, task.title, task.details, task.priority)
+    constructor(task: Task) : this(
+        task.id,
+        task.title,
+        task.details,
+        task.priority,
+        task.createdOn,
+        task.lastUpdate
+    )
 
     fun hasDetails(): Boolean = details.isNotEmpty()
 
     override fun toString(): String {
-        return "{Task: id: $id, title: $title, details: $details, priority: $priority}"
+        return "{Task:" +
+                " id: $id, " +
+                " title: $title," +
+                " details: $details," +
+                " priority: $priority" +
+                " created_on: $createdOn" +
+                " last_update: $lastUpdate" +
+                "}"
     }
 
     interface TaskPriority {

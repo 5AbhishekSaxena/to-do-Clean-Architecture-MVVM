@@ -9,6 +9,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
+import java.util.*
 
 
 /**
@@ -41,3 +42,5 @@ fun View.setupSnackbar(
         }
     })
 }
+
+fun getCurrentTimeInMilli(): Long = Calendar.getInstance(Locale.getDefault()).timeInMillis

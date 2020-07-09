@@ -35,14 +35,7 @@ class TasksRepository private constructor(application: Application) {
     }
 
     init {
-        val database = Room.databaseBuilder(
-            application.applicationContext,
-            TaskDatabase::class.java, TaskDatabase.DATABASE_NAME
-        )
-            .fallbackToDestructiveMigration()
-            .build()
-
-        tasksLocalDataSource = TasksLocalDataSource(database.taskDao)
+        tasksLocalDataSource = TasksLocalDataSource(TaskDatabase.getInstance(application).taskDao)
     }
 
     suspend fun getTasks(forceUpdate: Boolean = false): Result<List<Task>> {

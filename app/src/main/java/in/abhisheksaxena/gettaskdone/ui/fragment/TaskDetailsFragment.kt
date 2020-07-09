@@ -73,7 +73,8 @@ class TaskDetailsFragment : Fragment() {
                 binding.titleEditText.setText(it.title)
                 binding.prioritySpinner.setText(it.priority, false)
                 binding.detailsEditText.setText(it.details)
-                viewModel.tempTask = Task(it)
+                viewModel.tempTask =
+                    Task(it)
             }
         })
 
