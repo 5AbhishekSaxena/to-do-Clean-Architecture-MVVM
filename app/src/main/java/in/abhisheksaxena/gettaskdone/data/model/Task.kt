@@ -32,6 +32,14 @@ data class Task(
 
     fun hasDetails(): Boolean = details.isNotEmpty()
 
+    fun getPriorityValue(): Int{
+        return when(priority){
+            "Low" -> 1
+            "Normal" -> 2
+            else -> 3
+        }
+    }
+
     override fun toString(): String {
         return "{Task:" +
                 " id: $id, " +
