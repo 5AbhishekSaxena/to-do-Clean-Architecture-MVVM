@@ -84,20 +84,20 @@ class TaskDetailsViewModel(application: Application) : AndroidViewModel(applicat
                     "equals: ${currentTask.value == tempTask}" +
                     "isNewTask: $isNewTask"
         )
-            when {
-                tempTask.title.isEmpty() -> {
-                    showSnackbarMessage(R.string.title_empty)
-                    return
-                }
-                tempTask.title.length > Constants.TITLE_CHARACTER_LIMIT -> {
-                    showSnackbarMessage(R.string.title_text_over_limit, Constants.TITLE_CHARACTER_LIMIT)
-                    return
-                }
-                tempTask.priority.isEmpty() -> {
-                    showSnackbarMessage(R.string.priority_empty)
-                    return
-                }
+        when {
+            tempTask.title.isEmpty() -> {
+                showSnackbarMessage(R.string.title_empty)
+                return
             }
+            tempTask.title.length > Constants.TITLE_CHARACTER_LIMIT -> {
+                showSnackbarMessage(R.string.title_text_over_limit, Constants.TITLE_CHARACTER_LIMIT)
+                return
+            }
+            tempTask.priority.isEmpty() -> {
+                showSnackbarMessage(R.string.priority_empty)
+                return
+            }
+        }
 
         if (currentTask.value != tempTask) {
             if (isNewTask || _taskId.value == null)
