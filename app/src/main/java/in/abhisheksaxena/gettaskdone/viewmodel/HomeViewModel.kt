@@ -12,7 +12,6 @@ import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
-import java.lang.RuntimeException
 
 
 /**
@@ -42,6 +41,9 @@ class HomeViewModel(
     var hasMessageShown = false
 
     private var currentFiltering = TasksFilterType.ALL_TASKS
+
+    private val _searchText = MutableLiveData<String>()
+    val searchText: LiveData<String> = _searchText
 
     private var _snackbarText = MutableLiveData<Event<Int>>()
     val snackbarText: LiveData<Event<Int>> = _snackbarText
@@ -83,7 +85,7 @@ class HomeViewModel(
 
         if (tasksResult is Result.Success) {
             coroutineScope.launch {
-                result.value = filterItems(tasksResult.data, currentFiltering)
+                result.value = filterItems(tasksResult.data, currentFiltering, _searchText.value ?: "")
             }
         } else {
             result.value = emptyList()
@@ -92,15 +94,22 @@ class HomeViewModel(
         return result
     }
 
-    private fun filterItems(tasks: List<Task>, filterType: TasksFilterType): List<Task> {
-        val tasksToShow = ArrayList<Task>()
+    private fun filterItems(
+        tasks: List<Task>,
+        filterType: TasksFilterType,
+        searchText: String
+    ): List<Task> {
+        //val tasksToShow = mutableListOf<Task>()
 
-        for (task in tasks) {
-            //do filtering
-        }
+        if (searchText.isEmpty())
+            return tasks
 
-        tasksToShow.addAll(tasks)
-        return tasksToShow
+        return tasks.filter { it.toString().contains(searchText) }
+        //return tasksToShow
+    }
+
+    fun updateSearchText(text: String){
+        _searchText.value = text
     }
 
     private fun showSnackbarMessage(@StringRes messageRes: Int) {
