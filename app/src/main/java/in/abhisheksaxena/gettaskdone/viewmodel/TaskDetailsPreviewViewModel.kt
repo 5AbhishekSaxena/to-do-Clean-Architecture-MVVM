@@ -26,6 +26,8 @@ class TaskDetailsPreviewViewModel(application: Application) : AndroidViewModel(a
 
     private val dataSource: TasksRepository = TasksRepository.getRepository(application)
 
+    private var hasMessageShown = false
+
     private val _taskId = MutableLiveData<Long>()
 
     private val _task = _taskId.switchMap { taskId ->
@@ -76,11 +78,13 @@ class TaskDetailsPreviewViewModel(application: Application) : AndroidViewModel(a
     }
 
     fun showUserMessage(message: Int) {
+        if(hasMessageShown) return
         when (message) {
             Constants.MESSAGE.ADD_TASK_OK -> showSnackBarMessage(R.string.task_created_success)
             Constants.MESSAGE.UPDATE_TASK_OK -> showSnackBarMessage(R.string.task_update_success)
             Constants.MESSAGE.UPDATE_TASK_NOT_OK -> showSnackBarMessage(R.string.task_no_change)
         }
+        hasMessageShown = true
     }
 
     fun taskOpenEvent() {

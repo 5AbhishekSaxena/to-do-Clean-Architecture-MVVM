@@ -16,6 +16,7 @@ import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
 import android.os.Bundle
 import android.view.*
 import android.widget.ArrayAdapter
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -85,7 +86,7 @@ class TaskDetailsFragment : Fragment() {
         setupNavigation()
         setupTextInputLayout()
         viewModel.start(arguments.taskId)
-        //handleOnBackPressed()
+        handleOnBackPressed()
     }
 
     private fun setupTextInputLayout() {
@@ -108,10 +109,10 @@ class TaskDetailsFragment : Fragment() {
 
         viewModel.taskUpdateEvent.observe(viewLifecycleOwner, EventObserver {
             var message =
-            if (it)
-                Constants.MESSAGE.UPDATE_TASK_OK
-            else
-                Constants.MESSAGE.UPDATE_TASK_NOT_OK
+                if (it)
+                    Constants.MESSAGE.UPDATE_TASK_OK
+                else
+                    Constants.MESSAGE.UPDATE_TASK_NOT_OK
 
             val action =
                 TaskDetailsFragmentDirections.actionTaskDetailsFragmentToTaskDetailsPreviewFragment(
@@ -162,21 +163,27 @@ class TaskDetailsFragment : Fragment() {
         hideKeyboard(requireActivity())
     }
 
-    /*//fixme - handle new navigation
+    //fixme - handle new navigation
     private fun handleOnBackPressed() {
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     // Handle the back button event'
-                    if (viewModel.viewState.value == AddTaskState.EDIT_STATE) {
-                        viewModel.updateViewState(AddTaskState.VIEW_STATE)
-                    } else {
-                        findNavController().navigateUp()
-                    }
+
+
+                    val action = if (arguments.taskId == -1L)
+                        TaskDetailsFragmentDirections.actionAddTaskFragmentToHomeFragment()
+                    else
+                        TaskDetailsFragmentDirections
+                            .actionTaskDetailsFragmentToTaskDetailsPreviewFragment(
+                                arguments.taskId, Constants.MESSAGE.UPDATE_TASK_NOT_OK
+                            )
+
+                    findNavController().navigate(action)
                 }
             }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-    }*/
+    }
 
     override fun onPause() {
         super.onPause()

@@ -10,6 +10,7 @@ import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.TaskDetailsPreviewViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -84,6 +85,7 @@ class TaskDetailsPreviewFragment : Fragment() {
 
     private fun setupSnackbar() {
         view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
+        Log.d(javaClass.name, "setupSnackbar, userMessage: ${arguments.userMessage}")
         viewModel.showUserMessage(arguments.userMessage)
     }
 
