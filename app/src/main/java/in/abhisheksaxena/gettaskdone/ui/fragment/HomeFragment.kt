@@ -62,6 +62,8 @@ class HomeFragment : Fragment() {
 
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewmodel = viewModel
+        binding.executePendingBindings()
 
         arguments = HomeFragmentArgs.fromBundle(requireArguments())
 

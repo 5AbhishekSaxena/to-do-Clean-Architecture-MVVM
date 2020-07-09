@@ -40,15 +40,38 @@ fun setPriorityColor(view: View, task: Task?) {
 }
 
 @BindingAdapter("app:setDate")
-fun setDate(textView: TextView, dateInMilli: Long?){
-    dateInMilli?.let{
-        val date = when{
+fun setDate(textView: TextView, dateInMilli: Long?) {
+    dateInMilli?.let {
+        val date = when {
             DateUtils.isToday(it) -> "Today"
             DateUtils.isToday(it + DateUtils.DAY_IN_MILLIS) -> "Yesterday"
             else -> SimpleDateFormat("MMMM dd, YYYY", Locale.getDefault()).format(Date(it))
         }
         textView.text = date
 
-        Log.d(TAG, "setDate, dateInMilli.today: $it, tomorrow: ${it - DateUtils.DAY_IN_MILLIS} yesterday: ${it + DateUtils.DAY_IN_MILLIS}")
+        Log.d(
+            TAG,
+            "setDate, dateInMilli.today: $it, tomorrow: ${it - DateUtils.DAY_IN_MILLIS} yesterday: ${it + DateUtils.DAY_IN_MILLIS}"
+        )
+    }
+}
+
+@BindingAdapter("app:setDrawableEnd")
+fun setDrawableEnd(textView: TextView, isAscendingOrder: Boolean?) {
+    isAscendingOrder?.let {
+        if (it)
+            textView.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.ic_baseline_arrow_upward_24,
+                0
+            )
+        else
+            textView.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.ic_baseline_arrow_downward_24,
+                0
+            )
     }
 }

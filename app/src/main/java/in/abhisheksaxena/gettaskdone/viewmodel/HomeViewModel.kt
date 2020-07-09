@@ -12,7 +12,6 @@ import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
-import kotlin.math.log
 
 
 /**
@@ -44,7 +43,7 @@ class HomeViewModel(
 
     private var currentFiltering = TasksFilterType.ALL_TASKS
 
-    private var listIsAscending = true
+    var isAscendingOrder = MutableLiveData<Boolean>(true)
 
     private val _queryText = MutableLiveData<String>()
     val queryText: LiveData<String> = _queryText
@@ -95,7 +94,7 @@ class HomeViewModel(
                     tasksResult.data,
                     currentFiltering,
                     _queryText.value,
-                    listIsAscending
+                    isAscendingOrder.value ?: true
                 )
             }
         } else {
@@ -133,7 +132,11 @@ class HomeViewModel(
     }
 
     fun updateSortOrder() {
-        listIsAscending = !listIsAscending
+        if (isAscendingOrder.value != null)
+            isAscendingOrder.value = !isAscendingOrder.value!!
+        else
+            isAscendingOrder.value = true
+
         //Log.d(TAG, "updateSortOrder, listIsAscending: $listIsAscending")
         loadTasks(false)
     }

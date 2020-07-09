@@ -25,4 +25,5 @@
     <string name="task_no_change">Changes discarded.</string>
     <string name="search">Search</string>
     <string name="title_text_over_limit">Title must be less than %1$d characters.</string>
+    <string name="a_z">A-Z</string>
 </resources>
