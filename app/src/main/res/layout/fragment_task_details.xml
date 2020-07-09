@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.text.InputType" />
     </data>
 
@@ -97,7 +98,7 @@
             android:layout_marginEnd="@dimen/margin_default"
             android:layout_marginBottom="@dimen/margin_default"
             android:src="@drawable/ic_baseline_add_24"
-            app:tint="#FFFFFF"
-            app:fabSize="normal" />
+            app:fabSize="normal"
+            app:tint="#FFFFFF" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
