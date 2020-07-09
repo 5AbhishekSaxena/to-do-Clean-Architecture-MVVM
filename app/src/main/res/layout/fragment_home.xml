@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="@dimen/margin_01"
-                android:text="@string/a_z"
+                android:text="@string/recent"
                 android:textStyle="bold"
                 android:visibility="@{viewmodel.tasks.empty? View.INVISIBLE : View.VISIBLE}"
                 app:layout_constraintEnd_toStartOf="@id/margin_end"
