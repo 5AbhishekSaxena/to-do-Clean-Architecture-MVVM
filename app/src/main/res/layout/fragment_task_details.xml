@@ -44,6 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                style="@style/TextInputLayoutStyle"
                 app:layout_constraintGuide_end="@dimen/margin_default" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -52,8 +53,9 @@
                 android:layout_height="wrap_content"
                 app:counterEnabled="true"
                 app:counterMaxLength="75"
-                app:boxBackgroundColor="@color/white"
-                app:hintTextColor="@color/primaryDarkColor"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:boxStrokeColor="@color/darker_gray"
+                app:hintTextColor="@color/black"
                 app:layout_constraintEnd_toEndOf="@id/margin_end"
                 app:layout_constraintStart_toStartOf="@id/margin_start"
                 app:layout_constraintTop_toTopOf="@id/margin_top">
@@ -63,7 +65,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/title"
-                android:maxLength="75"
+                android:textColor="@color/black"
+                android:textCursorDrawable="@drawable/custom_cursor"
                 android:inputType="textCapSentences" />
             </com.google.android.material.textfield.TextInputLayout>
 
