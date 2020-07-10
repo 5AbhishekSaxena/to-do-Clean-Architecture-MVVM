@@ -122,7 +122,6 @@ class HomeViewModel(
         else
             tasksToShow.sortedWith(compareByDescending {it.lastUpdate})
 
-
         return tasksToShow
     }
 
