@@ -69,17 +69,27 @@
                 android:inputType="textCapSentences" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:id="@+id/priority_label_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/priority"
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/margin_default"
+                app:layout_constraintTop_toBottomOf="@id/title_layout"
+                app:layout_constraintStart_toStartOf="@id/margin_start"/>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/priority_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_default"
+                android:layout_marginTop="@dimen/margin_01"
                 app:boxStrokeColor="@color/secondaryColor"
                 app:endIconTint="@color/primaryDarkColor"
                 app:layout_constraintEnd_toEndOf="@id/margin_end"
                 app:layout_constraintStart_toStartOf="@id/margin_start"
-                app:layout_constraintTop_toBottomOf="@id/title_layout">
+                app:layout_constraintTop_toBottomOf="@id/priority_label_text_view">
 
                 <AutoCompleteTextView
                     android:id="@+id/priority_spinner"
