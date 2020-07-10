@@ -12,7 +12,10 @@
         <item name="colorError">@color/errorColor</item>
         <item name="colorOnError">@color/secondaryTextColor</item>
         <item name="fontFamily">@font/roboto</item>
+    </style>
 
+    <style name="TextInputLayoutStyle" parent="TextAppearance.AppCompat">
+        <item name="colorAccent">@color/secondaryColor</item>
     </style>
 
 </resources>

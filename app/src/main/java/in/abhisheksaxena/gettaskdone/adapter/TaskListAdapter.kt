@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
  * @since 24-06-2020 07:48
  */
 
-class TaskListAdapter(val clickListener: TaskItemClickListener) : ListAdapter<Task, TaskListAdapter.ViewHolder>(TaskDiffCallback()) {
+class TaskListAdapter(private val clickListener: TaskItemClickListener) : ListAdapter<Task, TaskListAdapter.ViewHolder>(TaskDiffCallback()) {
 
     private val TAG = javaClass.name
 
