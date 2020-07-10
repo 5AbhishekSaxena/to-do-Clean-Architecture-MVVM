@@ -61,13 +61,13 @@ class HomeViewModel(
     val taskSwipeToDeletedEvent: LiveData<Event<Unit>> = _taskSwipeToDeletedEvent
 
     fun swipeToDeleteTask(index: Int) {
-        //Log.d(TAG, "swipeToDeleteTask, index: $index")
+        Log.d(TAG, "swipeToDeleteTask, index: $index")
         coroutineScope.launch {
             val task = tasks.value?.get(index)
             task?.let {
                 tasksRepository.deleteTask(it.id)
                 hasMessageShown = false
-                Log.d(TAG, "swipeToDeleteTask, hasMessageShown: $hasMessageShown")
+                //Log.d(TAG, "swipeToDeleteTask, hasMessageShown: $hasMessageShown")
                 taskSwipeToDeleteEvent()
             }
         }
@@ -116,7 +116,7 @@ class HomeViewModel(
         else
             tasks.toList()
 
-        Log.d(TAG, "filterItems, isAscendingOrder: $isInAscendingOrder")
+        //Log.d(TAG, "filterItems, isAscendingOrder: $isInAscendingOrder")
         tasksToShow = if (isInAscendingOrder)
             tasksToShow.sortedWith(compareBy { it.lastUpdate })
         else

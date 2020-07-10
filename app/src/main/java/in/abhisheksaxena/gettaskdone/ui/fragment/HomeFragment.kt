@@ -88,7 +88,7 @@ class HomeFragment : Fragment() {
         })
 
         viewModel.taskSwipeToDeletedEvent.observe(viewLifecycleOwner, EventObserver {
-            Log.d(TAG, "setupEventObservers - swipeToDelete")
+            //Log.d(TAG, "setupEventObservers - swipeToDelete")
             //adapter.notifyDataSetChanged()
         })
     }
@@ -100,7 +100,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupSnackbar() {
-        Log.e(TAG, "setupSnackbar called")
+        //Log.e(TAG, "setupSnackbar called")
         view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
         arguments.let {
             viewModel.showUserMessage(it.userMessage)
@@ -144,7 +144,7 @@ class HomeFragment : Fragment() {
         setupFab()
 
         binding.sortTextView.setOnClickListener{
-            Log.d(TAG, "setupOnClickListeners, clicked")
+            //Log.d(TAG, "setupOnClickListeners, clicked")
             viewModel.updateSortOrder()
         }
     }

@@ -22,8 +22,9 @@ fun hideKeyboard(activity: Activity?) {
         ?.hideSoftInputFromWindow((activity.currentFocus ?: View(activity)).windowToken, 0)
 }
 
-fun View.showSnackbar(snackBarText: String, timeLength: Int){
-    Snackbar.make(this, snackBarText, timeLength).show()
+fun View.showSnackbar(snackbarText: String, timeLength: Int){
+    //Log.d(javaClass.name, "showSnackbar, snackbarText: $snackbarText")
+    Snackbar.make(this, snackbarText, timeLength).show()
 }
 
 fun View.setupSnackbar(
@@ -32,8 +33,9 @@ fun View.setupSnackbar(
     timeLength: Int
 ){
     snackbarEvent.observe(lifecycleOwner, Observer{ event ->
+        //Log.d(javaClass.name, "setupSnackbar, event.getContentIfNotHandled: ${event.getContentIfNotHandled()}")
         event.getContentIfNotHandled()?.let {
-            Log.d(javaClass.name, "setupSnackbar, event.hasExtras(): ${event.hasIntExtras()}, event.intArray: ${event.intExtras}")
+            //Log.d(javaClass.name, "setupSnackbar, event.hasExtras(): ${event.hasIntExtras()}, event.intArray: ${event.intExtras}")
             if (event.hasIntExtras() && event.intExtras != null)
                 //Log.d(javaClass.name, "setupSnackbar, error: string: ${context.getString(it, *event.intExtras!!)}")
                 showSnackbar(context.getString(it, *event.intExtras!!), timeLength)
