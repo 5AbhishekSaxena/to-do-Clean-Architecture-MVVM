@@ -34,8 +34,8 @@ data class Task(
 
     fun getPriorityValue(): Int{
         return when(priority){
-            "Low" -> 1
-            "Normal" -> 2
+            TaskPriority.LOW -> 1
+            TaskPriority.MEDIUM -> 2
             else -> 3
         }
     }
