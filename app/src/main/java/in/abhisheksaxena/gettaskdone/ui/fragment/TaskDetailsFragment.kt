@@ -43,7 +43,7 @@ class TaskDetailsFragment : Fragment() {
     private val TAG = javaClass.name
 
     private val priorities =
-        listOf(Task.TaskPriority.LOW, Task.TaskPriority.NORMAL, Task.TaskPriority.HIGH)
+        listOf(Task.TaskPriority.LOW, Task.TaskPriority.MEDIUM, Task.TaskPriority.HIGH)
 
     override fun onCreateView(
         inflater: LayoutInflater,

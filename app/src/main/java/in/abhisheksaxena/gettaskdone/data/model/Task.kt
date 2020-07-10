@@ -54,7 +54,7 @@ data class Task(
     interface TaskPriority {
         companion object {
             const val LOW = "Low"
-            const val NORMAL = "Normal"
+            const val MEDIUM = "Medium"
             const val HIGH = "High"
         }
     }

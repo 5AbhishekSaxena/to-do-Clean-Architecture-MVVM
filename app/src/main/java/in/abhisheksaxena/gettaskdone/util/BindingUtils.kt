@@ -29,7 +29,7 @@ fun setPriorityColor(view: View, task: Task?) {
             Task.TaskPriority.LOW -> {
                 view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.dirty_yellow))
             }
-            Task.TaskPriority.NORMAL -> {
+            Task.TaskPriority.MEDIUM -> {
                 view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.dirty_green))
             }
             else -> {
