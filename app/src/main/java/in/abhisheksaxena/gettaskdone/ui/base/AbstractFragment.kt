@@ -30,7 +30,6 @@ abstract class AbstractFragment<B : ViewDataBinding, VM : BaseViewModel> :
     protected lateinit var binding: B
 
     protected abstract val viewModel: VM
-    protected abstract var modelClass: Class<VM>
 
     override fun onCreateView(
         inflater: LayoutInflater,
