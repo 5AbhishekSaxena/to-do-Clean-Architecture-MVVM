@@ -11,6 +11,7 @@ import `in`.abhisheksaxena.gettaskdone.util.TasksFilterType
 import android.app.Application
 import android.util.Log
 import androidx.annotation.StringRes
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
 
@@ -20,14 +21,13 @@ import kotlinx.coroutines.*
  * @since 24-06-2020 07:06
  */
 
-class HomeViewModel(application: Application): AbstractViewModel(application) {
+class HomeViewModel
+    @ViewModelInject constructor(application: Application, private val tasksRepository: TasksRepository): AbstractViewModel(application) {
 
     private val TAG = javaClass.name
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-
-    private val tasksRepository = TasksRepository.getRepository(application)
 
     private val _forceUpdate = MutableLiveData<Boolean>(false)
 

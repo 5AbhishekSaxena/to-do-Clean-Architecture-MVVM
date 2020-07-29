@@ -10,6 +10,7 @@ import `in`.abhisheksaxena.gettaskdone.util.getCurrentTimeInMilli
 import android.app.Application
 import android.util.Log
 import androidx.annotation.StringRes
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
 
@@ -21,9 +22,9 @@ import kotlinx.coroutines.*
 
 private const val TAG = "TaskDetailsViewModel"
 
-class TaskDetailsViewModel(application: Application) : AbstractViewModel(application) {
-
-    private val tasksRepository = TasksRepository.getRepository(application)
+class TaskDetailsViewModel
+    @ViewModelInject
+        constructor(application: Application, private val tasksRepository: TasksRepository) : AbstractViewModel(application) {
 
     private val viewModelJob = Job()
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)

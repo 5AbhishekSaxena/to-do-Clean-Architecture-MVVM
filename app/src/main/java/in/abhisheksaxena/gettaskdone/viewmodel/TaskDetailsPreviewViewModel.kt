@@ -8,6 +8,7 @@ import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import `in`.abhisheksaxena.gettaskdone.util.Constants
 import android.app.Application
 import androidx.annotation.StringRes
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
 
@@ -17,21 +18,20 @@ import kotlinx.coroutines.*
  * @since 07-07-2020 16:27
  */
 
-class TaskDetailsPreviewViewModel(application: Application) : AbstractViewModel(application) {
+class TaskDetailsPreviewViewModel
+    @ViewModelInject constructor(application: Application, private val tasksRepository: TasksRepository) : AbstractViewModel(application) {
 
     private val viewModelJob = Job()
     private val coroutineScope: CoroutineScope =
         CoroutineScope(Dispatchers.Main + viewModelJob)
     private val ioDispatcher = Dispatchers.IO
 
-    private val dataSource: TasksRepository = TasksRepository.getRepository(application)
-
     private var hasMessageShown = false
 
     private val _taskId = MutableLiveData<Long>()
 
     private val _task = _taskId.switchMap { taskId ->
-        dataSource.observeTask(taskId).map { computeResult(it) }
+        tasksRepository.observeTask(taskId).map { computeResult(it) }
     }
     val task: LiveData<Task?> = _task
 
@@ -67,7 +67,7 @@ class TaskDetailsPreviewViewModel(application: Application) : AbstractViewModel(
     fun deleteTask() {
         _taskId.value?.let { taskId ->
             coroutineScope.launch {
-                dataSource.deleteTask(taskId)
+                tasksRepository.deleteTask(taskId)
                 taskDeleteEvent()
             }
         }
