@@ -4,11 +4,11 @@ import `in`.abhisheksaxena.gettaskdone.EventObserver
 import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.data.db.TasksRepository
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentTaskDetailsPreviewBinding
+import `in`.abhisheksaxena.gettaskdone.ui.base.AbstractFragment
 import `in`.abhisheksaxena.gettaskdone.util.Constants
 import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.TaskDetailsPreviewViewModel
-import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -25,37 +25,17 @@ import com.google.android.material.snackbar.Snackbar
  * @since 02-07-2020 14:15
  */
 
-class TaskDetailsPreviewFragment : Fragment() {
+class TaskDetailsPreviewFragment : AbstractFragment<FragmentTaskDetailsPreviewBinding, TaskDetailsPreviewViewModel>() {
 
-    private lateinit var binding: FragmentTaskDetailsPreviewBinding
-
-    private val viewModel by viewModels<TaskDetailsPreviewViewModel>()
+    override var layoutRes: Int = R.layout.fragment_task_details_preview
+    override val viewModel: TaskDetailsPreviewViewModel by viewModels()
 
     private lateinit var arguments: TaskDetailsPreviewFragmentArgs
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return DataBindingUtil.inflate<FragmentTaskDetailsPreviewBinding>(
-            inflater,
-            R.layout.fragment_task_details_preview,
-            container,
-            false
-        ).apply {
-            binding = this
-        }.root
-    }
+    override fun onViewCreated(savedInstanceState: Bundle?) {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
-        val database = TasksRepository.getRepository(requireNotNull(this.activity).application)
         arguments = TaskDetailsPreviewFragmentArgs.fromBundle(requireArguments())
 
-        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewmodel = viewModel
         binding.executePendingBindings()
 

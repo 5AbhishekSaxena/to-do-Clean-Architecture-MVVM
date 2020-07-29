@@ -21,7 +21,7 @@ import kotlinx.coroutines.*
 
 private const val TAG = "TaskDetailsViewModel"
 
-class TaskDetailsViewModel(application: Application) : AndroidViewModel(application) {
+class TaskDetailsViewModel(application: Application) : AbstractViewModel(application) {
 
     private val tasksRepository = TasksRepository.getRepository(application)
 

@@ -11,11 +11,12 @@ import java.lang.IllegalArgumentException
  * @since 24-06-2020 12:42
  */
 
+/*
 class HomeViewModelFactory(private val dataSource: TasksRepository): BaseViewModelFactory{
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(HomeViewModel::class.java))
-            return HomeViewModel(dataSource) as T
+            return HomeViewModel() as T
         throw IllegalArgumentException("Unknown ViewModel initialised")
     }
-}
+}*/

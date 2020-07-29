@@ -3,22 +3,17 @@ package `in`.abhisheksaxena.gettaskdone.ui.fragment
 import `in`.abhisheksaxena.gettaskdone.EventObserver
 import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.adapter.TaskListAdapter
-import `in`.abhisheksaxena.gettaskdone.data.db.TasksRepository
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentHomeBinding
+import `in`.abhisheksaxena.gettaskdone.ui.base.AbstractFragment
 import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
-import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.View.OnAttachStateChangeListener
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.isVisible
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,39 +26,20 @@ import com.google.android.material.snackbar.Snackbar
  * @since 24-06-2020 11:09
  */
 
-class HomeFragment : Fragment() {
+class HomeFragment : AbstractFragment<FragmentHomeBinding, HomeViewModel>() {
 
     private val TAG = javaClass.name
 
-    private lateinit var binding: FragmentHomeBinding
-
-    private lateinit var viewModel: HomeViewModel
+    override var layoutRes: Int = R.layout.fragment_home
+    override val viewModel: HomeViewModel by viewModels()
 
     private lateinit var arguments: HomeFragmentArgs
 
     private lateinit var adapter: TaskListAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val database = TasksRepository.getRepository(requireNotNull(this.activity).application)
-
-        val factory = HomeViewModelFactory(database)
-
-        viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
-        binding.lifecycleOwner = viewLifecycleOwner
+    override fun onViewCreated(savedInstanceState: Bundle?) {
         binding.viewmodel = viewModel
         binding.executePendingBindings()
-
         arguments = HomeFragmentArgs.fromBundle(requireArguments())
 
         setHasOptionsMenu(true)

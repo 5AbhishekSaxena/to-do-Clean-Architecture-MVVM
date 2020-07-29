@@ -17,7 +17,7 @@ import kotlinx.coroutines.*
  * @since 07-07-2020 16:27
  */
 
-class TaskDetailsPreviewViewModel(application: Application) : AndroidViewModel(application) {
+class TaskDetailsPreviewViewModel(application: Application) : AbstractViewModel(application) {
 
     private val viewModelJob = Job()
     private val coroutineScope: CoroutineScope =
