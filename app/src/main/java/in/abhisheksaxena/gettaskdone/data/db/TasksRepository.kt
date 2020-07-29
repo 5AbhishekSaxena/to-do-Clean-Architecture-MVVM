@@ -3,9 +3,8 @@ package `in`.abhisheksaxena.gettaskdone.data.db
 import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
 import `in`.abhisheksaxena.gettaskdone.data.db.local.TasksLocalDataSource
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
-import android.app.Application
-import androidx.room.Room
 import `in`.abhisheksaxena.gettaskdone.data.Result
+import android.content.Context
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.*
 
@@ -16,7 +15,7 @@ import kotlinx.coroutines.*
  */
 
 
-class TasksRepository private constructor(application: Application) {
+class TasksRepository private constructor( context: Context) {
 
     private val tasksLocalDataSource: TaskDataSource
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -25,9 +24,9 @@ class TasksRepository private constructor(application: Application) {
         @Volatile
         private var INSTANCE: TasksRepository? = null
 
-        fun getRepository(app: Application): TasksRepository {
+        fun getRepository(context: Context): TasksRepository {
             return INSTANCE ?: synchronized(this) {
-                TasksRepository(app).also {
+                TasksRepository(context).also {
                     INSTANCE = it
                 }
             }
@@ -35,7 +34,7 @@ class TasksRepository private constructor(application: Application) {
     }
 
     init {
-        tasksLocalDataSource = TasksLocalDataSource(TaskDatabase.getInstance(application).taskDao)
+        tasksLocalDataSource = TasksLocalDataSource(TaskDatabase.getInstance(context).taskDao)
     }
 
     suspend fun getTasks(forceUpdate: Boolean = false): Result<List<Task>> {
