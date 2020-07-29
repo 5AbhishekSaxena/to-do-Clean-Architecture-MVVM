@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModelStoreOwner
  * @since 24-06-2020 06:56
  */
 
-abstract class BaseFragment<B : ViewDataBinding, VM : BaseViewModel> :
+abstract class AbstractFragment<B : ViewDataBinding, VM : BaseViewModel> :
     Fragment() {
 
     @get:LayoutRes
@@ -29,7 +29,7 @@ abstract class BaseFragment<B : ViewDataBinding, VM : BaseViewModel> :
 
     protected lateinit var binding: B
 
-    protected lateinit var viewModel: VM
+    protected abstract val viewModel: VM
     protected abstract var modelClass: Class<VM>
 
     override fun onCreateView(
@@ -42,15 +42,8 @@ abstract class BaseFragment<B : ViewDataBinding, VM : BaseViewModel> :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        getViewModelStoreOwner()?.let { owner ->
-            viewModel =
-                ViewModelProvider(owner).get(modelClass)
-        }
         onViewCreated(savedInstanceState)
     }
 
     protected abstract fun onViewCreated(savedInstanceState: Bundle?)
-
-    protected abstract fun getViewModelStoreOwner(): ViewModelStoreOwner?
 }
