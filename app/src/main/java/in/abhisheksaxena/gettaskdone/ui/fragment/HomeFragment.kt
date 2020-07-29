@@ -15,10 +15,12 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
 
 /**
@@ -26,6 +28,7 @@ import com.google.android.material.snackbar.Snackbar
  * @since 24-06-2020 11:09
  */
 
+@AndroidEntryPoint
 class HomeFragment : AbstractFragment<FragmentHomeBinding, HomeViewModel>() {
 
     private val TAG = javaClass.name

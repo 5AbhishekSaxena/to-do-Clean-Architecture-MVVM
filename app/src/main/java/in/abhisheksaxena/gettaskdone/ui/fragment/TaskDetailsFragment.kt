@@ -20,6 +20,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
 
 /**
@@ -27,11 +28,12 @@ import com.google.android.material.snackbar.Snackbar
  * @since 24-06-2020 07:43
  */
 
+@AndroidEntryPoint
 class TaskDetailsFragment : AbstractFragment<FragmentTaskDetailsBinding, TaskDetailsViewModel>() {
 
     @LayoutRes
     override var layoutRes: Int = R.layout.fragment_task_details
-    override val viewModel by viewModels<TaskDetailsViewModel>()
+    override val viewModel: TaskDetailsViewModel by viewModels()
 
     private lateinit var arguments: TaskDetailsFragmentArgs
 

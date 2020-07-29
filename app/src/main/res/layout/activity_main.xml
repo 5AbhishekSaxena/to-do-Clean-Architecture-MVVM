@@ -27,7 +27,7 @@
             android:id="@+id/default_navHost_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="in.abhisheksaxena.gettaskdone.ui.MainNavHostFragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
             app:defaultNavHost="true"
             app:navGraph="@navigation/to_do_navigation" />
     </LinearLayout>

@@ -18,6 +18,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
 
 /**
@@ -25,6 +26,7 @@ import com.google.android.material.snackbar.Snackbar
  * @since 02-07-2020 14:15
  */
 
+@AndroidEntryPoint
 class TaskDetailsPreviewFragment : AbstractFragment<FragmentTaskDetailsPreviewBinding, TaskDetailsPreviewViewModel>() {
 
     override var layoutRes: Int = R.layout.fragment_task_details_preview
