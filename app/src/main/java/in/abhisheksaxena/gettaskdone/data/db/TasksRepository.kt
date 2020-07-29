@@ -15,12 +15,12 @@ import kotlinx.coroutines.*
  */
 
 
-class TasksRepository private constructor( context: Context) {
+class TasksRepository(/*context: Context, */private val tasksLocalDataSource: TasksLocalDataSource) {
 
-    private val tasksLocalDataSource: TaskDataSource
+    //private val tasksLocalDataSource: TaskDataSource
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    companion object {
+    /*companion object {
         @Volatile
         private var INSTANCE: TasksRepository? = null
 
@@ -31,11 +31,11 @@ class TasksRepository private constructor( context: Context) {
                 }
             }
         }
-    }
+    }*/
 
-    init {
+    /*init {
         tasksLocalDataSource = TasksLocalDataSource(TaskDatabase.getInstance(context).taskDao)
-    }
+    }*/
 
     suspend fun getTasks(forceUpdate: Boolean = false): Result<List<Task>> {
         return tasksLocalDataSource.getTasks()

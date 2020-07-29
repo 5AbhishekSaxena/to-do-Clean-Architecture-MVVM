@@ -22,44 +22,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 )
 abstract class TaskDatabase : RoomDatabase() {
 
-    abstract val taskDao: TaskDao
+    abstract fun getTaskDao(): TaskDao
 
     companion object {
-
-        private const val DATABASE_NAME = "taskdb"
-
-        @Volatile
-        private var INSTANCE: TaskDatabase? = null
-
-        fun getInstance(context: Context): TaskDatabase {
-            synchronized(this) {
-                var instance = INSTANCE
-                if (instance == null) {
-                    instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        TaskDatabase::class.java,
-                        DATABASE_NAME
-                    )
-                        .fallbackToDestructiveMigration()
-                        .addMigrations(MIGRATION_3_4)
-                        .build()
-                    INSTANCE = instance
-                }
-                return instance
-            }
-        }
-
-
-        private val MIGRATION_3_4: Migration = object : Migration(2, 3) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL(
-                    "ALTER TABLE Tasks "
-                            + " ADD COLUMN " +
-                            "created_on LONG DEFAULT (${getCurrentTimeInMilli()}), " +
-                            "last_update LONG DEFAULT (${getCurrentTimeInMilli()})"
-                )
-            }
-        }
+        const val DATABASE_NAME = "taskdb"
     }
 
 }
