@@ -24,11 +24,6 @@ class TaskDetailsPreviewViewModel
     private val tasksRepository: TasksRepository
 ) : AbstractViewModel(application) {
 
-    private val viewModelJob = Job()
-    private val coroutineScope: CoroutineScope =
-        CoroutineScope(Dispatchers.Main + viewModelJob)
-    private val ioDispatcher = Dispatchers.IO
-
     private var hasMessageShown = false
 
     private val _taskId = MutableLiveData<Long>()
@@ -40,9 +35,6 @@ class TaskDetailsPreviewViewModel
 
     private val _taskOpenEvent = MutableLiveData<Event<Unit>>()
     val taskOpenEvent: LiveData<Event<Unit>> = _taskOpenEvent
-
-    private val _taskUpdateEvent = MutableLiveData<Event<Unit>>()
-    val taskUpdateEvent: LiveData<Event<Unit>> = _taskUpdateEvent
 
     private val _taskDeleteEvent = MutableLiveData<Event<Unit>>()
     val taskDeleteEvent: LiveData<Event<Unit>> = _taskDeleteEvent
@@ -59,7 +51,7 @@ class TaskDetailsPreviewViewModel
         return if (resultTask is Result.Success) {
             resultTask.data
         } else {
-            showSnackBarMessage(R.string.loading_tasks_error)
+            showSnackbarMessage(R.string.loading_tasks_error)
             null
         }
     }
@@ -73,23 +65,14 @@ class TaskDetailsPreviewViewModel
         }
     }
 
-    private fun showSnackBarMessage(@StringRes messageRes: Int) {
-        _snackbarText.value = Event(messageRes)
-    }
-
     override fun showSnackbarMessage(messageRes: Int, intExtras: List<Int>) {
-        if(hasMessageShown) return
+        if (hasMessageShown) return
         super.showSnackbarMessage(messageRes, intExtras)
-        //hasMessageShown = true
+        hasMessageShown = true
     }
 
     fun taskOpenEvent() {
         _taskOpenEvent.value = Event(Unit)
-    }
-
-    //todo
-    fun taskUpdateEvent() {
-        _taskUpdateEvent.value = Event(Unit)
     }
 
     private fun taskDeleteEvent() {

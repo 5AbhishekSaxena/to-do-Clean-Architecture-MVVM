@@ -8,6 +8,9 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 
 
 /**
@@ -16,7 +19,14 @@ import androidx.lifecycle.MutableLiveData
  */
 
 abstract class AbstractViewModel(application: Application) : AndroidViewModel(application) {
-    protected val _snackbarText: MutableLiveData<Event<Int>> = MutableLiveData()
+
+
+    protected val viewModelJob = Job()
+    protected val coroutineScope: CoroutineScope =
+        CoroutineScope(Dispatchers.Main + viewModelJob)
+    protected val ioDispatcher = Dispatchers.IO
+
+    private val _snackbarText: MutableLiveData<Event<Int>> = MutableLiveData()
     val snackbarText: LiveData<Event<Int>> = _snackbarText
 
     open fun showSnackbarMessage(
@@ -55,5 +65,10 @@ abstract class AbstractViewModel(application: Application) : AndroidViewModel(ap
             snackbarEvent.intExtras = intExtras
 
         _snackbarText.value = snackbarEvent
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
     }
 }
