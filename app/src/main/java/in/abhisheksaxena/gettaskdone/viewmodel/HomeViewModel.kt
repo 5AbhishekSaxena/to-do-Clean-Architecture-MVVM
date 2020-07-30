@@ -10,7 +10,6 @@ import `in`.abhisheksaxena.gettaskdone.util.Constants
 import `in`.abhisheksaxena.gettaskdone.util.TasksFilterType
 import android.app.Application
 import android.util.Log
-import androidx.annotation.StringRes
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
@@ -71,15 +70,10 @@ class HomeViewModel
         }
     }
 
-    fun showUserMessage(message: Int) {
+    override fun showSnackbarMessage(messageRes: Int, intExtras: List<Int>) {
         //Log.d(TAG, "showUserMessage, hasMessageShown: $hasMessageShown, message: $message")
         if (hasMessageShown) return
-        when (message) {
-            Constants.MESSAGE.ADD_TASK_OK -> showSnackbarMessage(R.string.task_created_success)
-            Constants.MESSAGE.UPDATE_TASK_OK -> showSnackbarMessage(R.string.task_update_success)
-            Constants.MESSAGE.DELETE_TASK_OK -> showSnackbarMessage(R.string.task_deleted_success)
-        }
-
+        super.showSnackbarMessage(messageRes, intExtras)
         hasMessageShown = true
     }
 
@@ -142,11 +136,6 @@ class HomeViewModel
         _forceUpdate.value = forceLoad
     }
 
-    private fun showSnackbarMessage(@StringRes messageRes: Int) {
-        //Log.d(TAG, "showSnackbarMessage, hasMessageShown: $hasMessageShown")
-        _snackbarText.value = Event(messageRes)
-    }
-
     fun newTaskEvent() {
         _newTaskEvent.value = Event(Unit)
     }
@@ -158,7 +147,7 @@ class HomeViewModel
     private fun taskSwipeToDeleteEvent() {
         //Log.d(TAG, "taskSwipeToDeleteEvent")
         //Log.d(TAG, "taskSwipeToDeleteEvent, hasMessageShows: $hasMessageShown")
-        showUserMessage(Constants.MESSAGE.DELETE_TASK_OK)
+        showSnackbarMessage(Constants.MESSAGE.DELETE_TASK_OK)
         _taskSwipeToDeletedEvent.value = Event(Unit)
     }
 

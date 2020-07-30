@@ -88,7 +88,7 @@ class TaskDetailsViewModel
                 return
             }
             tempTask.title.length > Constants.TITLE_CHARACTER_LIMIT -> {
-                showSnackbarMessage(R.string.title_text_over_limit, Constants.TITLE_CHARACTER_LIMIT)
+                showSnackbarMessage(R.string.title_text_over_limit, listOf(Constants.TITLE_CHARACTER_LIMIT))
                 return
             }
             tempTask.priority.isEmpty() -> {
@@ -132,15 +132,6 @@ class TaskDetailsViewModel
             showSnackbarMessage(R.string.loading_tasks_error)
             null
         }
-    }
-
-    private fun showSnackbarMessage(@StringRes messageRes: Int, vararg intExtras: Int) {
-        val event = Event(messageRes)
-        if (intExtras.isNotEmpty()) {
-            event.intExtras = intExtras.toTypedArray()
-        }
-
-        _snackbarText.value = event
     }
 
     private fun taskCreateEvent() {

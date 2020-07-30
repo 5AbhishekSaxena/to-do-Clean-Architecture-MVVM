@@ -9,7 +9,6 @@ import `in`.abhisheksaxena.gettaskdone.ui.base.AbstractFragment
 import `in`.abhisheksaxena.gettaskdone.util.Constants
 import `in`.abhisheksaxena.gettaskdone.util.HideSoftKeyboardOnFocusChange
 import `in`.abhisheksaxena.gettaskdone.util.hideKeyboard
-import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.TaskDetailsViewModel
 import android.os.Bundle
 import android.widget.ArrayAdapter
@@ -43,7 +42,6 @@ class TaskDetailsFragment : AbstractFragment<FragmentTaskDetailsBinding, TaskDet
         listOf(Task.TaskPriority.LOW, Task.TaskPriority.MEDIUM, Task.TaskPriority.HIGH)
 
     override fun onViewCreated(savedInstanceState: Bundle?) {
-
 
         arguments = TaskDetailsFragmentArgs.fromBundle(requireArguments())
         //Log.e(TAG, "arguments, state: ${arguments.navData}")

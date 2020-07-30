@@ -13,6 +13,7 @@ class Constants {
             const val UPDATE_TASK_OK = 2
             const val UPDATE_TASK_NOT_OK = 3
             const val DELETE_TASK_OK = 4
+            const val ERROR_LOADING_TASK = 21
         }
     }
 

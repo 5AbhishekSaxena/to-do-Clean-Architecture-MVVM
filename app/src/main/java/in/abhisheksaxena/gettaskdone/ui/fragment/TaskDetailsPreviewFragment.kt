@@ -6,8 +6,6 @@ import `in`.abhisheksaxena.gettaskdone.data.db.TasksRepository
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentTaskDetailsPreviewBinding
 import `in`.abhisheksaxena.gettaskdone.ui.base.AbstractFragment
 import `in`.abhisheksaxena.gettaskdone.util.Constants
-import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
-import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.TaskDetailsPreviewViewModel
 import android.os.Bundle
 import android.util.Log
@@ -70,7 +68,7 @@ class TaskDetailsPreviewFragment :
         //Log.d(javaClass.name, "setupSnackbar, userMessage: ${arguments.userMessage}")
         super.setupSnackbar()
 
-        viewModel.showUserMessage(arguments.userMessage)
+        viewModel.showSnackbarMessage(arguments.userMessage)
 
     }
 

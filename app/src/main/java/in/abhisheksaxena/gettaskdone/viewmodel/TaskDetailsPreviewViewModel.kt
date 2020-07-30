@@ -19,7 +19,10 @@ import kotlinx.coroutines.*
  */
 
 class TaskDetailsPreviewViewModel
-    @ViewModelInject constructor(application: Application, private val tasksRepository: TasksRepository) : AbstractViewModel(application) {
+@ViewModelInject constructor(
+    application: Application,
+    private val tasksRepository: TasksRepository
+) : AbstractViewModel(application) {
 
     private val viewModelJob = Job()
     private val coroutineScope: CoroutineScope =
@@ -74,14 +77,10 @@ class TaskDetailsPreviewViewModel
         _snackbarText.value = Event(messageRes)
     }
 
-    fun showUserMessage(message: Int) {
+    override fun showSnackbarMessage(messageRes: Int, intExtras: List<Int>) {
         if(hasMessageShown) return
-        when (message) {
-            Constants.MESSAGE.ADD_TASK_OK -> showSnackBarMessage(R.string.task_created_success)
-            Constants.MESSAGE.UPDATE_TASK_OK -> showSnackBarMessage(R.string.task_update_success)
-            Constants.MESSAGE.UPDATE_TASK_NOT_OK -> showSnackBarMessage(R.string.task_no_change)
-        }
-        hasMessageShown = true
+        super.showSnackbarMessage(messageRes, intExtras)
+        //hasMessageShown = true
     }
 
     fun taskOpenEvent() {

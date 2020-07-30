@@ -52,8 +52,8 @@ abstract class AbstractFragment<B : ViewDataBinding, VM : AbstractViewModel> :
         //Log.e(TAG, "setupSnackbar called")
         viewModel.snackbarText.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let {
-                if (event.hasIntExtras() && event.intExtras != null)
-                    Snackbar.make(requireView(), getString(it, *event.intExtras!!), Snackbar.LENGTH_SHORT).show()
+                if (event.containsIntExtras())
+                    Snackbar.make(requireView(), getString(it, *event.intExtras.toTypedArray()), Snackbar.LENGTH_SHORT).show()
                 else
                     Snackbar.make(requireView(), getString(it), Snackbar.LENGTH_SHORT).show()
                 //showSnackbar(context.getString(it), timeLength)

@@ -10,9 +10,9 @@ import androidx.lifecycle.Observer
 
 class Event<out T> (private val content: T){
 
-    var intExtras: Array<Int>? = null
+    var intExtras: List<Int> = emptyList()
 
-    fun hasIntExtras(): Boolean = intExtras?.isNotEmpty() ?: false
+    fun containsIntExtras(): Boolean = intExtras.isNotEmpty()
 
     var hasBeenHandled = false
         private set

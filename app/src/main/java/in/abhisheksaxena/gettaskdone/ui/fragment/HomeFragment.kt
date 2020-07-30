@@ -5,8 +5,6 @@ import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.adapter.TaskListAdapter
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentHomeBinding
 import `in`.abhisheksaxena.gettaskdone.ui.base.AbstractFragment
-import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
-import `in`.abhisheksaxena.gettaskdone.util.showSnackbar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import android.os.Bundle
 import android.util.Log
@@ -73,13 +71,12 @@ class HomeFragment : AbstractFragment<FragmentHomeBinding, HomeViewModel>() {
         })
     }
 
-    override fun setupSnackbar(){
+    override fun setupSnackbar() {
         //snackbarText = viewModel.snackbarText
         super.setupSnackbar()
 
-        arguments.let {
-            viewModel.showUserMessage(it.userMessage)
-        }
+        viewModel.showSnackbarMessage(arguments.userMessage)
+
     }
 
     private fun setupDataObservers() {
@@ -121,16 +118,16 @@ class HomeFragment : AbstractFragment<FragmentHomeBinding, HomeViewModel>() {
         }
     }
 
-    private fun setupOnClickListeners(){
+    private fun setupOnClickListeners() {
         setupFab()
 
-        binding.sortTextView.setOnClickListener{
+        binding.sortTextView.setOnClickListener {
             //Log.d(TAG, "setupOnClickListeners, clicked")
             viewModel.updateSortOrder()
         }
     }
 
-    private fun setupFab(){
+    private fun setupFab() {
         binding.fab.setOnClickListener {
             viewModel.newTaskEvent()
         }
