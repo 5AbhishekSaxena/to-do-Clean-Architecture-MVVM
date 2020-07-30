@@ -3,28 +3,23 @@ package `in`.abhisheksaxena.gettaskdone.ui.fragment
 
 import `in`.abhisheksaxena.gettaskdone.EventObserver
 import `in`.abhisheksaxena.gettaskdone.R
-import `in`.abhisheksaxena.gettaskdone.data.db.TasksRepository
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentTaskDetailsBinding
+import `in`.abhisheksaxena.gettaskdone.ui.base.AbstractFragment
 import `in`.abhisheksaxena.gettaskdone.util.Constants
 import `in`.abhisheksaxena.gettaskdone.util.HideSoftKeyboardOnFocusChange
 import `in`.abhisheksaxena.gettaskdone.util.hideKeyboard
-import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.TaskDetailsViewModel
-import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
-import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
 import android.os.Bundle
-import android.view.*
 import android.widget.ArrayAdapter
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.LayoutRes
 import androidx.core.widget.doOnTextChanged
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
 
 /**
@@ -32,11 +27,12 @@ import com.google.android.material.snackbar.Snackbar
  * @since 24-06-2020 07:43
  */
 
-class TaskDetailsFragment : Fragment() {
+@AndroidEntryPoint
+class TaskDetailsFragment : AbstractFragment<FragmentTaskDetailsBinding, TaskDetailsViewModel>() {
 
-
-    private lateinit var binding: FragmentTaskDetailsBinding
-    private val viewModel by viewModels<TaskDetailsViewModel>()
+    @LayoutRes
+    override var layoutRes: Int = R.layout.fragment_task_details
+    override val viewModel: TaskDetailsViewModel by viewModels()
 
     private lateinit var arguments: TaskDetailsFragmentArgs
 
@@ -45,30 +41,11 @@ class TaskDetailsFragment : Fragment() {
     private val priorities =
         listOf(Task.TaskPriority.LOW, Task.TaskPriority.MEDIUM, Task.TaskPriority.HIGH)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return DataBindingUtil.inflate<FragmentTaskDetailsBinding>(
-            inflater,
-            R.layout.fragment_task_details,
-            container,
-            false
-        ).apply {
-            binding = this
-        }.root
-    }
+    override fun onViewCreated(savedInstanceState: Bundle?) {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val database = TasksRepository.getRepository(requireNotNull(this.activity).application)
         arguments = TaskDetailsFragmentArgs.fromBundle(requireArguments())
         //Log.e(TAG, "arguments, state: ${arguments.navData}")
-        binding.lifecycleOwner = viewLifecycleOwner
 
-        //todo set via two-way binding
         viewModel.currentTask.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.titleEditText.setText(it.title)
@@ -80,7 +57,7 @@ class TaskDetailsFragment : Fragment() {
         })
 
         setupSpinner()
-        setupSnackbar()
+        //setupSnackbar()
         setupFabButton()
         setupListeners()
         setupNavigation()
@@ -108,7 +85,7 @@ class TaskDetailsFragment : Fragment() {
         })
 
         viewModel.taskUpdateEvent.observe(viewLifecycleOwner, EventObserver {
-            var message =
+            val message =
                 if (it)
                     Constants.MESSAGE.UPDATE_TASK_OK
                 else
@@ -124,9 +101,10 @@ class TaskDetailsFragment : Fragment() {
         })
     }
 
-    private fun setupSnackbar() {
-        view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
-    }
+    //override fun setupSnackbar() {
+        //view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
+
+    //}
 
 
     private fun setupListeners() {

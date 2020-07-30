@@ -4,11 +4,9 @@ import `in`.abhisheksaxena.gettaskdone.EventObserver
 import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.data.db.TasksRepository
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentTaskDetailsPreviewBinding
+import `in`.abhisheksaxena.gettaskdone.ui.base.AbstractFragment
 import `in`.abhisheksaxena.gettaskdone.util.Constants
-import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
-import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import `in`.abhisheksaxena.gettaskdone.viewmodel.TaskDetailsPreviewViewModel
-import `in`.abhisheksaxena.gettaskdone.viewmodel.factory.HomeViewModelFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -18,6 +16,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
 
 /**
@@ -25,42 +24,23 @@ import com.google.android.material.snackbar.Snackbar
  * @since 02-07-2020 14:15
  */
 
-class TaskDetailsPreviewFragment : Fragment() {
+@AndroidEntryPoint
+class TaskDetailsPreviewFragment :
+    AbstractFragment<FragmentTaskDetailsPreviewBinding, TaskDetailsPreviewViewModel>() {
 
-    private lateinit var binding: FragmentTaskDetailsPreviewBinding
-
-    private val viewModel by viewModels<TaskDetailsPreviewViewModel>()
+    override var layoutRes: Int = R.layout.fragment_task_details_preview
+    override val viewModel: TaskDetailsPreviewViewModel by viewModels()
 
     private lateinit var arguments: TaskDetailsPreviewFragmentArgs
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return DataBindingUtil.inflate<FragmentTaskDetailsPreviewBinding>(
-            inflater,
-            R.layout.fragment_task_details_preview,
-            container,
-            false
-        ).apply {
-            binding = this
-        }.root
-    }
+    override fun onViewCreated(savedInstanceState: Bundle?) {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
-        val database = TasksRepository.getRepository(requireNotNull(this.activity).application)
         arguments = TaskDetailsPreviewFragmentArgs.fromBundle(requireArguments())
 
-        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewmodel = viewModel
         binding.executePendingBindings()
 
         setupFab()
-        setupSnackbar()
         setupNavigation()
         setHasOptionsMenu(true)
         viewModel.start(arguments.taskId)
@@ -83,24 +63,29 @@ class TaskDetailsPreviewFragment : Fragment() {
         })
     }
 
-    private fun setupSnackbar() {
-        view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
-        Log.d(javaClass.name, "setupSnackbar, userMessage: ${arguments.userMessage}")
-        viewModel.showUserMessage(arguments.userMessage)
+    override fun setupSnackbar() {
+        //view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
+        //Log.d(javaClass.name, "setupSnackbar, userMessage: ${arguments.userMessage}")
+        super.setupSnackbar()
+
+        viewModel.showSnackbarMessage(arguments.userMessage)
+
     }
 
     private fun navigateToTaskDetailsFragment() {
         val action =
             TaskDetailsPreviewFragmentDirections.actionTaskDetailsPreviewFragmentToTaskDetailsFragment(
                 arguments.taskId,
-            getString(R.string.edit_task_label))
+                getString(R.string.edit_task_label)
+            )
         findNavController().navigate(action)
     }
 
     private fun navigateToHomeFragment() {
         val action =
             TaskDetailsPreviewFragmentDirections.actionTaskDetailsPreviewFragmentToHomeFragment(
-            Constants.MESSAGE.DELETE_TASK_OK)
+                Constants.MESSAGE.DELETE_TASK_OK
+            )
         findNavController().navigate(action)
     }
 

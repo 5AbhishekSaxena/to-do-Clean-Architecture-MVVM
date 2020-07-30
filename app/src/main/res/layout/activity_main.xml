@@ -23,7 +23,7 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <fragment
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/default_navHost_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

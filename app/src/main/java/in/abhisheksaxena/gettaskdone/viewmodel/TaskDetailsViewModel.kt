@@ -10,6 +10,7 @@ import `in`.abhisheksaxena.gettaskdone.util.getCurrentTimeInMilli
 import android.app.Application
 import android.util.Log
 import androidx.annotation.StringRes
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
 
@@ -21,9 +22,9 @@ import kotlinx.coroutines.*
 
 private const val TAG = "TaskDetailsViewModel"
 
-class TaskDetailsViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val tasksRepository = TasksRepository.getRepository(application)
+class TaskDetailsViewModel
+    @ViewModelInject
+        constructor(application: Application, private val tasksRepository: TasksRepository) : AbstractViewModel(application) {
 
     private val viewModelJob = Job()
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -38,9 +39,6 @@ class TaskDetailsViewModel(application: Application) : AndroidViewModel(applicat
     val currentTask: LiveData<Task?> = _task
 
     var tempTask = Task()
-
-    private val _snackbarText = MutableLiveData<Event<Int>>()
-    val snackbarText: LiveData<Event<Int>> = _snackbarText
 
     private val _taskCreateEvent = MutableLiveData<Event<Unit>>()
     val taskCreateEvent: LiveData<Event<Unit>> = _taskCreateEvent
@@ -90,7 +88,7 @@ class TaskDetailsViewModel(application: Application) : AndroidViewModel(applicat
                 return
             }
             tempTask.title.length > Constants.TITLE_CHARACTER_LIMIT -> {
-                showSnackbarMessage(R.string.title_text_over_limit, Constants.TITLE_CHARACTER_LIMIT)
+                showSnackbarMessage(R.string.title_text_over_limit, listOf(Constants.TITLE_CHARACTER_LIMIT))
                 return
             }
             tempTask.priority.isEmpty() -> {
@@ -134,15 +132,6 @@ class TaskDetailsViewModel(application: Application) : AndroidViewModel(applicat
             showSnackbarMessage(R.string.loading_tasks_error)
             null
         }
-    }
-
-    private fun showSnackbarMessage(@StringRes messageRes: Int, vararg intExtras: Int) {
-        val event = Event(messageRes)
-        if (intExtras.isNotEmpty()) {
-            event.intExtras = intExtras.toTypedArray()
-        }
-
-        _snackbarText.value = event
     }
 
     private fun taskCreateEvent() {
