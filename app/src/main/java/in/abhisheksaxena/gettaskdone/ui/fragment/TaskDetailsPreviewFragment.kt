@@ -27,7 +27,8 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 
 @AndroidEntryPoint
-class TaskDetailsPreviewFragment : AbstractFragment<FragmentTaskDetailsPreviewBinding, TaskDetailsPreviewViewModel>() {
+class TaskDetailsPreviewFragment :
+    AbstractFragment<FragmentTaskDetailsPreviewBinding, TaskDetailsPreviewViewModel>() {
 
     override var layoutRes: Int = R.layout.fragment_task_details_preview
     override val viewModel: TaskDetailsPreviewViewModel by viewModels()
@@ -42,7 +43,6 @@ class TaskDetailsPreviewFragment : AbstractFragment<FragmentTaskDetailsPreviewBi
         binding.executePendingBindings()
 
         setupFab()
-        setupSnackbar()
         setupNavigation()
         setHasOptionsMenu(true)
         viewModel.start(arguments.taskId)
@@ -65,24 +65,29 @@ class TaskDetailsPreviewFragment : AbstractFragment<FragmentTaskDetailsPreviewBi
         })
     }
 
-    private fun setupSnackbar() {
-        view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
-        Log.d(javaClass.name, "setupSnackbar, userMessage: ${arguments.userMessage}")
+    override fun setupSnackbar() {
+        //view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
+        //Log.d(javaClass.name, "setupSnackbar, userMessage: ${arguments.userMessage}")
+        super.setupSnackbar()
+
         viewModel.showUserMessage(arguments.userMessage)
+
     }
 
     private fun navigateToTaskDetailsFragment() {
         val action =
             TaskDetailsPreviewFragmentDirections.actionTaskDetailsPreviewFragmentToTaskDetailsFragment(
                 arguments.taskId,
-            getString(R.string.edit_task_label))
+                getString(R.string.edit_task_label)
+            )
         findNavController().navigate(action)
     }
 
     private fun navigateToHomeFragment() {
         val action =
             TaskDetailsPreviewFragmentDirections.actionTaskDetailsPreviewFragmentToHomeFragment(
-            Constants.MESSAGE.DELETE_TASK_OK)
+                Constants.MESSAGE.DELETE_TASK_OK
+            )
         findNavController().navigate(action)
     }
 

@@ -6,8 +6,10 @@ import `in`.abhisheksaxena.gettaskdone.adapter.TaskListAdapter
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentHomeBinding
 import `in`.abhisheksaxena.gettaskdone.ui.base.AbstractFragment
 import `in`.abhisheksaxena.gettaskdone.util.setupSnackbar
+import `in`.abhisheksaxena.gettaskdone.util.showSnackbar
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.View.OnAttachStateChangeListener
 import android.view.inputmethod.EditorInfo
@@ -46,7 +48,6 @@ class HomeFragment : AbstractFragment<FragmentHomeBinding, HomeViewModel>() {
         arguments = HomeFragmentArgs.fromBundle(requireArguments())
 
         setHasOptionsMenu(true)
-        setupSnackbar()
         setupObservers()
         setupRecyclerView()
         setupOnClickListeners()
@@ -72,18 +73,19 @@ class HomeFragment : AbstractFragment<FragmentHomeBinding, HomeViewModel>() {
         })
     }
 
+    override fun setupSnackbar(){
+        //snackbarText = viewModel.snackbarText
+        super.setupSnackbar()
+
+        arguments.let {
+            viewModel.showUserMessage(it.userMessage)
+        }
+    }
+
     private fun setupDataObservers() {
         viewModel.tasks.observe(viewLifecycleOwner, Observer { tasks ->
             adapter.submitList(tasks)
         })
-    }
-
-    private fun setupSnackbar() {
-        //Log.e(TAG, "setupSnackbar called")
-        view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
-        arguments.let {
-            viewModel.showUserMessage(it.userMessage)
-        }
     }
 
     private fun setupRecyclerView() {

@@ -40,9 +40,6 @@ class TaskDetailsViewModel
 
     var tempTask = Task()
 
-    private val _snackbarText = MutableLiveData<Event<Int>>()
-    val snackbarText: LiveData<Event<Int>> = _snackbarText
-
     private val _taskCreateEvent = MutableLiveData<Event<Unit>>()
     val taskCreateEvent: LiveData<Event<Unit>> = _taskCreateEvent
 

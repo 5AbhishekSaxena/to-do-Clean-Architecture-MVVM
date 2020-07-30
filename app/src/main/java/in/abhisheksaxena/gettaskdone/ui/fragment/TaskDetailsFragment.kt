@@ -59,7 +59,7 @@ class TaskDetailsFragment : AbstractFragment<FragmentTaskDetailsBinding, TaskDet
         })
 
         setupSpinner()
-        setupSnackbar()
+        //setupSnackbar()
         setupFabButton()
         setupListeners()
         setupNavigation()
@@ -87,7 +87,7 @@ class TaskDetailsFragment : AbstractFragment<FragmentTaskDetailsBinding, TaskDet
         })
 
         viewModel.taskUpdateEvent.observe(viewLifecycleOwner, EventObserver {
-            var message =
+            val message =
                 if (it)
                     Constants.MESSAGE.UPDATE_TASK_OK
                 else
@@ -103,9 +103,10 @@ class TaskDetailsFragment : AbstractFragment<FragmentTaskDetailsBinding, TaskDet
         })
     }
 
-    private fun setupSnackbar() {
-        view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
-    }
+    //override fun setupSnackbar() {
+        //view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
+
+    //}
 
 
     private fun setupListeners() {

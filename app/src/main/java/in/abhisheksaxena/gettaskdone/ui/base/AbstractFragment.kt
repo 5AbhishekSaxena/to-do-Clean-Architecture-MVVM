@@ -1,7 +1,9 @@
 package `in`.abhisheksaxena.gettaskdone.ui.base
 
+import `in`.abhisheksaxena.gettaskdone.Event
 import `in`.abhisheksaxena.gettaskdone.viewmodel.AbstractViewModel
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +11,9 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import com.google.android.material.snackbar.Snackbar
 
 
 /**
@@ -38,7 +43,21 @@ abstract class AbstractFragment<B : ViewDataBinding, VM : AbstractViewModel> :
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         onViewCreated(savedInstanceState)
+        setupSnackbar()
     }
 
     protected abstract fun onViewCreated(savedInstanceState: Bundle?)
+
+    protected open fun setupSnackbar() {
+        //Log.e(TAG, "setupSnackbar called")
+        viewModel.snackbarText.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                if (event.hasIntExtras() && event.intExtras != null)
+                    Snackbar.make(requireView(), getString(it, *event.intExtras!!), Snackbar.LENGTH_SHORT).show()
+                else
+                    Snackbar.make(requireView(), getString(it), Snackbar.LENGTH_SHORT).show()
+                //showSnackbar(context.getString(it), timeLength)
+            }
+        })
+    }
 }

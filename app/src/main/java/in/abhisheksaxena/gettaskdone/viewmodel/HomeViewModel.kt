@@ -49,9 +49,6 @@ class HomeViewModel
     private val _queryText = MutableLiveData<String>()
     val queryText: LiveData<String> = _queryText
 
-    private var _snackbarText = MutableLiveData<Event<Int>>()
-    val snackbarText: LiveData<Event<Int>> = _snackbarText
-
     private val _openTaskEvent = MutableLiveData<Event<Long>>()
     val openTaskEvent: LiveData<Event<Long>> = _openTaskEvent
 

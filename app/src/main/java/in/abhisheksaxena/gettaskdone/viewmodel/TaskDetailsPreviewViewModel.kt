@@ -35,9 +35,6 @@ class TaskDetailsPreviewViewModel
     }
     val task: LiveData<Task?> = _task
 
-    private val _snackbarText = MutableLiveData<Event<Int>>()
-    val snackbarText: LiveData<Event<Int>> = _snackbarText
-
     private val _taskOpenEvent = MutableLiveData<Event<Unit>>()
     val taskOpenEvent: LiveData<Event<Unit>> = _taskOpenEvent
 
