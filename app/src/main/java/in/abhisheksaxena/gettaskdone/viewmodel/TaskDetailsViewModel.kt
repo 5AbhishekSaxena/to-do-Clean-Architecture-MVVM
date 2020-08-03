@@ -26,9 +26,6 @@ class TaskDetailsViewModel
     @ViewModelInject
         constructor(application: Application, private val tasksRepository: TasksRepository) : AbstractViewModel(application) {
 
-    private val viewModelJob = Job()
-    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-
     private var isNewTask: Boolean = true
 
     private val _taskId = MutableLiveData<Long>()
@@ -140,10 +137,5 @@ class TaskDetailsViewModel
 
     private fun taskUpdateEvent(isUpdated: Boolean) {
         _taskUpdateEvent.value = Event(isUpdated)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
     }
 }

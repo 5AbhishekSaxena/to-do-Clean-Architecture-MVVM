@@ -21,7 +21,7 @@ import kotlinx.coroutines.Job
 abstract class AbstractViewModel(application: Application) : AndroidViewModel(application) {
 
 
-    protected val viewModelJob = Job()
+    private val viewModelJob = Job()
     protected val coroutineScope: CoroutineScope =
         CoroutineScope(Dispatchers.Main + viewModelJob)
     protected val ioDispatcher = Dispatchers.IO

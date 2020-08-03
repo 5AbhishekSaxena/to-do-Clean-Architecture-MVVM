@@ -25,9 +25,6 @@ class HomeViewModel
 
     private val TAG = javaClass.name
 
-    private val viewModelJob = Job()
-    private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-
     private val _forceUpdate = MutableLiveData<Boolean>(false)
 
     private val _tasks: LiveData<List<Task>> = _forceUpdate.switchMap { forceUpdate ->
@@ -149,10 +146,5 @@ class HomeViewModel
         //Log.d(TAG, "taskSwipeToDeleteEvent, hasMessageShows: $hasMessageShown")
         showSnackbarMessage(Constants.MESSAGE.DELETE_TASK_OK)
         _taskSwipeToDeletedEvent.value = Event(Unit)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
     }
 }
