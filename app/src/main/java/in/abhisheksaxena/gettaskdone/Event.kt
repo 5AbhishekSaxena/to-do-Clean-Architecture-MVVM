@@ -34,6 +34,7 @@ open class Event<out T>(private val content: T) {
 
 class SnackBarEvent<out T>(private val content: T, val action: () -> Unit = {}): Event<T>(content){
     var hasAction = false
+    var actionText = ""
 
 
 }

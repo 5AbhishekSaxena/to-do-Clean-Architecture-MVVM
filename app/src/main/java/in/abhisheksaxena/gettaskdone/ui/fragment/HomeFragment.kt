@@ -59,140 +59,125 @@ class HomeFragment : AbstractFragment<FragmentHomeBinding, HomeViewModel>() {
 
     private fun setupEventObservers() {
         viewModel.newTaskEvent.observe(viewLifecycleOwner, EventObserver {
-            navigateToTaskDetails()
+            val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailsFragment(
+                -1,
+                getString(R.string.add_task_label)
+            )
+            findNavController().navigate(action)
         })
 
         viewModel.openTaskEvent.observe(viewLifecycleOwner, EventObserver {
-            navigateToTaskDetailsPreview(it)
-        })
-
-        viewModel.taskSwipeToDeletedEvent.observe(viewLifecycleOwner, EventObserver {
-            //Log.d(TAG, "setupEventObservers - swipeToDelete")
-            //adapter.notifyDataSetChanged()
+            val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailsPreviewFragment(it)
+            findNavController().navigate(action)
         })
     }
 
     override fun setupSnackbar() {
         //snackbarText = viewModel.snackbarText
         super.setupSnackbar()
-        val action: () -> Unit = if (arguments.userMessage == Constants.MESSAGE.DELETE_TASK_OK && arguments.task != null) {
-            { viewModel.insertTask(arguments.task!!) }
-        } else {
-            {}
-        }
+        val action: () -> Unit =
+            if (arguments.userMessage == Constants.MESSAGE.DELETE_TASK_OK && arguments.task != null) {
+                { viewModel.insertTask(arguments.task!!) }
+            } else {
+                {}
+            }
 
-    viewModel.showSnackbarMessage(arguments.userMessage, action = action)
+        viewModel.showSnackbarMessage(arguments.userMessage, action = action)
 
-}
-
-private fun setupDataObservers() {
-    viewModel.tasks.observe(viewLifecycleOwner, Observer { tasks ->
-        Log.e(TAG, "tasks: $tasks")
-        adapter.submitList(tasks)
-    })
-}
-
-private fun setupRecyclerView() {
-    val lambda: (Long) -> Unit = { id: Long ->
-        viewModel.openTaskEvent(id)
     }
 
-    val listener = TaskListAdapter.TaskItemClickListener(lambda)
-    adapter = TaskListAdapter(listener)
-
-    binding.tasksRecyclerView.adapter = adapter
-    binding.tasksRecyclerView.layoutManager =
-        LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-
-    setupSwipeToDeleteItem()
-}
-
-private fun setupSwipeToDeleteItem() {
-    object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.END) {
-        override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
-        ): Boolean {
-            return false
-        }
-
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            viewModel.swipeToDeleteTask(viewHolder.adapterPosition)
-        }
-    }.apply {
-        ItemTouchHelper(this).attachToRecyclerView(binding.tasksRecyclerView)
-    }
-}
-
-private fun setupOnClickListeners() {
-    setupFab()
-
-    binding.sortTextView.setOnClickListener {
-        //Log.d(TAG, "setupOnClickListeners, clicked")
-        viewModel.updateSortOrder()
-    }
-}
-
-private fun setupFab() {
-    binding.fab.setOnClickListener {
-        viewModel.newTaskEvent()
+    private fun setupDataObservers() {
+        viewModel.tasks.observe(viewLifecycleOwner, Observer { tasks ->
+            Log.e(TAG, "tasks: $tasks")
+            adapter.submitList(tasks)
+        })
     }
 
-    toggleFab(true)
-}
+    private fun setupRecyclerView() {
+        adapter = TaskListAdapter(TaskListAdapter.TaskItemClickListener { id: Long ->
+            viewModel.openTaskEvent(id)
+        })
 
-private fun toggleFab(isVisible: Boolean) {
-    if (isVisible)
-        binding.fab.visibility = View.VISIBLE
-    else
-        binding.fab.visibility = View.INVISIBLE
-}
+        binding.tasksRecyclerView.adapter = adapter
+        binding.tasksRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-private fun navigateToTaskDetails() {
-    val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailsFragment(
-        -1,
-        getString(R.string.add_task_label)
-    )
-    findNavController().navigate(action)
-}
+        setupSwipeToDeleteItem()
+    }
 
-private fun navigateToTaskDetailsPreview(taskId: Long) {
-    val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailsPreviewFragment(taskId)
-    findNavController().navigate(action)
-}
+    private fun setupSwipeToDeleteItem() {
+        object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.END) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
 
-override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-    super.onCreateOptionsMenu(menu, inflater)
-    inflater.inflate(R.menu.home_menu, menu)
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                viewModel.swipeToDeleteTask(viewHolder.adapterPosition)
+            }
+        }.apply {
+            ItemTouchHelper(this).attachToRecyclerView(binding.tasksRecyclerView)
+        }
+    }
 
-    val searchItem = menu.findItem(R.id.action_search)
-    val searchView = searchItem.actionView as SearchView
+    private fun setupOnClickListeners() {
+        setupFab()
 
-    searchView.imeOptions = EditorInfo.IME_ACTION_DONE
+        binding.sortTextView.setOnClickListener {
+            //Log.d(TAG, "setupOnClickListeners, clicked")
+            viewModel.updateSortOrder()
+        }
+    }
 
-    searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-        override fun onQueryTextChange(newText: String?): Boolean {
-            return false
+    private fun setupFab() {
+        binding.fab.setOnClickListener {
+            viewModel.newTaskEvent()
         }
 
-        override fun onQueryTextSubmit(query: String?): Boolean {
-            viewModel.updateSearchText(query)
-            return false
-        }
-    })
+        toggleFab(true)
+    }
 
-    searchView.addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
-        override fun onViewDetachedFromWindow(arg0: View?) {
-            // search was detached/closed
-            viewModel.updateSearchText(null)
-            toggleFab(true)
-        }
+    private fun toggleFab(isVisible: Boolean) {
+        if (isVisible)
+            binding.fab.visibility = View.VISIBLE
+        else
+            binding.fab.visibility = View.INVISIBLE
+    }
 
-        override fun onViewAttachedToWindow(arg0: View?) {
-            // search was opened
-            toggleFab(false)
-        }
-    })
-}
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.home_menu, menu)
+
+        val searchItem = menu.findItem(R.id.action_search)
+        val searchView = searchItem.actionView as SearchView
+
+        searchView.imeOptions = EditorInfo.IME_ACTION_DONE
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.updateSearchText(query)
+                return false
+            }
+        })
+
+        searchView.addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
+            override fun onViewDetachedFromWindow(arg0: View?) {
+                // search was detached/closed
+                viewModel.updateSearchText(null)
+                toggleFab(true)
+            }
+
+            override fun onViewAttachedToWindow(arg0: View?) {
+                // search was opened
+                toggleFab(false)
+            }
+        })
+    }
 }
