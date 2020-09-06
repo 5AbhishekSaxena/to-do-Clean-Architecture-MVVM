@@ -49,7 +49,7 @@ data class Task(
                 " details: $details," +
                 " priority: $priority" +
                 " created_on: $createdOn" +
-                " last_update: $updatedOn" +
+                " updated_on: $updatedOn" +
                 "}"
     }
 
