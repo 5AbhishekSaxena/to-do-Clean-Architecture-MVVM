@@ -110,9 +110,9 @@ class HomeViewModel
 
         //Log.d(TAG, "filterItems, isAscendingOrder: $isInAscendingOrder")
         tasksToShow = if (isInAscendingOrder)
-            tasksToShow.sortedWith(compareBy { it.lastUpdate })
+            tasksToShow.sortedWith(compareBy { it.updatedOn })
         else
-            tasksToShow.sortedWith(compareByDescending { it.lastUpdate })
+            tasksToShow.sortedWith(compareByDescending { it.updatedOn })
 
         return tasksToShow
     }

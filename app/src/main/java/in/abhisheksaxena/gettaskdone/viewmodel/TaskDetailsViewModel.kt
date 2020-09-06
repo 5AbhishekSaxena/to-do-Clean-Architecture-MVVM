@@ -9,7 +9,6 @@ import `in`.abhisheksaxena.gettaskdone.util.Constants
 import `in`.abhisheksaxena.gettaskdone.util.getCurrentTimeInMilli
 import android.app.Application
 import android.util.Log
-import androidx.annotation.StringRes
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
@@ -102,7 +101,7 @@ constructor(application: Application, tasksRepository: TasksRepository) :
             if (isNewTask || _taskId.value == null)
                 createTask(tempTask)
             else {
-                tempTask.lastUpdate = getCurrentTimeInMilli()
+                tempTask.updatedOn = getCurrentTimeInMilli()
                 updateTask(tempTask)
             }
         } else {

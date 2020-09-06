@@ -87,6 +87,7 @@ class HomeFragment : AbstractFragment<FragmentHomeBinding, HomeViewModel>() {
 
 private fun setupDataObservers() {
     viewModel.tasks.observe(viewLifecycleOwner, Observer { tasks ->
+        Log.e(TAG, "tasks: $tasks")
         adapter.submitList(tasks)
     })
 }

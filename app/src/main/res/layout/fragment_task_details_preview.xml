@@ -115,7 +115,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_01"
-                app:setDate="@{viewmodel.task.lastUpdate}"
+                app:setDate="@{viewmodel.task.updatedOn}"
                 app:layout_constraintEnd_toStartOf="@id/margin_end"
                 app:layout_constraintTop_toBottomOf="@id/priority_text_view"
                 tools:text="July, 10th, 2020" />

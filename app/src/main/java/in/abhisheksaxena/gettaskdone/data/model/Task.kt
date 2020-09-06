@@ -1,6 +1,5 @@
 package `in`.abhisheksaxena.gettaskdone.data.model
 
-import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
 import `in`.abhisheksaxena.gettaskdone.util.getCurrentTimeInMilli
 import android.os.Parcelable
 import androidx.room.ColumnInfo
@@ -22,7 +21,7 @@ data class Task(
     var details: String = "",
     var priority: String = "",
     @ColumnInfo(name = "created_on") val createdOn: Long = getCurrentTimeInMilli(),
-    @ColumnInfo(name = "last_update") var lastUpdate: Long = getCurrentTimeInMilli()
+    @ColumnInfo(name = "updated_on") var updatedOn: Long = getCurrentTimeInMilli()
 ): Parcelable {
     constructor(task: Task) : this(
         task.id,
@@ -30,7 +29,7 @@ data class Task(
         task.details,
         task.priority,
         task.createdOn,
-        task.lastUpdate
+        task.updatedOn
     )
 
     fun hasDetails(): Boolean = details.isNotEmpty()
@@ -50,7 +49,7 @@ data class Task(
                 " details: $details," +
                 " priority: $priority" +
                 " created_on: $createdOn" +
-                " last_update: $lastUpdate" +
+                " last_update: $updatedOn" +
                 "}"
     }
 
