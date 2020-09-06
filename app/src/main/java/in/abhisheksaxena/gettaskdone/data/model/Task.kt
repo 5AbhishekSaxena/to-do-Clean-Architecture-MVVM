@@ -2,9 +2,11 @@ package `in`.abhisheksaxena.gettaskdone.data.model
 
 import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
 import `in`.abhisheksaxena.gettaskdone.util.getCurrentTimeInMilli
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
 
 /**
@@ -13,6 +15,7 @@ import androidx.room.PrimaryKey
  */
 
 @Entity(tableName = "Tasks")
+@Parcelize
 data class Task(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     var title: String = "",
@@ -20,7 +23,7 @@ data class Task(
     var priority: String = "",
     @ColumnInfo(name = "created_on") val createdOn: Long = getCurrentTimeInMilli(),
     @ColumnInfo(name = "last_update") var lastUpdate: Long = getCurrentTimeInMilli()
-) {
+): Parcelable {
     constructor(task: Task) : this(
         task.id,
         task.title,
