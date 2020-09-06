@@ -28,6 +28,11 @@
             android:name="userMessage"
             android:defaultValue="-1"
             app:argType="integer" />
+        <argument
+            android:name="task"
+            app:nullable="true"
+            android:defaultValue="@null"
+            app:argType="in.abhisheksaxena.gettaskdone.data.model.Task" />
     </fragment>
 
     <fragment

@@ -5,9 +5,7 @@ import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.data.Result
 import `in`.abhisheksaxena.gettaskdone.data.db.TasksRepository
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
-import `in`.abhisheksaxena.gettaskdone.util.Constants
 import android.app.Application
-import androidx.annotation.StringRes
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
@@ -21,8 +19,8 @@ import kotlinx.coroutines.*
 class TaskDetailsPreviewViewModel
 @ViewModelInject constructor(
     application: Application,
-    private val tasksRepository: TasksRepository
-) : AbstractViewModel(application) {
+    tasksRepository: TasksRepository
+) : AbstractViewModel(application, tasksRepository) {
 
     private var hasMessageShown = false
 
@@ -36,8 +34,8 @@ class TaskDetailsPreviewViewModel
     private val _taskOpenEvent = MutableLiveData<Event<Unit>>()
     val taskOpenEvent: LiveData<Event<Unit>> = _taskOpenEvent
 
-    private val _taskDeleteEvent = MutableLiveData<Event<Unit>>()
-    val taskDeleteEvent: LiveData<Event<Unit>> = _taskDeleteEvent
+    private val _taskDeleteEvent = MutableLiveData<Event<Task>>()
+    val taskDeleteEvent: LiveData<Event<Task>> = _taskDeleteEvent
 
     fun start(taskId: Long?) {
         // possible configuration change
@@ -59,15 +57,15 @@ class TaskDetailsPreviewViewModel
     fun deleteTask() {
         _taskId.value?.let { taskId ->
             coroutineScope.launch {
+                taskDeleteEvent(task.value!!)
                 tasksRepository.deleteTask(taskId)
-                taskDeleteEvent()
             }
         }
     }
 
-    override fun showSnackbarMessage(messageRes: Int, intExtras: List<Int>) {
+    override fun showSnackbarMessage(messageRes: Int, intExtras: List<Int>, action: () -> Unit) {
         if (hasMessageShown) return
-        super.showSnackbarMessage(messageRes, intExtras)
+        super.showSnackbarMessage(messageRes, intExtras, action)
         hasMessageShown = true
     }
 
@@ -75,7 +73,7 @@ class TaskDetailsPreviewViewModel
         _taskOpenEvent.value = Event(Unit)
     }
 
-    private fun taskDeleteEvent() {
-        _taskDeleteEvent.value = Event(Unit)
+    private fun taskDeleteEvent(task: Task) {
+        _taskDeleteEvent.value = Event(task)
     }
 }

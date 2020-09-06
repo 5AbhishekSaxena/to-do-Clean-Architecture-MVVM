@@ -2,20 +2,15 @@ package `in`.abhisheksaxena.gettaskdone.ui.fragment
 
 import `in`.abhisheksaxena.gettaskdone.EventObserver
 import `in`.abhisheksaxena.gettaskdone.R
-import `in`.abhisheksaxena.gettaskdone.data.db.TasksRepository
+import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import `in`.abhisheksaxena.gettaskdone.databinding.FragmentTaskDetailsPreviewBinding
 import `in`.abhisheksaxena.gettaskdone.ui.base.AbstractFragment
 import `in`.abhisheksaxena.gettaskdone.util.Constants
 import `in`.abhisheksaxena.gettaskdone.viewmodel.TaskDetailsPreviewViewModel
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -59,7 +54,7 @@ class TaskDetailsPreviewFragment :
         })
 
         viewModel.taskDeleteEvent.observe(viewLifecycleOwner, EventObserver {
-            navigateToHomeFragment()
+            navigateToHomeFragment(it)
         })
     }
 
@@ -81,10 +76,11 @@ class TaskDetailsPreviewFragment :
         findNavController().navigate(action)
     }
 
-    private fun navigateToHomeFragment() {
+    private fun navigateToHomeFragment(task: Task) {
         val action =
             TaskDetailsPreviewFragmentDirections.actionTaskDetailsPreviewFragmentToHomeFragment(
-                Constants.MESSAGE.DELETE_TASK_OK
+                Constants.MESSAGE.DELETE_TASK_OK,
+                task
             )
         findNavController().navigate(action)
     }

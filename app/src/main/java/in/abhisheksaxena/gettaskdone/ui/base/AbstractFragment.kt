@@ -1,9 +1,7 @@
 package `in`.abhisheksaxena.gettaskdone.ui.base
 
-import `in`.abhisheksaxena.gettaskdone.Event
 import `in`.abhisheksaxena.gettaskdone.viewmodel.AbstractViewModel
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,9 +51,21 @@ abstract class AbstractFragment<B : ViewDataBinding, VM : AbstractViewModel> :
         viewModel.snackbarText.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 if (event.containsIntExtras())
-                    Snackbar.make(requireView(), getString(it, *event.intExtras.toTypedArray()), Snackbar.LENGTH_SHORT).show()
-                else
-                    Snackbar.make(requireView(), getString(it), Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(
+                        requireView(),
+                        getString(it, *event.intExtras.toTypedArray()),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                else {
+                    if (event.hasAction) {
+                        Snackbar.make(requireView(), getString(it), Snackbar.LENGTH_LONG)
+                            .setAction("Undo") {
+                                event.action.invoke()
+                            }.show()
+                    } else {
+                        Snackbar.make(requireView(), getString(it), Snackbar.LENGTH_SHORT).show()
+                    }
+                }
                 //showSnackbar(context.getString(it), timeLength)
             }
         })

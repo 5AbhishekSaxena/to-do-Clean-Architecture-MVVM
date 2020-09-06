@@ -23,8 +23,9 @@ import kotlinx.coroutines.*
 private const val TAG = "TaskDetailsViewModel"
 
 class TaskDetailsViewModel
-    @ViewModelInject
-        constructor(application: Application, private val tasksRepository: TasksRepository) : AbstractViewModel(application) {
+@ViewModelInject
+constructor(application: Application, tasksRepository: TasksRepository) :
+    AbstractViewModel(application, tasksRepository) {
 
     private var isNewTask: Boolean = true
 
@@ -85,7 +86,10 @@ class TaskDetailsViewModel
                 return
             }
             tempTask.title.length > Constants.TITLE_CHARACTER_LIMIT -> {
-                showSnackbarMessage(R.string.title_text_over_limit, listOf(Constants.TITLE_CHARACTER_LIMIT))
+                showSnackbarMessage(
+                    R.string.title_text_over_limit,
+                    listOf(Constants.TITLE_CHARACTER_LIMIT)
+                )
                 return
             }
             tempTask.priority.isEmpty() -> {

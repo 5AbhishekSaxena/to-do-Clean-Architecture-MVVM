@@ -21,7 +21,10 @@ import kotlinx.coroutines.*
  */
 
 class HomeViewModel
-    @ViewModelInject constructor(application: Application, private val tasksRepository: TasksRepository): AbstractViewModel(application) {
+@ViewModelInject constructor(
+    application: Application,
+    tasksRepository: TasksRepository
+) : AbstractViewModel(application, tasksRepository) {
 
     private val TAG = javaClass.name
 
@@ -62,15 +65,15 @@ class HomeViewModel
                 tasksRepository.deleteTask(it.id)
                 hasMessageShown = false
                 //Log.d(TAG, "swipeToDeleteTask, hasMessageShown: $hasMessageShown")
-                taskSwipeToDeleteEvent()
+                taskSwipeToDeleteEvent(it)
             }
         }
     }
 
-    override fun showSnackbarMessage(messageRes: Int, intExtras: List<Int>) {
+    override fun showSnackbarMessage(messageRes: Int, intExtras: List<Int>, action: () -> Unit) {
         //Log.d(TAG, "showUserMessage, hasMessageShown: $hasMessageShown, message: $message")
         if (hasMessageShown) return
-        super.showSnackbarMessage(messageRes, intExtras)
+        super.showSnackbarMessage(messageRes, intExtras, action)
         hasMessageShown = true
     }
 
@@ -109,7 +112,7 @@ class HomeViewModel
         tasksToShow = if (isInAscendingOrder)
             tasksToShow.sortedWith(compareBy { it.lastUpdate })
         else
-            tasksToShow.sortedWith(compareByDescending {it.lastUpdate})
+            tasksToShow.sortedWith(compareByDescending { it.lastUpdate })
 
         return tasksToShow
     }
@@ -141,10 +144,10 @@ class HomeViewModel
         _openTaskEvent.value = Event(id)
     }
 
-    private fun taskSwipeToDeleteEvent() {
-        //Log.d(TAG, "taskSwipeToDeleteEvent")
-        //Log.d(TAG, "taskSwipeToDeleteEvent, hasMessageShows: $hasMessageShown")
-        showSnackbarMessage(Constants.MESSAGE.DELETE_TASK_OK)
+    private fun taskSwipeToDeleteEvent(task: Task) {
+        showSnackbarMessage(Constants.MESSAGE.DELETE_TASK_OK, action = {
+            insertTask(task)
+        })
         _taskSwipeToDeletedEvent.value = Event(Unit)
     }
 }
