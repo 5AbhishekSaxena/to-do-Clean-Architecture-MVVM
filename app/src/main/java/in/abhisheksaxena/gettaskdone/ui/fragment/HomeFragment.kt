@@ -16,11 +16,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -39,7 +37,7 @@ class HomeFragment : AbstractFragment<FragmentHomeBinding, HomeViewModel>() {
 
     private lateinit var arguments: HomeFragmentArgs
 
-    private lateinit var adapter: TaskListAdapter
+    private lateinit var taskListAdapter: TaskListAdapter
 
     override fun onViewCreated(savedInstanceState: Bundle?) {
         binding.viewmodel = viewModel
@@ -65,11 +63,6 @@ class HomeFragment : AbstractFragment<FragmentHomeBinding, HomeViewModel>() {
             )
             findNavController().navigate(action)
         })
-
-        viewModel.openTaskEvent.observe(viewLifecycleOwner, EventObserver {
-            val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailsPreviewFragment(it)
-            findNavController().navigate(action)
-        })
     }
 
     override fun setupSnackbar() {
@@ -89,16 +82,17 @@ class HomeFragment : AbstractFragment<FragmentHomeBinding, HomeViewModel>() {
     private fun setupDataObservers() {
         viewModel.tasks.observe(viewLifecycleOwner, Observer { tasks ->
             Log.e(TAG, "tasks: $tasks")
-            adapter.submitList(tasks)
+            taskListAdapter.submitList(tasks)
         })
     }
 
     private fun setupRecyclerView() {
-        adapter = TaskListAdapter(TaskListAdapter.TaskItemClickListener { id: Long ->
-            viewModel.openTaskEvent(id)
+        taskListAdapter = TaskListAdapter(TaskListAdapter.TaskItemClickListener { id ->
+            val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailsPreviewFragment(id)
+            findNavController().navigate(action)
         })
 
-        binding.tasksRecyclerView.adapter = adapter
+        binding.tasksRecyclerView.adapter = taskListAdapter
         binding.tasksRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
