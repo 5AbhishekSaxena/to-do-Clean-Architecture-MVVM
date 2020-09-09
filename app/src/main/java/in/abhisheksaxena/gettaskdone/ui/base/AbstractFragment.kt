@@ -59,7 +59,7 @@ abstract class AbstractFragment<B : ViewDataBinding, VM : AbstractViewModel> :
                 else {
                     if (event.hasAction) {
                         Snackbar.make(requireView(), getString(it), Snackbar.LENGTH_LONG)
-                            .setAction("Undo") {
+                            .setAction(event.actionText) {
                                 event.action.invoke()
                             }.show()
                     } else {

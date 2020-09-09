@@ -54,9 +54,6 @@ class HomeViewModel
     private val _newTaskEvent = MutableLiveData<Event<Unit>>()
     val newTaskEvent: LiveData<Event<Unit>> = _newTaskEvent
 
-    private val _taskSwipeToDeletedEvent = MutableLiveData<Event<Unit>>()
-    val taskSwipeToDeletedEvent: LiveData<Event<Unit>> = _taskSwipeToDeletedEvent
-
     fun swipeToDeleteTask(index: Int) {
         Log.d(TAG, "swipeToDeleteTask, index: $index")
         coroutineScope.launch {
@@ -70,10 +67,10 @@ class HomeViewModel
         }
     }
 
-    override fun showSnackbarMessage(messageRes: Int, intExtras: List<Int>, action: () -> Unit) {
+    override fun showSnackbarMessage(messageRes: Int, intExtras: List<Int>, action: () -> Unit, actionText: String) {
         //Log.d(TAG, "showUserMessage, hasMessageShown: $hasMessageShown, message: $message")
         if (hasMessageShown) return
-        super.showSnackbarMessage(messageRes, intExtras, action)
+        super.showSnackbarMessage(messageRes, intExtras, action, actionText)
         hasMessageShown = true
     }
 
@@ -148,6 +145,5 @@ class HomeViewModel
         showSnackbarMessage(Constants.MESSAGE.DELETE_TASK_OK, action = {
             insertTask(task)
         })
-        _taskSwipeToDeletedEvent.value = Event(Unit)
     }
 }

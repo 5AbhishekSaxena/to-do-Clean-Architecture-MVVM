@@ -36,7 +36,8 @@ abstract class AbstractViewModel(
     open fun showSnackbarMessage(
         @StringRes messageRes: Int,
         intExtras: List<Int> = emptyList(),
-        action: () -> Unit = {}
+        action: () -> Unit = {},
+        actionText: String = ""
     ) {
         when (messageRes) {
             Constants.MESSAGE.ADD_TASK_OK -> setupSnackBarEvent(
@@ -51,7 +52,8 @@ abstract class AbstractViewModel(
                 R.string.task_deleted_success,
                 intExtras,
                 action,
-                true
+                true,
+                actionText
             )
             Constants.MESSAGE.ERROR_LOADING_TASK -> setupSnackBarEvent(
                 R.string.loading_tasks_error,
@@ -64,7 +66,8 @@ abstract class AbstractViewModel(
         @StringRes messageRes: Int,
         intExtras: List<Int>,
         action: () -> Unit = {},
-        hasAction: Boolean = false
+        hasAction: Boolean = false,
+        actionText: String = ""
     ) {
         //Log.d(TAG, "showSnackbarMessage, hasMessageShown: $hasMessageShown")
 
@@ -73,6 +76,7 @@ abstract class AbstractViewModel(
                 this.intExtras = intExtras
 
             this.hasAction = hasAction
+            this.actionText = actionText
         }
     }
 

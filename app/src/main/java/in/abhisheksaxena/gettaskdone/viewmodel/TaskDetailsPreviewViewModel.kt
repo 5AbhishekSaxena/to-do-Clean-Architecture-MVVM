@@ -63,9 +63,9 @@ class TaskDetailsPreviewViewModel
         }
     }
 
-    override fun showSnackbarMessage(messageRes: Int, intExtras: List<Int>, action: () -> Unit) {
+    override fun showSnackbarMessage(messageRes: Int, intExtras: List<Int>, action: () -> Unit, actionText: String) {
         if (hasMessageShown) return
-        super.showSnackbarMessage(messageRes, intExtras, action)
+        super.showSnackbarMessage(messageRes, intExtras, action, actionText)
         hasMessageShown = true
     }
 
