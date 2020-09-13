@@ -5,7 +5,6 @@ import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDao
 import `in`.abhisheksaxena.gettaskdone.data.db.local.TaskDatabase
 import `in`.abhisheksaxena.gettaskdone.data.db.local.TasksLocalDataSource
 import android.content.Context
-import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,7 +24,7 @@ object ApplicationModule {
 
     @Singleton
     @Provides
-    fun providesTasksLocalDataSource(taskDao: TaskDao): TasksLocalDataSource{
+    fun providesTasksLocalDataSource(taskDao: TaskDao): TasksLocalDataSource {
         return TasksLocalDataSource(taskDao)
     }
 
@@ -33,7 +32,7 @@ object ApplicationModule {
     @Provides
     fun providesTaskRepository(
         tasksLocalDataSource: TasksLocalDataSource
-    ): TasksRepository{
+    ): TasksRepository {
         return TasksRepository(tasksLocalDataSource)
     }
 

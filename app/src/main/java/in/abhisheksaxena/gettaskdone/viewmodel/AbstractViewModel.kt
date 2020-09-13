@@ -1,6 +1,5 @@
 package `in`.abhisheksaxena.gettaskdone.viewmodel
 
-import `in`.abhisheksaxena.gettaskdone.Event
 import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.SnackBarEvent
 import `in`.abhisheksaxena.gettaskdone.data.db.TasksRepository
@@ -71,12 +70,13 @@ abstract class AbstractViewModel(
     ) {
         //Log.d(TAG, "showSnackbarMessage, hasMessageShown: $hasMessageShown")
 
-        _snackbarText.value = SnackBarEvent(messageRes, action).apply {
+        _snackbarText.value = SnackBarEvent(messageRes).apply {
             if (intExtras.isNotEmpty())
                 this.intExtras = intExtras
 
             this.hasAction = hasAction
             this.actionText = actionText
+            this.action = action
         }
     }
 

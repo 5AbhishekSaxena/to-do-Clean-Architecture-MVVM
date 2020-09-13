@@ -18,7 +18,6 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -102,7 +101,7 @@ class TaskDetailsFragment : AbstractFragment<FragmentTaskDetailsBinding, TaskDet
     }
 
     //override fun setupSnackbar() {
-        //view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
+    //view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
 
     //}
 

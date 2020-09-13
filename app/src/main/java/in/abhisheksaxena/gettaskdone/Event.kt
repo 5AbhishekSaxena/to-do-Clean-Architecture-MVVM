@@ -1,9 +1,6 @@
 package `in`.abhisheksaxena.gettaskdone
 
-import android.os.Parcel
-import android.os.Parcelable
 import androidx.lifecycle.Observer
-import `in`.abhisheksaxena.gettaskdone.Event
 
 
 /**
@@ -32,9 +29,10 @@ open class Event<out T>(private val content: T) {
     fun peekContent(): T = content
 }
 
-class SnackBarEvent<out T>(private val content: T, val action: () -> Unit = {}): Event<T>(content){
+class SnackBarEvent<out T>(private val content: T) : Event<T>(content) {
     var hasAction = false
     var actionText = ""
+    var action: () -> Unit = {}
 
 
 }

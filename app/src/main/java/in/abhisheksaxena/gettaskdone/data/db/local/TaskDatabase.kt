@@ -5,8 +5,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 
 
 /**
@@ -22,7 +20,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 abstract class TaskDatabase : RoomDatabase() {
 
     abstract fun getTaskDao(): TaskDao
-
 
 
     companion object {
@@ -55,7 +52,6 @@ abstract class TaskDatabase : RoomDatabase() {
                 //database.execSQL("ALTER TABLE Song ADD COLUMN tag TEXT NOT NULL DEFAULT ''")
             }
         }*/
-
 
 
     }

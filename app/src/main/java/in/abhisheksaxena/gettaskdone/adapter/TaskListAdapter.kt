@@ -1,8 +1,8 @@
 package `in`.abhisheksaxena.gettaskdone.adapter
 
 
-import `in`.abhisheksaxena.gettaskdone.databinding.TaskListItemBinding
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
+import `in`.abhisheksaxena.gettaskdone.databinding.TaskListItemBinding
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -15,7 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
  * @since 24-06-2020 07:48
  */
 
-class TaskListAdapter(private val clickListener: TaskItemClickListener) : ListAdapter<Task, TaskListAdapter.ViewHolder>(TaskDiffCallback()) {
+class TaskListAdapter(private val clickListener: TaskItemClickListener) :
+    ListAdapter<Task, TaskListAdapter.ViewHolder>(TaskDiffCallback()) {
 
     private val TAG = javaClass.name
 

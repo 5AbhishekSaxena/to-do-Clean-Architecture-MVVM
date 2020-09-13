@@ -10,4 +10,4 @@ import dagger.hilt.android.HiltAndroidApp
  */
 
 @HiltAndroidApp
-class GetTaskDone: Application()
+class GetTaskDone : Application()

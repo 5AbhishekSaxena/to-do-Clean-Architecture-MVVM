@@ -22,7 +22,7 @@ data class Task(
     var priority: String = "",
     @ColumnInfo(name = "created_on") val createdOn: Long = getCurrentTimeInMilli(),
     @ColumnInfo(name = "updated_on") var updatedOn: Long = getCurrentTimeInMilli()
-): Parcelable {
+) : Parcelable {
     constructor(task: Task) : this(
         task.id,
         task.title,
@@ -34,8 +34,8 @@ data class Task(
 
     fun hasDetails(): Boolean = details.isNotEmpty()
 
-    fun getPriorityValue(): Int{
-        return when(priority){
+    fun getPriorityValue(): Int {
+        return when (priority) {
             TaskPriority.LOW -> 1
             TaskPriority.MEDIUM -> 2
             else -> 3

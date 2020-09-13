@@ -11,8 +11,10 @@ import `in`.abhisheksaxena.gettaskdone.util.TasksFilterType
 import android.app.Application
 import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.*
-import kotlinx.coroutines.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.switchMap
+import kotlinx.coroutines.launch
 
 
 /**
@@ -67,7 +69,12 @@ class HomeViewModel
         }
     }
 
-    override fun showSnackbarMessage(messageRes: Int, intExtras: List<Int>, action: () -> Unit, actionText: String) {
+    override fun showSnackbarMessage(
+        messageRes: Int,
+        intExtras: List<Int>,
+        action: () -> Unit,
+        actionText: String
+    ) {
         //Log.d(TAG, "showUserMessage, hasMessageShown: $hasMessageShown, message: $message")
         if (hasMessageShown) return
         super.showSnackbarMessage(messageRes, intExtras, action, actionText)

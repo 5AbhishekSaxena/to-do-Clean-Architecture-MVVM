@@ -59,7 +59,7 @@ class TasksLocalDataSource internal constructor(
         taskDao.insertTask(task)
     }
 
-    override suspend fun updateTask(task: Task) = withContext<Unit>(ioDispatcher){
+    override suspend fun updateTask(task: Task) = withContext<Unit>(ioDispatcher) {
         taskDao.updateTask(task)
     }
 
@@ -68,7 +68,7 @@ class TasksLocalDataSource internal constructor(
     }
 
 
-    override suspend fun deleteTask(taskId: Long) = withContext<Unit>(ioDispatcher){
+    override suspend fun deleteTask(taskId: Long) = withContext<Unit>(ioDispatcher) {
         taskDao.deleteTaskById(taskId)
     }
 }

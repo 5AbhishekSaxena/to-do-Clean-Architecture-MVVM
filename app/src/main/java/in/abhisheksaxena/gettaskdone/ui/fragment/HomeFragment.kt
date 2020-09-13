@@ -9,7 +9,9 @@ import `in`.abhisheksaxena.gettaskdone.util.Constants
 import `in`.abhisheksaxena.gettaskdone.viewmodel.HomeViewModel
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.View
 import android.view.View.OnAttachStateChangeListener
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.SearchView
@@ -83,7 +85,11 @@ class HomeFragment : AbstractFragment<FragmentHomeBinding, HomeViewModel>() {
                 {}
             }
 
-        viewModel.showSnackbarMessage(arguments.userMessage, action = action, actionText = actionText)
+        viewModel.showSnackbarMessage(
+            arguments.userMessage,
+            action = action,
+            actionText = actionText
+        )
 
     }
 
