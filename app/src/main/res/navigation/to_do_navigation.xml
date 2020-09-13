@@ -19,11 +19,7 @@
             app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_homeFragment_to_taskDetailsPreviewFragment"
-            app:destination="@id/taskDetailsPreviewFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:destination="@id/taskDetailsPreviewFragment" />
         <argument
             android:name="userMessage"
             android:defaultValue="-1"
@@ -85,11 +81,7 @@
             android:id="@+id/action_taskDetailsPreviewFragment_to_homeFragment"
             app:destination="@id/homeFragment"
             app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true"
-            app:enterAnim="@anim/slide_in_left"
-            app:exitAnim="@anim/slide_out_right"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:popUpToInclusive="true" />
         <argument
             android:name="taskId"
             android:defaultValue="-1L"

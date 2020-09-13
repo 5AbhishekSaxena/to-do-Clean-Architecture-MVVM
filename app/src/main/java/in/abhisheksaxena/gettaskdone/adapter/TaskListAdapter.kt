@@ -44,7 +44,7 @@ class TaskListAdapter(private val clickListener: TaskItemClickListener) : ListAd
             clickListener: TaskItemClickListener
         ) {
             binding.root.setOnClickListener {
-                clickListener.onClick(task)
+                clickListener.onClick(task, binding)
             }
             binding.task = task
             binding.executePendingBindings()
@@ -61,9 +61,9 @@ class TaskListAdapter(private val clickListener: TaskItemClickListener) : ListAd
         }
     }
 
-    class TaskItemClickListener(val clickListener: (taskId: Long) -> Unit) {
-        fun onClick(task: Task) {
-            clickListener(task.id)
+    class TaskItemClickListener(val clickListener: (taskId: Long, binding: TaskListItemBinding) -> Unit) {
+        fun onClick(task: Task, binding: TaskListItemBinding) {
+            clickListener(task.id, binding)
         }
     }
 

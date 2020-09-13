@@ -7,10 +7,12 @@ import `in`.abhisheksaxena.gettaskdone.databinding.FragmentTaskDetailsPreviewBin
 import `in`.abhisheksaxena.gettaskdone.ui.base.AbstractFragment
 import `in`.abhisheksaxena.gettaskdone.util.Constants
 import `in`.abhisheksaxena.gettaskdone.viewmodel.TaskDetailsPreviewViewModel
+import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.transition.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -27,6 +29,21 @@ class TaskDetailsPreviewFragment :
     override val viewModel: TaskDetailsPreviewViewModel by viewModels()
 
     private lateinit var arguments: TaskDetailsPreviewFragmentArgs
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            // The drawing view is the id of the view above which the container transform
+            // will play in z-space.
+            drawingViewId = R.id.default_navHost_fragment
+            duration = resources.getInteger(R.integer.reply_motion_duration_large).toLong()
+            // Set the color of the scrim to transparent as we also want to animate the
+            // list fragment out of view
+            scrimColor = Color.TRANSPARENT
+            // setAllContainerColors(requireContext().themeColor(R.attr.colorSurface)) fixme
+        }
+    }
+
 
     override fun onViewCreated(savedInstanceState: Bundle?) {
 
