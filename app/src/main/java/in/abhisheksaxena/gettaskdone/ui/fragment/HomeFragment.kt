@@ -74,14 +74,16 @@ class HomeFragment : AbstractFragment<FragmentHomeBinding, HomeViewModel>() {
     override fun setupSnackbar() {
         //snackbarText = viewModel.snackbarText
         super.setupSnackbar()
+        var actionText = ""
         val action: () -> Unit =
             if (arguments.userMessage == Constants.MESSAGE.DELETE_TASK_OK && arguments.task != null) {
+                actionText = "Undo"
                 { viewModel.insertTask(arguments.task!!) }
             } else {
                 {}
             }
 
-        viewModel.showSnackbarMessage(arguments.userMessage, action = action)
+        viewModel.showSnackbarMessage(arguments.userMessage, action = action, actionText = actionText)
 
     }
 

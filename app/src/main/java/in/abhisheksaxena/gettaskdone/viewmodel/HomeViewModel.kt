@@ -144,6 +144,6 @@ class HomeViewModel
     private fun taskSwipeToDeleteEvent(task: Task) {
         showSnackbarMessage(Constants.MESSAGE.DELETE_TASK_OK, action = {
             insertTask(task)
-        })
+        }, actionText = "Undo")
     }
 }
