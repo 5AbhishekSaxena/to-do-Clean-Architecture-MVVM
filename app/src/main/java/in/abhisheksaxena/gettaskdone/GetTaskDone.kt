@@ -1,6 +1,7 @@
 package `in`.abhisheksaxena.gettaskdone
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatDelegate
 import dagger.hilt.android.HiltAndroidApp
 
 
@@ -10,4 +11,11 @@ import dagger.hilt.android.HiltAndroidApp
  */
 
 @HiltAndroidApp
-class GetTaskDone : Application()
+class GetTaskDone : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+    }
+}
