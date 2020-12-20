@@ -9,7 +9,10 @@ import `in`.abhisheksaxena.gettaskdone.util.Constants
 import `in`.abhisheksaxena.gettaskdone.viewmodel.TaskDetailsPreviewViewModel
 import android.graphics.Color
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import androidx.core.app.ShareCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.transition.MaterialContainerTransform
@@ -73,6 +76,10 @@ class TaskDetailsPreviewFragment :
         viewModel.taskDeleteEvent.observe(viewLifecycleOwner, EventObserver {
             navigateToHomeFragment(it)
         })
+
+        viewModel.taskShareEvent.observe(viewLifecycleOwner, EventObserver {
+            shareTask(it)
+        })
     }
 
     override fun setupSnackbar() {
@@ -111,7 +118,21 @@ class TaskDetailsPreviewFragment :
         return if (item.itemId == R.id.action_delete) {
             viewModel.deleteTask()
             true
+        } else if (item.itemId == R.id.action_share) {
+            viewModel.onShareTask()
+            true
         } else
             false
+    }
+
+    private fun shareTask(text: String) {
+        ShareCompat.IntentBuilder.from(requireActivity())
+            .setType("text/plain")
+            .setText(text)
+            .intent
+            .also {
+                if (it.resolveActivity(requireActivity().packageManager) != null)
+                    startActivity(it)
+            }
     }
 }

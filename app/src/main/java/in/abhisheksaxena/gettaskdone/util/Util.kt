@@ -1,15 +1,9 @@
 package `in`.abhisheksaxena.gettaskdone.util
 
-import `in`.abhisheksaxena.gettaskdone.Event
+import `in`.abhisheksaxena.gettaskdone.data.model.Task
 import android.app.Activity
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.core.view.postDelayed
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
 
@@ -24,3 +18,12 @@ fun hideKeyboard(activity: Activity?) {
 }
 
 fun getCurrentTimeInMilli(): Long = Calendar.getInstance(Locale.getDefault()).timeInMillis
+
+fun convertTaskToString(task: Task): String {
+    return StringBuilder().apply {
+        append(task.title)
+        append("\n\n")
+        append("Details: \n")
+        append(task.details)
+    }.toString()
+}

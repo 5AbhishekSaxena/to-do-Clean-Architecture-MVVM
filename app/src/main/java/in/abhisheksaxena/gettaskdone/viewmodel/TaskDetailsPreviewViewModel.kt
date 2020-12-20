@@ -5,6 +5,7 @@ import `in`.abhisheksaxena.gettaskdone.R
 import `in`.abhisheksaxena.gettaskdone.data.Result
 import `in`.abhisheksaxena.gettaskdone.data.db.TasksRepository
 import `in`.abhisheksaxena.gettaskdone.data.model.Task
+import `in`.abhisheksaxena.gettaskdone.util.convertTaskToString
 import android.app.Application
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
@@ -40,6 +41,9 @@ class TaskDetailsPreviewViewModel
     private val _taskDeleteEvent = MutableLiveData<Event<Task>>()
     val taskDeleteEvent: LiveData<Event<Task>> = _taskDeleteEvent
 
+    private val _taskShareEvent = MutableLiveData<Event<String>>()
+    val taskShareEvent: LiveData<Event<String>> = _taskShareEvent
+
     fun start(taskId: Long?) {
         // possible configuration change
         if (taskId == _taskId.value)
@@ -63,6 +67,13 @@ class TaskDetailsPreviewViewModel
                 taskDeleteEvent(task.value!!)
                 tasksRepository.deleteTask(taskId)
             }
+        }
+    }
+
+    fun onShareTask() {
+        _task.value?.let {
+            val shareContent = convertTaskToString(it)
+            _taskShareEvent.value = Event(shareContent)
         }
     }
 

@@ -8,4 +8,11 @@
         android:title="@string/delete"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_baseline_share_24"
+        android:title="@string/delete"
+        app:showAsAction="ifRoom" />
+
+
 </menu>
