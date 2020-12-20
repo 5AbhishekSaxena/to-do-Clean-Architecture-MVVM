@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="in.abhisheksaxena.gettaskdone.ui.fragment.HomeFragment"
+        android:name="tech.developingdeveloper.gettaskdone.ui.fragment.HomeFragment"
         android:label="Tasks"
         tools:layout="@layout/fragment_home">
         <action
@@ -33,7 +33,7 @@
 
     <fragment
         android:id="@+id/taskDetailsFragment"
-        android:name="in.abhisheksaxena.gettaskdone.ui.fragment.TaskDetailsFragment"
+        android:name="tech.developingdeveloper.gettaskdone.ui.fragment.TaskDetailsFragment"
         android:label="{title}"
         tools:layout="@layout/fragment_task_details">
         <action
@@ -67,7 +67,7 @@
 
     <fragment
         android:id="@+id/taskDetailsPreviewFragment"
-        android:name="in.abhisheksaxena.gettaskdone.ui.fragment.TaskDetailsPreviewFragment"
+        android:name="tech.developingdeveloper.gettaskdone.ui.fragment.TaskDetailsPreviewFragment"
         android:label="View Task"
         tools:layout="@layout/fragment_task_details_preview">
         <action

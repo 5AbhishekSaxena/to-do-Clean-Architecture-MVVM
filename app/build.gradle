@@ -9,7 +9,7 @@ android {
     compileSdkVersion 29
 
     defaultConfig {
-        applicationId "in.abhisheksaxena.gettaskdone"
+        applicationId "tech.developingdeveloper.gettaskdone"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1

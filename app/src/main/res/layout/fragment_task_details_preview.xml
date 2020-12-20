@@ -9,7 +9,7 @@
 
         <variable
             name="viewmodel"
-            type="in.abhisheksaxena.gettaskdone.viewmodel.TaskDetailsPreviewViewModel" />
+            type="tech.developingdeveloper.gettaskdone.viewmodel.TaskDetailsPreviewViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
