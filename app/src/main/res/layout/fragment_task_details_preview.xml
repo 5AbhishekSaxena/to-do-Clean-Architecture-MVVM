@@ -9,13 +9,14 @@
 
         <variable
             name="viewmodel"
-            type="in.abhisheksaxena.gettaskdone.viewmodel.TaskDetailsPreviewViewModel" />
+            type="tech.developingdeveloper.gettaskdone.viewmodel.TaskDetailsPreviewViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:transitionName="@string/task_card_detail_transition_name">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -115,9 +116,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_01"
-                app:setDate="@{viewmodel.task.updatedOn}"
                 app:layout_constraintEnd_toStartOf="@id/margin_end"
                 app:layout_constraintTop_toBottomOf="@id/priority_text_view"
+                app:setDate="@{viewmodel.task.updatedOn}"
                 tools:text="July, 10th, 2020" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

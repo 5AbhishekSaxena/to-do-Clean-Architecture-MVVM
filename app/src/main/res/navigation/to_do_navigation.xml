@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="in.abhisheksaxena.gettaskdone.ui.fragment.HomeFragment"
+        android:name="tech.developingdeveloper.gettaskdone.ui.fragment.HomeFragment"
         android:label="Tasks"
         tools:layout="@layout/fragment_home">
         <action
@@ -19,45 +19,41 @@
             app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_homeFragment_to_taskDetailsPreviewFragment"
-            app:destination="@id/taskDetailsPreviewFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:destination="@id/taskDetailsPreviewFragment" />
         <argument
             android:name="userMessage"
             android:defaultValue="-1"
             app:argType="integer" />
         <argument
             android:name="task"
-            app:nullable="true"
             android:defaultValue="@null"
-            app:argType="in.abhisheksaxena.gettaskdone.data.model.Task" />
+            app:argType="in.abhisheksaxena.gettaskdone.data.model.Task"
+            app:nullable="true" />
     </fragment>
 
     <fragment
         android:id="@+id/taskDetailsFragment"
-        android:name="in.abhisheksaxena.gettaskdone.ui.fragment.TaskDetailsFragment"
+        android:name="tech.developingdeveloper.gettaskdone.ui.fragment.TaskDetailsFragment"
         android:label="{title}"
         tools:layout="@layout/fragment_task_details">
         <action
             android:id="@+id/action_addTaskFragment_to_homeFragment"
             app:destination="@id/homeFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true"
             app:enterAnim="@anim/slide_in_left"
             app:exitAnim="@anim/slide_out_right"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_taskDetailsFragment_to_taskDetailsPreviewFragment"
             app:destination="@id/taskDetailsPreviewFragment"
-            app:popUpTo="@id/taskDetailsPreviewFragment"
-            app:popUpToInclusive="true"
             app:enterAnim="@anim/slide_in_left"
             app:exitAnim="@anim/slide_out_right"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/taskDetailsPreviewFragment"
+            app:popUpToInclusive="true" />
         <argument
             android:name="taskId"
             android:defaultValue="-1L"
@@ -71,7 +67,7 @@
 
     <fragment
         android:id="@+id/taskDetailsPreviewFragment"
-        android:name="in.abhisheksaxena.gettaskdone.ui.fragment.TaskDetailsPreviewFragment"
+        android:name="tech.developingdeveloper.gettaskdone.ui.fragment.TaskDetailsPreviewFragment"
         android:label="View Task"
         tools:layout="@layout/fragment_task_details_preview">
         <action
@@ -85,11 +81,7 @@
             android:id="@+id/action_taskDetailsPreviewFragment_to_homeFragment"
             app:destination="@id/homeFragment"
             app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true"
-            app:enterAnim="@anim/slide_in_left"
-            app:exitAnim="@anim/slide_out_right"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:popUpToInclusive="true" />
         <argument
             android:name="taskId"
             android:defaultValue="-1L"

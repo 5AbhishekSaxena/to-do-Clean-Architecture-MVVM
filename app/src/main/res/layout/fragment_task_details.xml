@@ -41,43 +41,43 @@
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/margin_bottom"
+                style="@style/TextInputLayoutStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                style="@style/TextInputLayoutStyle"
                 app:layout_constraintGuide_end="@dimen/margin_default" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/title_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:counterEnabled="true"
                 app:boxBackgroundColor="@android:color/transparent"
                 app:boxStrokeColor="@color/darker_gray"
+                app:counterEnabled="true"
                 app:hintTextColor="@color/black"
                 app:layout_constraintEnd_toEndOf="@id/margin_end"
                 app:layout_constraintStart_toStartOf="@id/margin_start"
                 app:layout_constraintTop_toTopOf="@id/margin_top">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/title_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/title"
-                android:textColor="@color/black"
-                android:textCursorDrawable="@drawable/custom_cursor"
-                android:inputType="textCapSentences" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/title_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/title"
+                    android:inputType="textCapSentences"
+                    android:textColor="@color/black"
+                    android:textCursorDrawable="@drawable/custom_cursor" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/priority_label_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_default"
                 android:text="@string/priority"
                 android:textStyle="bold"
-                android:layout_marginTop="@dimen/margin_default"
-                app:layout_constraintTop_toBottomOf="@id/title_layout"
-                app:layout_constraintStart_toStartOf="@id/margin_start"/>
+                app:layout_constraintStart_toStartOf="@id/margin_start"
+                app:layout_constraintTop_toBottomOf="@id/title_layout" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/priority_layout"
@@ -107,8 +107,8 @@
                 android:layout_marginBottom="@dimen/margin_07"
                 android:background="@android:color/transparent"
                 android:gravity="start"
-                android:inputType="textMultiLine|textCapSentences"
                 android:hint="@string/details"
+                android:inputType="textMultiLine|textCapSentences"
                 app:layout_constraintBottom_toTopOf="@id/margin_bottom"
                 app:layout_constraintEnd_toEndOf="@id/margin_end"
                 app:layout_constraintStart_toStartOf="@id/margin_start"

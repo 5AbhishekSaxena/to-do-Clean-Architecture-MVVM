@@ -26,4 +26,6 @@
     <string name="search">Search</string>
     <string name="title_text_over_limit">Title must be less than %1$d characters.</string>
     <string name="recent">Recent</string>
+    <string name="task_card_transition_name">task_card_transition_name_%s</string>
+    <string name="task_card_detail_transition_name">email_card_detail_transition_name</string>
 </resources>
